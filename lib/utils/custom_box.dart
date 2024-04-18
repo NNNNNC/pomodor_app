@@ -13,7 +13,7 @@ class _custom_boxState extends State<custom_box> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(25),
+      padding: EdgeInsets.all(20),
       child: widget.child,
       decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,

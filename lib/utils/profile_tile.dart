@@ -25,7 +25,7 @@ class profile_tile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 12,right: 12, top: 12, bottom: 5),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (Context) => edit_page()));
         },
         child: custom_box(

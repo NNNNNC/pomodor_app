@@ -19,6 +19,7 @@ class _profile_pageState extends State<profile_page> {
         ),
 
       floatingActionButton: FloatingActionButton(
+        heroTag: 'profile',
         onPressed: (){},
         child: Icon(Icons.add, size: 45,),
       ),

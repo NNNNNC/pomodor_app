@@ -31,7 +31,7 @@ class _MainpageState extends State<Mainpage> {
           index: currentIndex,
           children: screens,
           ),
-
+        
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (value) => setState(() => currentIndex = value),

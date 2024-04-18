@@ -18,7 +18,9 @@ class _edit_pageState extends State<edit_page> {
           Padding(
             padding: const EdgeInsets.only(right: 25),
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.check,
                   size: 30,
