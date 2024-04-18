@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/utils/topic_dialog.dart';
+// import 'package:flutter/widgets.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({super.key});
@@ -23,16 +25,65 @@ class _PomodoroPageState extends State<PomodoroPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'SELECT TOPIC',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 16,
+                TextButton(
+                  /*onPressed: () => showMenu(
+                    context: context,
+                    position:
+                        const RelativeRect.fromLTRB(30.0, 150.0, 100.0, 150.0),
+                    items: const [
+                      PopupMenuItem(
+                        child: Text('Topic 1'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Topic 2'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Topic 3'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Topic 4'),
+                      ),
+                    ],
+                  ),*/
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const TopicDialog();
+                    },
+                  ),
+                  child: Text(
+                    'SELECT TOPIC',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Icon(
-                  Icons.headphones,
-                  color: Theme.of(context).colorScheme.secondary,
+                IconButton(
+                  onPressed: () => showMenu(
+                    context: context,
+                    position:
+                        const RelativeRect.fromLTRB(270.0, 140.0, 300.0, 150.0),
+                    items: const [
+                      PopupMenuItem(
+                        child: Text('No Sound'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Rain'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('TV Static'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Fan'),
+                      ),
+                    ],
+                  ),
+                  icon: Icon(
+                    Icons.headphones,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
               ],
             ),
