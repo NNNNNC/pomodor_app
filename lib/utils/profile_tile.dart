@@ -11,14 +11,14 @@ class profile_tile extends StatelessWidget {
   final String ringtone;
 
   const profile_tile({
-    super.key, 
+    Key? key,
     required this.profile_name,
-    required this.focus_duration, 
-    required this.long_break, 
-    required this.short_break, 
-    required this.white_noise, 
+    required this.focus_duration,
+    required this.long_break,
+    required this.short_break,
+    required this.white_noise,
     required this.ringtone,
-    });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class profile_tile extends StatelessWidget {
                 children: [
                   Text('White Noise :', style: Theme.of(context).textTheme.titleMedium),
                   Padding(
-                    padding: const EdgeInsets.only(left: 80),
+                    padding: const EdgeInsets.only(left: 82),
                     child: Text(white_noise, style: Theme.of(context).textTheme.titleMedium),
                   ),
                   ],
@@ -94,7 +94,7 @@ class profile_tile extends StatelessWidget {
                 children: [
                   Text('Ringtone :', style: Theme.of(context).textTheme.titleMedium),
                   Padding(
-                    padding: const EdgeInsets.only(left: 105),
+                    padding: const EdgeInsets.only(left: 107),
                     child: Text(ringtone, style: Theme.of(context).textTheme.titleMedium),
                   ),
                   ],

@@ -15,7 +15,7 @@ class flashcard_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12,right: 12, top: 10,),
+      padding: const EdgeInsets.only(left: 12,right: 12, top: 10),
       child: GestureDetector(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (Context) => flashcard_edit()));

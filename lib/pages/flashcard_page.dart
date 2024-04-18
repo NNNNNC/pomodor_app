@@ -10,6 +10,9 @@ class flashcard_page extends StatefulWidget {
 }
 
 class _flashcard_pageState extends State<flashcard_page> {
+
+  List<Widget> flashcardTiles = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,17 +22,24 @@ class _flashcard_pageState extends State<flashcard_page> {
         ),
         floatingActionButton: FloatingActionButton(
         heroTag: 'flashcard',
-        onPressed: (){},
+        onPressed: (){
+          setState(() {
+              flashcardTiles.add(
+                flashcard_tile(
+                  flashcard_name: 'Science', flashcard_count: 4,
+                ),
+              );
+            });
+        },
         child: Icon(Icons.add, size: 45,),
       ),
 
-      body: ListView( 
-        children: [
-          flashcard_tile(flashcard_name: 'Science', flashcard_count: 4,),
-          flashcard_tile(flashcard_name: 'Math', flashcard_count: 10,),
-          flashcard_tile(flashcard_name: 'English', flashcard_count: 8,)
-        ],
-      ),
+      body: ListView.builder(
+          itemCount: flashcardTiles.length,
+          itemBuilder: (context, index) {
+            return flashcardTiles[index];
+          },
+        )
     );
   }
 }
