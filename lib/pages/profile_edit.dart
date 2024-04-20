@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
-class edit_page extends StatefulWidget {
-  const edit_page({super.key});
+class profile_edit extends StatefulWidget {
+  const profile_edit({super.key});
 
   @override
-  State<edit_page> createState() => _edit_pageState();
+  State<profile_edit> createState() => _profile_editState();
 }
 
-class _edit_pageState extends State<edit_page> {
+class _profile_editState extends State<profile_edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

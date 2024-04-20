@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/pages/edit_page.dart';
+import 'package:pomodoro_app/pages/profile_edit.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_tile extends StatelessWidget {
@@ -26,7 +26,7 @@ class profile_tile extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12,right: 12, top: 12, bottom: 5),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (Context) => edit_page()));
+          Navigator.push(context, MaterialPageRoute(builder: (Context) => profile_edit()));
         },
         child: custom_box(
           child: Column(
