@@ -23,9 +23,11 @@ class _custom_box_2State extends State<custom_box_2> {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Color.fromARGB(255, 37, 37, 37).withOpacity(0.5),
-            offset: Offset(0, 3),
-          ),
+                          blurRadius: 1.5,
+                          spreadRadius: 0,
+                          offset: const Offset(-4, 4),
+                          color: Colors.black.withOpacity(0.25),
+                        ),
         ],
       ),
     );

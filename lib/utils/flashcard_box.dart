@@ -39,6 +39,14 @@ class flashcard_box extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+                          blurRadius: 1.5,
+                          spreadRadius: 0,
+                          offset: const Offset(-4, 1),
+                          color: Colors.black.withOpacity(0.25),
+                        ),
+        ]
       ),
     );
   }

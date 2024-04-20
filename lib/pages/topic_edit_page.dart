@@ -14,7 +14,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Topic Title"),
+        title: Text("Topic Edit"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 25),
