@@ -18,33 +18,24 @@ class _PomodoroPageState extends State<PomodoroPage> {
   bool timerStarted = false;
   Timer? timer;
   int seconds = 0, minutes = 0;
-  String digitSec = '00', digitMin = '00';
-  List laps = [];
+  int breakCounter = 0;
+  String digitSec = '00';
+  String digitMin = '00';
 
   // timer methods
 
   void timerStop() {
     timer!.cancel();
     setState(() {
-      timerStarted = false;
-    });
-  }
-
-  void reset() {
-    timer!.cancel();
-    setState(() {
-      seconds = 59;
-      minutes = 25;
-      digitMin = '25';
+      seconds = 0;
+      minutes = 0;
+      digitMin = '00';
       digitSec = '00';
-      timerStarted = false;
-    });
-  }
 
-  void addLaps() {
-    String lap = "$digitMin:$digitSec";
-    setState(() {
-      laps.add(lap);
+      timerStarted = false;
+
+      // transition to other states
+      transition();
     });
   }
 
@@ -52,19 +43,96 @@ class _PomodoroPageState extends State<PomodoroPage> {
     timerStarted = true;
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      int localSeconds = seconds - 1;
-      int localMinutes = minutes;
-
-      if (localSeconds < 1) {
-        localMinutes--;
-        localSeconds = 59;
-      }
       setState(() {
-        seconds = localSeconds;
-        minutes = localMinutes;
+        if (seconds == 0) {
+          minutes--;
+          seconds = 60;
+        }
+        seconds--;
+
         digitSec = (seconds >= 10) ? "$seconds" : "0$seconds";
-        digitMin = (seconds >= 10) ? "$minutes" : "0$minutes";
+        digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+
+        // stop if countdown is finished
+        if ((minutes == 0) && (seconds == 0)) {
+          timerStop();
+        }
       });
+    });
+  }
+
+  // focus methods
+
+  void focus() {
+    setState(() {
+      isFocusing = !isFocusing;
+      isBreak = false;
+      isLongBreak = false;
+      minutes = 1;
+      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+
+      if (timerStarted) {
+        timerStop();
+      } else {
+        startTimer();
+      }
+    });
+  }
+
+  void shortBreak() {
+    setState(() {
+      isFocusing = false;
+      isBreak = !isBreak;
+      isLongBreak = false;
+      minutes = 1;
+      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+
+      if (timerStarted) {
+        timerStop();
+      } else {
+        startTimer();
+      }
+    });
+  }
+
+  void longBreak() {
+    setState(() {
+      isFocusing = false;
+      isBreak = false;
+      isLongBreak = !isLongBreak;
+      minutes = 1;
+      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+
+      if (timerStarted) {
+        timerStop();
+      } else {
+        startTimer();
+      }
+    });
+  }
+
+  void transition() {
+    setState(() {
+      if (isFocusing) {
+        isFocusing = false;
+
+        if (breakCounter <= 3) {
+          shortBreak();
+        } else {
+          longBreak();
+          breakCounter = 0;
+        }
+      }
+
+      if (isBreak) {
+        isBreak = false;
+        focus();
+        breakCounter++;
+      }
+
+      if (isLongBreak) {
+        isLongBreak = false;
+      }
     });
   }
 
@@ -140,13 +208,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
               children: [
                 // Focus state
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isFocusing = !isFocusing;
-                      isBreak = false;
-                      isLongBreak = false;
-                    });
-                  },
+                  onTap: () => focus(),
                   child: Container(
                     decoration: BoxDecoration(
                       color: isFocusing ? Colors.grey[900] : Colors.grey,
@@ -182,13 +244,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
                 // Long Break State
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isLongBreak = !isLongBreak;
-                      isBreak = false;
-                      isFocusing = false;
-                    });
-                  },
+                  onTap: () => longBreak(),
                   child: Container(
                     margin: const EdgeInsets.only(left: 5.0),
                     decoration: BoxDecoration(
@@ -220,13 +276,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
                 // Short break state
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isLongBreak = false;
-                      isBreak = !isBreak;
-                      isFocusing = false;
-                    });
-                  },
+                  onTap: () => shortBreak(),
                   child: Container(
                     margin: const EdgeInsets.only(left: 5.0),
                     decoration: BoxDecoration(
@@ -270,13 +320,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
           // Focus Button
           GestureDetector(
-            onTap: () {
-              setState(() {
-                isFocusing = !isFocusing;
-                isBreak = false;
-                isLongBreak = false;
-              });
-            },
+            onTap: () => focus(),
             child: Container(
               width: 251,
               height: 251,
@@ -315,21 +359,18 @@ class _PomodoroPageState extends State<PomodoroPage> {
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        shadows: CupertinoContextMenu.kEndBoxShadow,
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      isFocusing
-                          ? '25:00'
-                          : isBreak
-                              ? '05:00'
-                              : isLongBreak
-                                  ? '15:00'
-                                  : 'Click here to start pomodoro',
+                      isFocusing || isBreak || isLongBreak
+                          ? '$digitMin:$digitSec'
+                          : 'Click here to start Pomodoro',
                       style: const TextStyle(
                         color: Color(0xffc0c0c0),
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
