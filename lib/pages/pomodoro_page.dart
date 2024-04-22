@@ -115,7 +115,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
       visibility.toggleVisibility(true);
 
-      minutes = 1;
+      minutes = 5;
       digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
 
       if (timerStarted) {
@@ -136,7 +136,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
       visibility.toggleVisibility(true);
 
-      minutes = 1;
+      minutes = 15;
       digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
 
       if (timerStarted) {
@@ -170,6 +170,10 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
   @override
   Widget build(BuildContext context) {
+    final int totalDuration = isFocusing ? 25 : (isBreak ? 5 : 15);
+    final double progress =
+        (totalDuration * 60 - (seconds + minutes * 60)) / (totalDuration * 60);
+
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => Scaffold(
         appBar: value.isVisible
@@ -360,64 +364,90 @@ class _PomodoroPageState extends State<PomodoroPage> {
               ),
 
               // Focus Button
-              GestureDetector(
-                onTap: () => focus(),
-                child: Container(
-                  width: 251,
-                  height: 251,
-                  decoration: BoxDecoration(
-                    color: isFocusing == true
-                        ? const Color(0xffc50e0e)
-                        : isBreak == true
+              Stack(
+                children: [
+                  // progress indicator
+                  Positioned.fill(
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      backgroundColor: isBreak
+                          ? const Color(0xff1dc50e)
+                          : isLongBreak
+                              ? const Color(0xff0e15c5)
+                              : Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        isFocusing
                             ? const Color(0xff1dc50e)
-                            : isLongBreak == true
-                                ? const Color(0xff0e15c5)
-                                : const Color(0xff3a3939),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 1.5,
-                        spreadRadius: 7,
-                        offset: Offset.zero,
-                        color: Colors.black.withOpacity(0.25),
+                            : isBreak
+                                ? const Color(0xff252525)
+                                : isLongBreak
+                                    ? const Color(0xff252525)
+                                    : Colors.transparent,
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          isFocusing
-                              ? 'FOCUSING'
-                              : isBreak
-                                  ? 'BREAK'
-                                  : isLongBreak
-                                      ? 'LONG BREAK'
-                                      : 'FOCUS',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: CupertinoContextMenu.kEndBoxShadow,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          isFocusing || isBreak || isLongBreak
-                              ? '$digitMin:$digitSec'
-                              : 'Click here to start Pomodoro',
-                          style: const TextStyle(
-                            color: Color(0xffc0c0c0),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                      strokeWidth: 10,
                     ),
                   ),
-                ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () => focus(),
+                    child: Container(
+                      width: 251,
+                      height: 251,
+                      decoration: BoxDecoration(
+                        color: isFocusing == true
+                            ? const Color(0xffc50e0e)
+                            : isBreak == true
+                                ? const Color(0xff1dc50e)
+                                : isLongBreak == true
+                                    ? const Color(0xff0e15c5)
+                                    : const Color(0xff3a3939),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 1.5,
+                            spreadRadius: 7,
+                            offset: Offset.zero,
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              isFocusing
+                                  ? 'FOCUSING'
+                                  : isBreak
+                                      ? 'BREAK'
+                                      : isLongBreak
+                                          ? 'LONG BREAK'
+                                          : 'FOCUS',
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: CupertinoContextMenu.kEndBoxShadow,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              isFocusing || isBreak || isLongBreak
+                                  ? '$digitMin:$digitSec'
+                                  : 'Click here to start Pomodoro',
+                              style: const TextStyle(
+                                color: Color(0xffc0c0c0),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 32.0),
