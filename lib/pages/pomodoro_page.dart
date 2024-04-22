@@ -124,13 +124,13 @@ class _PomodoroPageState extends State<PomodoroPage> {
         }
       }
 
-      if (isBreak) {
+      else if (isBreak) {
         isBreak = false;
         focus();
         breakCounter++;
       }
 
-      if (isLongBreak) {
+      else if (isLongBreak) {
         isLongBreak = false;
       }
     });
