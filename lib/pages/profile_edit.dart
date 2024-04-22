@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +11,20 @@ class profile_edit extends StatefulWidget {
 }
 
 class _profile_editState extends State<profile_edit> {
+  String? selectedAudioPath;
+  final Map<String, String> audioItems = {
+    'audios/Dryer.mp3': 'Dryer',
+    'audios/Fan.mp3': 'Fan',
+    'audios/Rain.mp3': 'Rain',
+    'audios/Train.mp3': 'Train',
+    'audios/Waves.mp3': 'Waves',
+  };
+
+  final player = AudioPlayer();
+
+  Future<void> playSound(String audioPath) async{
+    await player.play(AssetSource(audioPath));
+  }
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _focusController = TextEditingController();
@@ -30,6 +45,7 @@ class _profile_editState extends State<profile_edit> {
   void initState() {
     super.initState();
     dropdownValue;
+    selectedAudioPath;
   }
 
   @override
@@ -199,7 +215,23 @@ class _profile_editState extends State<profile_edit> {
                           'White Noise:',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                          customTextField(items)
+                        DropdownButton<String>(
+                          hint: Text('Select an audio'),
+                          value: selectedAudioPath,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedAudioPath = newValue;
+                              playSound(selectedAudioPath!);
+                            });
+                          },
+                          items: audioItems.entries
+                              .map<DropdownMenuItem<String>>((entry) {
+                            return DropdownMenuItem<String>(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            );
+                          }).toList(),
+                        ),
                       ],
                     ),
                   )),
@@ -224,20 +256,19 @@ class _profile_editState extends State<profile_edit> {
 
   Widget customTextField(List<String> items) {
     return DropdownButton<String>(
-            value: dropdownValue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: items.map((item) {
-              return DropdownMenuItem(
-                value: item,
-                child: Text(item),
-              );
-            }).toList(),
-            onChanged: (item) {
-              setState(() {
-                dropdownValue = item;
-              });
-            },
-            
-          );
+      value: dropdownValue,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      items: items.map((item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+      onChanged: (item) {
+        setState(() {
+          dropdownValue = item;
+        });
+      },
+    );
   }
 }

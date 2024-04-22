@@ -40,7 +40,7 @@ class _MainpageState extends State<Mainpage> {
                     icon: Container(
                       height: 30,
                       child: Image.asset(
-                        'icons/pie-chart.png',
+                        'assets/icons/pie-chart.png',
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
@@ -50,7 +50,7 @@ class _MainpageState extends State<Mainpage> {
                       icon: Container(
                         height: 30,
                         child: Image.asset(
-                          'icons/document.png',
+                          'assets/icons/document.png',
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
@@ -59,7 +59,7 @@ class _MainpageState extends State<Mainpage> {
                       icon: Container(
                         height: 30,
                         child: Image.asset(
-                          'icons/bill.png',
+                          'assets/icons/bill.png',
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
