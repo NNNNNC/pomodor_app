@@ -17,6 +17,7 @@ class PomodoroPage extends StatefulWidget {
 }
 
 class _PomodoroPageState extends State<PomodoroPage> {
+  bool isMuted = false;
   bool isAppBarVisible = true;
   bool isFocusing = false;
   bool isBreak = false;
@@ -212,27 +213,32 @@ class _PomodoroPageState extends State<PomodoroPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () => showMenu(
-                        context: context,
-                        position: const RelativeRect.fromLTRB(
-                            270.0, 140.0, 300.0, 150.0),
-                        items: const [
-                          PopupMenuItem(
-                            child: Text('No Sound'),
-                          ),
-                          PopupMenuItem(
-                            child: Text('Rain'),
-                          ),
-                          PopupMenuItem(
-                            child: Text('TV Static'),
-                          ),
-                          PopupMenuItem(
-                            child: Text('Fan'),
-                          ),
-                        ],
-                      ),
+                      // onPressed: () => showMenu(
+                      //   context: context,
+                      //   position: const RelativeRect.fromLTRB(
+                      //       270.0, 140.0, 300.0, 150.0),
+                      //   items: const [
+                      //     PopupMenuItem(
+                      //       child: Text('No Sound'),
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: Text('Rain'),
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: Text('TV Static'),
+                      //     ),
+                      //     PopupMenuItem(
+                      //       child: Text('Fan'),
+                      //     ),
+                      //   ],
+                      // ),
+                      onPressed: () {
+                        setState(() {
+                          isMuted = !isMuted;
+                        });
+                      },
                       icon: Icon(
-                        Icons.headphones,
+                        isMuted ? Icons.headset_off : Icons.headphones,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
