@@ -10,11 +10,17 @@ class topic_edit_page extends StatefulWidget {
 }
 
 class _topic_edit_pageState extends State<topic_edit_page> {
+  TextEditingController _topicController =
+      TextEditingController(text: "Topic title");
+  TextEditingController _descriptionController =
+      TextEditingController(text: "Description");
+  bool _isEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Topic Edit"),
+        title: const Text("Topic Edit"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 25),
@@ -22,7 +28,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   size: 30,
                 )),
@@ -32,7 +38,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 30, left: 10, bottom: 5),
+            padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
             child: Row(
               children: [
                 SizedBox(
@@ -51,8 +57,30 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Topic title',
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Expanded(
+                        child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isEnabled = true;
+                        });
+                      },
+                      child: TextField(
+                        controller: _topicController,
+                        enabled: _isEnabled,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          _topicController.text = value;
+                        },
+                        onSubmitted: (value) {
+                          _isEnabled = false;
+                        },
+                      ),
+                    ))
+                    // Text('Topic title',
+                    //     style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
               )),
@@ -107,20 +135,60 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.titleMedium,
-                          maxLines: null, // Set to null for unlimited lines
+                          child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isEnabled = true;
+                          });
+                        },
+                        child: TextField(
+                          controller: _descriptionController,
+                          enabled: _isEnabled,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          decoration: InputDecoration(border: InputBorder.none),
+                          onChanged: (value) {
+                            _descriptionController.text = value;
+                          },
+                          onSubmitted: (value) {
+                            _isEnabled = false;
+                          },
                         ),
-                      ),
+                      )
+                          // Text(
+                          //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                          //   textAlign: TextAlign.left,
+                          //   style: Theme.of(context).textTheme.titleMedium,
+                          //   maxLines: null, // Set to null for unlimited lines ),
+                          ),
                     ],
                   ),
                   Positioned(
-                    top: -15,
-                    right: -15,
-                    child: IconButton(onPressed: (){},icon: Icon(Icons.edit, color: Theme.of(context).colorScheme.secondary),)
-                  ),
+                      top: -15,
+                      right: -15,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isEnabled = true;
+                          });
+                          TextField(
+                            maxLines: 5,
+                            minLines: 1,
+                            controller: _descriptionController,
+                            enabled: _isEnabled,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            decoration:
+                                InputDecoration(border: InputBorder.none),
+                            onChanged: (value) {
+                              _descriptionController.text = value;
+                            },
+                            onSubmitted: (value) {
+                              _isEnabled = false;
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.edit,
+                            color: Theme.of(context).colorScheme.secondary),
+                      )),
                 ],
               ),
             ),
