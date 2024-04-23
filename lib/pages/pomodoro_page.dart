@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
+import 'package:pomodoro_app/utils/taskDialog.dart';
 import 'package:pomodoro_app/utils/topic_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,6 @@ class PomodoroPage extends StatefulWidget {
 
 class _PomodoroPageState extends State<PomodoroPage> {
   bool isMuted = false;
-  bool isAppBarVisible = true;
   bool isFocusing = false;
   bool isBreak = false;
   bool isLongBreak = false;
@@ -26,6 +26,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
   Timer? timer;
   int seconds = 0, minutes = 0;
   int breakCounter = 0;
+  int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
 
@@ -62,6 +63,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
   }
 
   void startTimer() {
+    minutes = setMinute;
     timerStarted = true;
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -95,8 +97,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
       visibility.toggleVisibility(!isFocusing);
 
-      minutes = 25;
-      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+      setMinute = 25;
+      digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
 
       if (timerStarted) {
         timerStop();
@@ -116,8 +118,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
       visibility.toggleVisibility(true);
 
-      minutes = 5;
-      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+      setMinute = 5;
+      digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
 
       if (timerStarted) {
         timerStop();
@@ -137,8 +139,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
       visibility.toggleVisibility(true);
 
-      minutes = 15;
-      digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+      setMinute = 15;
+      digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
 
       if (timerStarted) {
         timerStop();
@@ -174,7 +176,6 @@ class _PomodoroPageState extends State<PomodoroPage> {
     final int totalDuration = isFocusing ? 25 : (isBreak ? 5 : 15);
     final double progress =
         (totalDuration * 60 - (seconds + minutes * 60)) / (totalDuration * 60);
-
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => Scaffold(
         appBar: value.isVisible
@@ -183,7 +184,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
               )
             : const PreferredSize(
                 preferredSize: Size.fromHeight(100.0),
-                child: SizedBox(height: 30.0),
+                child: SizedBox(height: 60.0),
               ),
 
         // Select topic and headphones
@@ -246,8 +247,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                 ),
               ),
 
-              SizedBox(
-                height: value.isVisible ? 36 : 14,
+              const SizedBox(
+                height: 36,
               ),
 
               // states
@@ -259,7 +260,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                     // Focus state
                     GestureDetector(
                       onTap: () => focus(),
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
                         decoration: BoxDecoration(
                           color: isFocusing ? Colors.grey[900] : Colors.grey,
                           borderRadius: const BorderRadius.only(
@@ -295,7 +297,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                     // Long Break State
                     GestureDetector(
                       onTap: () => longBreak(),
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
                         margin: const EdgeInsets.only(left: 5.0),
                         decoration: BoxDecoration(
                           color: isLongBreak ? Colors.grey[900] : Colors.grey,
@@ -328,7 +331,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                     // Short break state
                     GestureDetector(
                       onTap: () => shortBreak(),
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
                         margin: const EdgeInsets.only(left: 5.0),
                         decoration: BoxDecoration(
                           color: isBreak ? Colors.grey[900] : Colors.grey,
@@ -365,8 +369,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                 ),
               ),
 
-              SizedBox(
-                height: value.isVisible ? 72 : 56,
+              const SizedBox(
+                height: 72,
               ),
 
               // Focus Button
@@ -396,7 +400,8 @@ class _PomodoroPageState extends State<PomodoroPage> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () => focus(),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 700),
                       width: 251,
                       height: 251,
                       decoration: BoxDecoration(
@@ -458,100 +463,142 @@ class _PomodoroPageState extends State<PomodoroPage> {
 
               const SizedBox(height: 32.0),
 
-              // will only show on focus mode
-              if (value.isVisible == false)
-                Container(
-                  width: 330,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff3a3939),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 1.5,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 4),
-                        color: Colors.black.withOpacity(0.25),
+              // lock toggle
+              if (isFocusing && value.isVisible)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          value.toggleVisibility(false);
+                        });
+                      },
+                      icon: Icon(
+                        Icons.lock,
+                        size: 28,
+                        color: Colors.grey[700],
                       ),
-                    ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12.0, right: 1.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Tasks',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Theme.of(context).colorScheme.secondary,
+                ),
+
+              // will only show on focus mode
+              // tasks
+              if (value.isVisible == false)
+                Expanded(
+                  child: Container(
+                    width: 330,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff3a3939),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 1.5,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 4),
+                          color: Colors.black.withOpacity(0.25),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 12.0, right: 1.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Tasks',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const TaskDialog();
+                                    },
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.fullscreen,
+                                  size: 24,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: SizedBox(
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: tasks.length,
+                                itemBuilder: (context, index) {
+                                  return MiniTaskTile(
+                                    taskTitle: tasks[index][0],
+                                    isChecked: tasks[index][1],
+                                    onChanged: (value) =>
+                                        _taskStatusChange(value, index),
+                                  );
+                                },
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.fullscreen,
-                                size: 24,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 117,
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            return MiniTaskTile(
-                              taskTitle: tasks[index][0],
-                              isChecked: tasks[index][1],
-                              onChanged: (value) =>
-                                  _taskStatusChange(value, index),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
               const SizedBox(height: 24),
 
-              // lock toggle
-
-              // flashcard
+              // bottom icons
               if (value.isVisible == false)
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.lock_open_outlined,
-                            size: 32,
-                            color: Colors.grey[850],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.lock_open_outlined,
+                              size: 32,
+                              color: Colors.grey[850],
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                value.toggleVisibility(!value.isVisible);
+                              });
+                            },
                           ),
-                          onPressed: () {},
-                        ),
-                        Image.asset(
-                          'icons/document.png',
-                          height: 40,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withOpacity(0.5),
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                      ],
+                          Image.asset(
+                            'assets/icons/document.png',
+                            height: 40,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.5),
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
