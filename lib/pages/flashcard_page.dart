@@ -26,7 +26,7 @@ class _flashcard_pageState extends State<flashcard_page> {
           setState(() {
               flashcardTiles.add(
                 flashcard_tile(
-                  flashcard_name: 'Science', flashcard_count: 4,
+                  flashcard_name: 'Card Set Name', flashcard_count: 1,
                 ),
               );
             });

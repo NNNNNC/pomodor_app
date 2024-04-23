@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:provider/provider.dart';
 import 'pages/main_page.dart';
 import 'theme/theme.dart';
 
@@ -13,7 +15,7 @@ late Box<profileModel> profileBox;
 //const String flashcardBoxName = 'flashcard';
 const String profileBoxName = 'profile';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
@@ -22,12 +24,16 @@ void main() async{
   //flashcardBox = await Hive.openBox(flashcardBoxName);
   await Hive.openBox<profileModel>(profileBoxName);
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => BottomBarVisibility(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,4 +44,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-  

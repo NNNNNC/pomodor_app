@@ -9,7 +9,24 @@ class profile_page extends StatefulWidget {
 }
 
 class _profile_pageState extends State<profile_page> {
-  List<Widget> profileTiles = [];
+  List<Map<String, dynamic>> settings = [
+    {
+      'profile_name': 'Profile Name',
+      'focus_duration': 25,
+      'long_break': 20,
+      'short_break': 15,
+      'white_noise': 'Rain',
+      'ringtone': 'Disney',
+    },
+    {
+      'profile_name': 'Profile Name 2',
+      'focus_duration': 30,
+      'long_break': 25,
+      'short_break': 10,
+      'white_noise': 'Ocean',
+      'ringtone': 'Classical',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +38,14 @@ class _profile_pageState extends State<profile_page> {
           heroTag: 'profile',
           onPressed: () {
             setState(() {
-              profileTiles.add(
-                profile_tile(
-                  profile_name: 'Profile',
-                  focus_duration: 25,
-                  long_break: 20,
-                  short_break: 15,
-                  white_noise: 'Rain',
-                  ringtone: 'Disney',
-                ),
-              );
+              settings.add({
+                'profile_name': 'Profile Name',
+                'focus_duration': 25,
+                'long_break': 20,
+                'short_break': 15,
+                'white_noise': 'Rain',
+                'ringtone': 'Disney',
+              });
             });
           },
           child: Icon(
@@ -39,9 +54,16 @@ class _profile_pageState extends State<profile_page> {
           ),
         ),
         body: ListView.builder(
-          itemCount: profileTiles.length,
+          itemCount: settings.length,
           itemBuilder: (context, index) {
-            return profileTiles[index];
+            final profile = settings[index];
+            return profile_tile(
+                profile_name: profile['profile_name'],
+                focus_duration: profile['focust_duration'] ?? 25,
+                long_break: profile['long_break'] ?? 20,
+                short_break: profile['short_break'] ?? 15,
+                white_noise: profile['white_noise'],
+                ringtone: profile['ringtone']);
           },
         ));
   }

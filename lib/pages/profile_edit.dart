@@ -1,14 +1,53 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_edit extends StatefulWidget {
-  const profile_edit({super.key});
-
+  const profile_edit({Key? key}) : super(key: key);
   @override
   State<profile_edit> createState() => _profile_editState();
 }
 
 class _profile_editState extends State<profile_edit> {
+  String? selectedAudioPath;
+  final Map<String, String> audioItems = {
+    'audios/Dryer.mp3': 'Dryer',
+    'audios/Fan.mp3': 'Fan',
+    'audios/Rain.mp3': 'Rain',
+    'audios/Train.mp3': 'Train',
+    'audios/Waves.mp3': 'Waves',
+  };
+
+  final player = AudioPlayer();
+
+  Future<void> playSound(String audioPath) async{
+    await player.play(AssetSource(audioPath));
+  }
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _focusController = TextEditingController();
+  TextEditingController _shortBreakController = TextEditingController();
+  TextEditingController _longBreakController = TextEditingController();
+  TextEditingController _WhiteNoiseController = TextEditingController();
+
+  String? dropdownValue;
+  List<String> items = [
+    '10',
+    '20',
+    '30',
+    '40',
+    '50',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownValue;
+    selectedAudioPath;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,23 +96,17 @@ class _profile_editState extends State<profile_edit> {
                       SizedBox(
                         width: 180,
                         child: TextField(
+                          cursorColor: Color.fromRGBO(192, 192, 192, 1),
                           decoration: InputDecoration(
-                            border: UnderlineInputBorder(
-                              // Use UnderlineInputBorder for bottom line only
-                              borderSide: BorderSide(
-                                color: Color.fromRGBO(158, 158, 158, 1),//Change the color of the bottom line here
-                                width: 2.0, // Set the width of the bottom line
-                              ),
-                            ),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                              color: Color.fromRGBO(192, 192, 192, 1),
+                            )),
                             focusedBorder: UnderlineInputBorder(
-                              // Use UnderlineInputBorder for focused bottom line
                               borderSide: BorderSide(
-                                color: Color.fromRGBO(158, 158, 158, 1), // Change the color of the focused bottom line here
-                                width:
-                                    2.0, // Set the width of the focused bottom line
+                                color: Color.fromRGBO(192, 192, 192, 1),
                               ),
                             ),
-                            hintText: 'Enter a search term',
                           ),
                         ),
                       ),
@@ -108,8 +141,10 @@ class _profile_editState extends State<profile_edit> {
                         SizedBox(
                           child: Row(
                             children: [
+                              SizedBox(child: customTextField(items)),
                               Text(' Minutes',
-                                  style: Theme.of(context).textTheme.titleMedium),
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium),
                             ],
                           ),
                         ),
@@ -126,8 +161,13 @@ class _profile_editState extends State<profile_edit> {
                           'Long Break Length:',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        Text('' + ' Minutes',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Row(
+                          children: [
+                            SizedBox(child: customTextField(items)),
+                            Text(' Minutes',
+                                style: Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
                       ],
                     ),
                   )),
@@ -141,8 +181,13 @@ class _profile_editState extends State<profile_edit> {
                           'Short Break Length:',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        Text('' + ' Minutes',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Row(
+                          children: [
+                            SizedBox(child: customTextField(items)),
+                            Text(' Minutes',
+                                style: Theme.of(context).textTheme.titleMedium),
+                          ],
+                        ),
                       ],
                     ),
                   )),
@@ -170,8 +215,23 @@ class _profile_editState extends State<profile_edit> {
                           'White Noise:',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        Text('',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        DropdownButton<String>(
+                          hint: Text('Select an audio'),
+                          value: selectedAudioPath,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedAudioPath = newValue;
+                              playSound(selectedAudioPath!);
+                            });
+                          },
+                          items: audioItems.entries
+                              .map<DropdownMenuItem<String>>((entry) {
+                            return DropdownMenuItem<String>(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            );
+                          }).toList(),
+                        ),
                       ],
                     ),
                   )),
@@ -185,13 +245,30 @@ class _profile_editState extends State<profile_edit> {
                           'Ringtone:',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        Text('',
-                            style: Theme.of(context).textTheme.titleMedium),
+                        customTextField(items)
                       ],
                     ),
                   )),
             ],
           ),
         ));
+  }
+
+  Widget customTextField(List<String> items) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.keyboard_arrow_down),
+      items: items.map((item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+      onChanged: (item) {
+        setState(() {
+          dropdownValue = item;
+        });
+      },
+    );
   }
 }

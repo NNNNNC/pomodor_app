@@ -33,17 +33,28 @@ class _flashcard_editState extends State<flashcard_edit> {
     'VILLONO',
   ];
   int _currentIndex = 0;
-  int count(_currentIndex) {
-    return _currentIndex + 1;
-  }
 
   void next() {
-    controller.nextPage(duration: Duration(milliseconds: 400));
+    if (_currentIndex < texts.length - 1) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1);
+        controller.nextPage(duration: Duration(milliseconds: 400));
+      });
+    }
   }
 
   void previous() {
-    controller.previousPage(duration: Duration(milliseconds: 400));
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex = (_currentIndex - 1);
+        controller.previousPage(duration: Duration(milliseconds: 400));
+      });
+    }
   }
+
+  TextEditingController _cardSetNameController =
+      TextEditingController(text: 'Card Set Name');
+  bool _isEnable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +63,9 @@ class _flashcard_editState extends State<flashcard_edit> {
           heroTag: 'flashcard edit',
           onPressed: () {
             setState(() {
-              texts.add('New Flashcard'); // Add a new flashcard to the list
+              texts.add(
+                  'New Flashcard'); // Add a new question flashcard to the list
+              // someting.add('')
             });
           },
           child: Icon(
@@ -60,7 +73,7 @@ class _flashcard_editState extends State<flashcard_edit> {
             size: 45,
           ),
         ),
-        body: Padding(
+        body: SingleChildScrollView(
           padding: EdgeInsets.only(
             top: 90,
             bottom: 50,
@@ -72,8 +85,32 @@ class _flashcard_editState extends State<flashcard_edit> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Card Set Name',
-                        style: Theme.of(context).textTheme.titleLarge),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isEnable = true;
+                          });
+                        },
+                        child: TextField(
+                          cursorColor: Color.fromRGBO(192, 192, 192, 1),
+                          controller: _cardSetNameController,
+                          enabled: _isEnable,
+                          style: Theme.of(context).textTheme.titleLarge,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            _cardSetNameController.text = value;
+                          },
+                          onSubmitted: (value) {
+                            setState(() {
+                              _isEnable = false;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                     GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
@@ -100,19 +137,65 @@ class _flashcard_editState extends State<flashcard_edit> {
                             return FlipCard(
                                 controller: _controller,
                                 direction: FlipDirection.HORIZONTAL,
-                                front: flashcard_box(
-                                  card_content: text,
-                                  flip_button: 'Check answer',
+                                front: FlashcardBox(
+                                  cardContent: text,
+                                  flipButton: TextButton(
+                                      onPressed: () {
+                                         _controller.toggleCard();
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'Check Answer ',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            size: 20,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ],
+                                      )),
                                 ),
-                                back: flashcard_box(
-                                  card_content: 'Jake Sacay',
-                                  flip_button: 'Check question',
+                                back: FlashcardBox(
+                                  cardContent: 'Jake Sacay',
+                                  flipButton: TextButton(
+                                      onPressed: () {
+                                         _controller.toggleCard();
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'Check Answer ',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            size: 20,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ],
+                                      )),
                                 ));
                           },
                           options: CarouselOptions(
+                              enableInfiniteScroll: false,
                               height: 400,
                               viewportFraction: 1,
-                              enableInfiniteScroll: false,
                               initialPage: 0,
                               onPageChanged: (index, reason) {
                                 setState(() {
@@ -149,9 +232,14 @@ class _flashcard_editState extends State<flashcard_edit> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          setState(() {
-                            texts.removeAt(_currentIndex);
-                          });
+                          if (texts.length > 1) {
+                            setState(() {
+                              texts.removeLast();
+                              _currentIndex = (_currentIndex >= texts.length)
+                                  ? texts.length - 1
+                                  : _currentIndex;
+                            });
+                          }
                         },
                         icon: Icon(
                           Icons.close,
@@ -180,9 +268,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      count(_currentIndex).toString() +
-                          '/' +
-                          texts.length.toString(),
+                      '${_currentIndex + 1}' + '/' + texts.length.toString(),
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
@@ -191,5 +277,6 @@ class _flashcard_editState extends State<flashcard_edit> {
             ],
           ),
         ));
+
   }
 }
