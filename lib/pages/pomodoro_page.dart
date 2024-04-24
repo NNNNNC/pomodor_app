@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
 import 'package:pomodoro_app/utils/sliding_app_bar.dart';
 import 'package:pomodoro_app/utils/taskDialog.dart';
@@ -617,13 +618,40 @@ class _PomodoroPageState extends State<PomodoroPage>
                                 });
                               },
                             ),
-                            Image.asset(
-                              'assets/icons/document.png',
-                              height: 40,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
-                                  .withOpacity(0.5),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionDuration:
+                                        const Duration(milliseconds: 200),
+                                    reverseTransitionDuration:
+                                        const Duration(milliseconds: 200),
+                                    opaque: true,
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) {
+                                      return const FlashcardPresent();
+                                    },
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(0, 1),
+                                          end: Offset.zero,
+                                        ).animate(animation),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Image.asset(
+                                'assets/icons/document.png',
+                                height: 40,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.5),
+                              ),
                             ),
                             const SizedBox(
                               width: 40,

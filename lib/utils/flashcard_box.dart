@@ -38,7 +38,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
           _isEnable = false;
         },
         child: Container(
-          width: 300,
+          height: 300,
           margin: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
@@ -47,7 +47,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
               BoxShadow(
                 blurRadius: 1.5,
                 spreadRadius: 0,
-                offset: const Offset(-4, 4),
+                offset: const Offset(0, 0),
                 color: Colors.black.withOpacity(0.25),
               ),
             ],
