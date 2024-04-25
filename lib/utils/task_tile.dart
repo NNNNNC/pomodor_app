@@ -14,14 +14,23 @@ class task_tile extends StatelessWidget {
     required this.onChanged,
   });
 
+  void createNewTask(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return task_edit_page();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (Context) => const task_edit_page()));
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (Context) => const task_edit_page()));
+          createNewTask(context);
         },
         child: custom_box_2(
           child: Row(

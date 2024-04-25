@@ -17,6 +17,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
   final List taskList = [
     ["lemonade", false],
     ["apple juice", false],
+    ["pineapple", true]
   ];
 
   void clickcheckbox(int index) {
