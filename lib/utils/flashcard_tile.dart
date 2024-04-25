@@ -6,11 +6,18 @@ class flashcard_tile extends StatelessWidget {
 
   final String flashcard_name;
   final int flashcard_count;
+  final int flashCardIndex;
+  final VoidCallback onDelete;
+  final Function(int,String) onUpdate;
 
   const flashcard_tile({
     super.key, 
     required this.flashcard_name, 
-    required this.flashcard_count});
+    required this.flashcard_count, 
+    required this.flashCardIndex, 
+    required this.onDelete, 
+    required this.onUpdate,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,11 @@ class flashcard_tile extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12,right: 12, top: 10),
       child: GestureDetector(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (Context) => flashcard_edit()));
+          Navigator.push(context, MaterialPageRoute(
+            builder: (Context) => flashcard_edit(
+              flashCardIndex: flashCardIndex,
+              onUpdate: onUpdate
+              )));
         },
         child: custom_box(
           child: Column(
@@ -36,6 +47,9 @@ class flashcard_tile extends StatelessWidget {
                          )
                         ),
                       PopupMenuItem(
+                        onTap: () {
+                          onDelete();
+                        },
                         child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)
                         )
                         )

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class FlashcardBox extends StatefulWidget {
   final String cardContent;
   final TextButton flipButton;
+  final Function(String) onUpdateContent;
 
   const FlashcardBox(
-      {Key? key, required this.cardContent, required this.flipButton})
+      {Key? key, required this.cardContent, required this.flipButton, required this.onUpdateContent})
       : super(key: key);
 
   @override
@@ -72,7 +73,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
                       border: InputBorder.none,
                     ),
                     onChanged: (value) {
-                      // Pending
+                      widget.onUpdateContent(value);
                     },
                     focusNode: FocusNode()
                       ..addListener(() {

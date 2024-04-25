@@ -1,17 +1,14 @@
-// import 'package:hive/hive.dart';
+import 'package:hive/hive.dart';
 
-// part 'flashcard_model.g.dart';
+part 'flashcardModel.g.dart';
 
-// @HiveType(typeId: 0, adapterName: 'flashcardAdopter')
-// class flashcardModel extends HiveObject{
-  
-//   @HiveField(0)
-//   String answer;
-//   @HiveField(1)
-//   String question;
+@HiveType(typeId: 0, adapterName: 'flashcardAdapter')
+class Flashcard extends HiveObject {
+  @HiveField(0)
+  String cardSetName;
 
-//   flashcardModel(
-//     this.answer,
-//     this.question
-//     );
-// }
+  @HiveField(1)
+  List<Map<String, String>> cards;
+
+  Flashcard({required this.cardSetName, required this.cards});
+}

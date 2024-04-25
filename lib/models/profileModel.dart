@@ -1,5 +1,3 @@
-
-
 import 'package:hive/hive.dart';
 
 part 'profileModel.g.dart';

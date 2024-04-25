@@ -9,6 +9,8 @@ class profile_tile extends StatelessWidget {
   final int short_break;
   final String white_noise;
   final String ringtone;
+  final int profileIndex;
+  final VoidCallback onDelete;
 
   const profile_tile({
     Key? key,
@@ -17,7 +19,7 @@ class profile_tile extends StatelessWidget {
     required this.long_break,
     required this.short_break,
     required this.white_noise,
-    required this.ringtone,
+    required this.ringtone, required this.onDelete, required this.profileIndex,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,9 @@ class profile_tile extends StatelessWidget {
                          )
                         ),
                       PopupMenuItem(
+                        onTap: (){
+                          onDelete();
+                        },
                         child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)
                         )
                         )

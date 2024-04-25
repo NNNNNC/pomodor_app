@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/utils/profile_tile.dart';
 
 class profile_page extends StatefulWidget {
@@ -38,14 +40,13 @@ class _profile_pageState extends State<profile_page> {
           heroTag: 'profile',
           onPressed: () {
             setState(() {
-              settings.add({
-                'profile_name': 'Profile Name',
-                'focus_duration': 25,
-                'long_break': 20,
-                'short_break': 15,
-                'white_noise': 'Rain',
-                'ringtone': 'Disney',
-              });
+              profileBox.add(profileModel(
+                'Profile Name',
+                25,
+                20,
+                15,
+                'audios/Rain.mp3',
+                'Disney',));
             });
           },
           child: Icon(
@@ -54,16 +55,23 @@ class _profile_pageState extends State<profile_page> {
           ),
         ),
         body: ListView.builder(
-          itemCount: settings.length,
+          itemCount: profileBox.length,
           itemBuilder: (context, index) {
-            final profile = settings[index];
+            var profile = profileBox.getAt(index);
             return profile_tile(
-                profile_name: profile['profile_name'],
-                focus_duration: profile['focust_duration'] ?? 25,
-                long_break: profile['long_break'] ?? 20,
-                short_break: profile['short_break'] ?? 15,
-                white_noise: profile['white_noise'],
-                ringtone: profile['ringtone']);
+                profile_name: profile!.name,
+                focus_duration: profile.focusDuration,
+                long_break: profile.longBreak,
+                short_break: profile.shortBreak,
+                white_noise: profile.whiteNoise,
+                ringtone: profile.ringtone, 
+                onDelete: () {
+                  setState(() {
+                    profileBox.deleteAt(index);
+                  });
+                }, 
+                profileIndex: index,
+                );
           },
         ));
   }

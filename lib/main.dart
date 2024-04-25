@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
@@ -9,20 +10,21 @@ import 'pages/main_page.dart';
 import 'theme/theme.dart';
 
 // Hive Boxes
-//late Box flashcardBox;
+late Box<Flashcard> flashcardBox;
 late Box<profileModel> profileBox;
 
-//const String flashcardBoxName = 'flashcard';
-const String profileBoxName = 'profile';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
 
+  Hive.registerAdapter<Flashcard>(flashcardAdapter());
   Hive.registerAdapter<profileModel>(profileAdapter());
 
-  //flashcardBox = await Hive.openBox(flashcardBoxName);
-  await Hive.openBox<profileModel>(profileBoxName);
+
+  flashcardBox = await Hive.openBox<Flashcard>('flashcard');
+  profileBox = await Hive.openBox<profileModel>('profile');
 
   runApp(
     ChangeNotifierProvider(

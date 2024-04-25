@@ -2,10 +2,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/utils/flashcard_box.dart';
 
 class flashcard_edit extends StatefulWidget {
-  const flashcard_edit({super.key});
+  final int flashCardIndex;
+  final Function(int,String) onUpdate;
+
+  const flashcard_edit({
+    super.key,
+     required this.flashCardIndex, 
+     required this.onUpdate
+     });
 
   @override
   State<flashcard_edit> createState() => _flashcard_editState();
@@ -13,29 +22,13 @@ class flashcard_edit extends StatefulWidget {
 
 class _flashcard_editState extends State<flashcard_edit> {
   final controller = CarouselController();
+
   FlipCardController _controller = FlipCardController();
-  List<String> texts = [
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-  ];
+
   int _currentIndex = 0;
 
   void next() {
-    if (_currentIndex < texts.length - 1) {
+    if (_currentIndex < flashcard.cards.length - 1) {
       setState(() {
         _currentIndex = (_currentIndex + 1);
         controller.nextPage(duration: Duration(milliseconds: 400));
@@ -52,9 +45,22 @@ class _flashcard_editState extends State<flashcard_edit> {
     }
   }
 
-  TextEditingController _cardSetNameController =
-      TextEditingController(text: 'Card Set Name');
+  late TextEditingController _cardSetNameController;
+  late Flashcard flashcard;
   bool _isEnable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    flashcard = flashcardBox.getAt(widget.flashCardIndex)!;
+    _cardSetNameController = TextEditingController(text: flashcard.cardSetName);
+  }
+
+  @override
+  void dispose() {
+    _cardSetNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +69,13 @@ class _flashcard_editState extends State<flashcard_edit> {
           heroTag: 'flashcard edit',
           onPressed: () {
             setState(() {
-              texts.add(
-                  'New Flashcard'); // Add a new question flashcard to the list
-              // someting.add('')
+              // Add a new question and answer flashcard to the list
+              Map<String, String> newCard = {
+                'question': 'New question',
+                'answer': 'New answer',
+              };
+              flashcard.cards.add(newCard);
+              widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
             });
           },
           child: Icon(
@@ -101,7 +111,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                             border: InputBorder.none,
                           ),
                           onChanged: (value) {
-                            _cardSetNameController.text = value;
+                            flashcard.cardSetName = value;
+                            widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
                           },
                           onSubmitted: (value) {
                             setState(() {
@@ -113,6 +124,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                     ),
                     GestureDetector(
                         onTap: () {
+                          flashcard.save();
                           Navigator.pop(context);
                         },
                         child: Icon(
@@ -131,20 +143,23 @@ class _flashcard_editState extends State<flashcard_edit> {
                   Center(
                       child: CarouselSlider.builder(
                           carouselController: controller,
-                          itemCount: texts.length,
+                          itemCount: flashcard.cards.length,
                           itemBuilder: (context, index, realIndex) {
-                            final text = texts[index];
+                            final card = flashcard.cards[index];
+                            final question = card['question'] ?? '';
+                            final answer = card['answer'] ?? '';
                             return FlipCard(
                                 controller: _controller,
                                 direction: FlipDirection.HORIZONTAL,
                                 front: FlashcardBox(
-                                  cardContent: text,
+                                  cardContent: question,
                                   flipButton: TextButton(
                                       onPressed: () {
-                                         _controller.toggleCard();
+                                        _controller.toggleCard();
                                       },
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Text(
                                             'Check Answer ',
@@ -163,15 +178,22 @@ class _flashcard_editState extends State<flashcard_edit> {
                                           ),
                                         ],
                                       )),
+                                  onUpdateContent: (editQuestion) {
+                                    setState(() {
+                                      flashcard.cards[index]['question'] =
+                                          editQuestion;
+                                    });
+                                  },
                                 ),
                                 back: FlashcardBox(
-                                  cardContent: 'Jake Sacay',
+                                  cardContent: answer,
                                   flipButton: TextButton(
                                       onPressed: () {
-                                         _controller.toggleCard();
+                                        _controller.toggleCard();
                                       },
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Text(
                                             'Check Answer ',
@@ -190,6 +212,11 @@ class _flashcard_editState extends State<flashcard_edit> {
                                           ),
                                         ],
                                       )),
+                                  onUpdateContent: (editAnswer) {
+                                    setState(() {
+                                      flashcard.cards[index]['answer'] = editAnswer;
+                                    });
+                                  },
                                 ));
                           },
                           options: CarouselOptions(
@@ -232,12 +259,14 @@ class _flashcard_editState extends State<flashcard_edit> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          if (texts.length > 1) {
+                          if (flashcard.cards.length > 1) {
                             setState(() {
-                              texts.removeLast();
-                              _currentIndex = (_currentIndex >= texts.length)
-                                  ? texts.length - 1
-                                  : _currentIndex;
+                              flashcard.cards.removeLast();
+                              _currentIndex =
+                                  (_currentIndex >= flashcard.cards.length)
+                                      ? flashcard.cards.length - 1
+                                      : _currentIndex;
+                              widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
                             });
                           }
                         },
@@ -250,7 +279,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                       width: 300,
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
-                        value: (_currentIndex + 1) / texts.length,
+                        value: (_currentIndex + 1) / flashcard.cards.length,
                         minHeight: 5,
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -268,7 +297,9 @@ class _flashcard_editState extends State<flashcard_edit> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '${_currentIndex + 1}' + '/' + texts.length.toString(),
+                      '${_currentIndex + 1}' +
+                          '/' +
+                          flashcard.cards.length.toString(),
                       style: TextStyle(fontSize: 14),
                     ),
                   ],
@@ -277,6 +308,5 @@ class _flashcard_editState extends State<flashcard_edit> {
             ],
           ),
         ));
-
   }
 }
