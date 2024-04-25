@@ -1,89 +1,59 @@
 import 'package:flutter/material.dart';
 
-class TopicDialog extends StatefulWidget {
-  const TopicDialog({
-    super.key,
-  });
+class CustomDialog extends StatefulWidget {
+  final List<String> listofItems;
+
+  const CustomDialog({
+    Key? key,
+    required this.listofItems,
+  }) : super(key: key);
 
   @override
-  State<TopicDialog> createState() => _TopicDialogState();
+  State<CustomDialog> createState() => _CustomDialogState();
 }
 
-class _TopicDialogState extends State<TopicDialog> {
-  String? _selectedTopic = "";
+class _CustomDialogState extends State<CustomDialog> {
+  String? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        width: 250,
-        height: 300,
-        child: Material(
-          child: Column(
-            children: [
-              RadioListTile(
-                title: Text(
-                  'Topic 1',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[200]),
-                ),
-                value: 'topic_1',
-                groupValue: _selectedTopic,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedTopic = value;
-                  });
-                  Navigator.of(context).pop();
-                },
+    return AlertDialog(
+      title: Text('Select Topic', style: Theme.of(context).textTheme.titleLarge,),
+      content: SingleChildScrollView(
+        child: Column(
+          children: widget.listofItems.map((topic) {
+            return RadioListTile(
+              title: Text(
+                topic,
+                style: TextStyle(fontSize: 16),
               ),
-              RadioListTile(
-                title: Text(
-                  'Topic 2',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[200]),
-                ),
-                value: 'topic_2',
-                groupValue: _selectedTopic,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedTopic = value;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              RadioListTile(
-                title: Text(
-                  'Topic 3',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[200]),
-                ),
-                value: 'topic_4',
-                groupValue: _selectedTopic,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedTopic = value;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              RadioListTile(
-                title: Text(
-                  'Topic 4',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[200]),
-                ),
-                value: 'topic_4',
-                groupValue: _selectedTopic,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedTopic = value;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
+              value: topic,
+              groupValue: _selectedItem,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedItem = value;
+                });
+              },
+              activeColor: Theme.of(context).colorScheme.secondary,
+            );
+          }).toList(),
         ),
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(_selectedItem);
+          },
+          child: Text(
+              'OK',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        ),
+      ],
     );
   }
 }

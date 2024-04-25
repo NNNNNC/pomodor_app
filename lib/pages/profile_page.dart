@@ -11,25 +11,6 @@ class profile_page extends StatefulWidget {
 }
 
 class _profile_pageState extends State<profile_page> {
-  List<Map<String, dynamic>> settings = [
-    {
-      'profile_name': 'Profile Name',
-      'focus_duration': 25,
-      'long_break': 20,
-      'short_break': 15,
-      'white_noise': 'Rain',
-      'ringtone': 'Disney',
-    },
-    {
-      'profile_name': 'Profile Name 2',
-      'focus_duration': 30,
-      'long_break': 25,
-      'short_break': 10,
-      'white_noise': 'Ocean',
-      'ringtone': 'Classical',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,12 +22,13 @@ class _profile_pageState extends State<profile_page> {
           onPressed: () {
             setState(() {
               profileBox.add(profileModel(
-                'Profile Name',
+                'John Doe',
                 25,
-                20,
+                5,
                 15,
-                'audios/Rain.mp3',
-                'Disney',));
+                'audio/Rain.mp3',
+                'audio/ringtone_5.mp3',
+              ));
             });
           },
           child: Icon(
@@ -59,19 +41,19 @@ class _profile_pageState extends State<profile_page> {
           itemBuilder: (context, index) {
             var profile = profileBox.getAt(index);
             return profile_tile(
-                profile_name: profile!.name,
-                focus_duration: profile.focusDuration,
-                long_break: profile.longBreak,
-                short_break: profile.shortBreak,
-                white_noise: profile.whiteNoise,
-                ringtone: profile.ringtone, 
-                onDelete: () {
-                  setState(() {
-                    profileBox.deleteAt(index);
-                  });
-                }, 
-                profileIndex: index,
-                );
+              profile_name: profile!.name,
+              focus_duration: profile.focusDuration,
+              long_break: profile.longBreak,
+              short_break: profile.shortBreak,
+              white_noise: profile.whiteNoise,
+              ringtone: profile.ringtone,
+              onDelete: () {
+                setState(() {
+                  profileBox.deleteAt(index);
+                });
+              },
+              profileIndex: index,
+            );
           },
         ));
   }

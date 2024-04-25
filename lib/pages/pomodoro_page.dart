@@ -224,12 +224,22 @@ class _PomodoroPageState extends State<PomodoroPage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const TopicDialog();
-                          },
-                        ),
+                        onPressed: () {
+                          showDialog<void>(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialog(
+                                listofItems: [
+                                  'Topic 1',
+                                  'Topic 2',
+                                  'Topic 3',
+                                  'Topic 4',
+                                ],
+                              );
+                            },
+                          );
+                        },
                         child: Text(
                           'SELECT TOPIC',
                           style: TextStyle(

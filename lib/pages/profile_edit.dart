@@ -1,51 +1,71 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/utils/audio_dialog.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_edit extends StatefulWidget {
-  const profile_edit({Key? key}) : super(key: key);
+  final int profileIndex;
+  const profile_edit({Key? key, required this.profileIndex}) : super(key: key);
   @override
   State<profile_edit> createState() => _profile_editState();
 }
 
 class _profile_editState extends State<profile_edit> {
-  String? selectedAudioPath;
-  final Map<String, String> audioItems = {
-    'audios/Dryer.mp3': 'Dryer',
-    'audios/Fan.mp3': 'Fan',
-    'audios/Rain.mp3': 'Rain',
-    'audios/Train.mp3': 'Train',
-    'audios/Waves.mp3': 'Waves',
-  };
+  final Map<String, String> ringtoneMap = {
+  'Ringtone 1': 'audio/ringtone_1.mp3',
+  'Ringtone 2': 'audio/ringtone_2.mp3',
+  'Ringtone 3': 'audio/ringtone_3.mp3',
+  'Ringtone 4': 'audio/ringtone_4.mp3',
+  'Ringtone 5': 'audio/ringtone_5.mp3',
+  // Add more entries for other audio files
+};
 
-  final player = AudioPlayer();
+  final Map<String, String> whiteNoiseMap = {
+  'Dryer': 'audio/Dryer.mp3',
+  'Fan': 'audio/Fan.mp3',
+  'Rain': 'audio/Rain.mp3',
+  'Train': 'audio/Train.mp3',
+  'Waves': 'audio/Waves.mp3',
+  // Add more entries for other audio files
+};
 
-  Future<void> playSound(String audioPath) async{
-    await player.play(AssetSource(audioPath));
-  }
+  // void getAudioName(String path, Map<String, String> itemMap){
+  //   Map<String, String> reverseMap = itemMap.map((key, value) => MapEntry(value, key));
+  //   print(reverseMap);
+  // }
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _focusController = TextEditingController();
-  TextEditingController _shortBreakController = TextEditingController();
-  TextEditingController _longBreakController = TextEditingController();
-  TextEditingController _WhiteNoiseController = TextEditingController();
 
-  String? dropdownValue;
-  List<String> items = [
-    '10',
-    '20',
-    '30',
-    '40',
-    '50',
-  ];
-
+  late TextEditingController _nameController;
+  late TextEditingController _focusController;
+  late TextEditingController _shortBreakController;
+  late TextEditingController _longBreakController;
+  late TextEditingController _whiteNoiseController;
+  late TextEditingController _ringtoneController;
+  late profileModel profile;
   @override
   void initState() {
     super.initState();
-    dropdownValue;
-    selectedAudioPath;
+    profile = profileBox.getAt(widget.profileIndex)!;
+    _nameController = TextEditingController(text: profile.name);
+    _focusController = TextEditingController(text: profile.focusDuration.toString());
+    _shortBreakController = TextEditingController(text: profile.shortBreak.toString());
+    _longBreakController = TextEditingController(text: profile.longBreak.toString());
+    _whiteNoiseController = TextEditingController(text: profile.whiteNoise);
+    _ringtoneController = TextEditingController(text: profile.ringtone);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _focusController.dispose();
+    _shortBreakController.dispose();
+    _longBreakController.dispose();
+    _whiteNoiseController.dispose();
+    _ringtoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,6 +78,7 @@ class _profile_editState extends State<profile_edit> {
               padding: const EdgeInsets.only(right: 25),
               child: IconButton(
                   onPressed: () {
+                    profile.save();
                     Navigator.pop(context);
                   },
                   icon: Icon(
@@ -90,25 +111,30 @@ class _profile_editState extends State<profile_edit> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Name:',
+                        'Name :',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(
                         width: 180,
                         child: TextField(
-                          cursorColor: Color.fromRGBO(192, 192, 192, 1),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Color.fromRGBO(192, 192, 192, 1),
-                            )),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
+                            controller: _nameController,
+                            cursorColor: Color.fromRGBO(192, 192, 192, 1),
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
                                 color: Color.fromRGBO(192, 192, 192, 1),
+                              )),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(192, 192, 192, 1),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                            onChanged: (value) {
+                              setState(() {
+                                profile.name = value;
+                              });
+                            }),
                       ),
                     ],
                   ),
@@ -135,13 +161,23 @@ class _profile_editState extends State<profile_edit> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Focus Duration:',
+                          'Focus Duration :',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         SizedBox(
                           child: Row(
                             children: [
-                              SizedBox(child: customTextField(items)),
+                              SizedBox(
+                                child: customTextField(
+                                  items: ['5','10', '15','20','25', '30'],
+                                  controller: _focusController,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      profile.focusDuration = int.parse(value!);
+                                    });
+                                  },
+                                ),
+                              ),
                               Text(' Minutes',
                                   style:
                                       Theme.of(context).textTheme.titleMedium),
@@ -158,12 +194,22 @@ class _profile_editState extends State<profile_edit> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Long Break Length:',
+                          'Long Break Length :',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Row(
                           children: [
-                            SizedBox(child: customTextField(items)),
+                            SizedBox(
+                              child: customTextField(
+                                items: ['5','10', '15','20','25', '30'],
+                                controller: _longBreakController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    profile.longBreak = int.parse(value!);
+                                  });
+                                },
+                              ),
+                            ),
                             Text(' Minutes',
                                 style: Theme.of(context).textTheme.titleMedium),
                           ],
@@ -178,12 +224,21 @@ class _profile_editState extends State<profile_edit> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Short Break Length:',
+                          'Short Break Length :',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Row(
                           children: [
-                            SizedBox(child: customTextField(items)),
+                            SizedBox(
+                              child: customTextField(
+                                items: ['5','10', '15','20','25', '30'],
+                                controller: _shortBreakController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    profile.shortBreak = int.parse(value!);
+                                  });
+                                },
+                              ),),
                             Text(' Minutes',
                                 style: Theme.of(context).textTheme.titleMedium),
                           ],
@@ -207,46 +262,72 @@ class _profile_editState extends State<profile_edit> {
               ),
               Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                  child: custom_box(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'White Noise:',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        DropdownButton<String>(
-                          hint: Text('Select an audio'),
-                          value: selectedAudioPath,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedAudioPath = newValue;
-                              playSound(selectedAudioPath!);
-                            });
-                          },
-                          items: audioItems.entries
-                              .map<DropdownMenuItem<String>>((entry) {
-                            return DropdownMenuItem<String>(
-                              value: entry.key,
-                              child: Text(entry.value),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog<String>(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) => audioDialog(audioMap: whiteNoiseMap, controller: _whiteNoiseController,),
+                      ).then((selectedValue) {
+                        _whiteNoiseController.text = selectedValue!;
+                        profile.whiteNoise = _whiteNoiseController.text;
+                      });
+                    },
+                    child: custom_box(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'White Noise :',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(_whiteNoiseController.text,
+                                  style: Theme.of(context).textTheme.bodySmall)
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )),
               Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                  child: custom_box(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Ringtone:',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        customTextField(items)
-                      ],
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog<String>(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) => audioDialog(audioMap: ringtoneMap, controller: _ringtoneController,),
+                      ).then((selectedValue) {
+                        _ringtoneController.text = selectedValue!;
+                        profile.ringtone = _ringtoneController.text;
+                      });
+                    },
+                    child: custom_box(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Ringtone :',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(_ringtoneController.text,
+                                  style: Theme.of(context).textTheme.bodySmall)
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )),
             ],
@@ -254,9 +335,14 @@ class _profile_editState extends State<profile_edit> {
         ));
   }
 
-  Widget customTextField(List<String> items) {
+  Widget customTextField({
+    required List<String> items,
+    required TextEditingController controller,
+    required Function(String?) onChanged,
+  }) {
+    String? selectedValue = items.contains(controller.text) ? controller.text : null;
     return DropdownButton<String>(
-      value: dropdownValue,
+      value: selectedValue,
       icon: const Icon(Icons.keyboard_arrow_down),
       items: items.map((item) {
         return DropdownMenuItem(
@@ -264,10 +350,10 @@ class _profile_editState extends State<profile_edit> {
           child: Text(item),
         );
       }).toList(),
-      onChanged: (item) {
-        setState(() {
-          dropdownValue = item;
-        });
+      onChanged: (value) {
+        onChanged(value!);
+        // Updadate controller value
+        controller.text = value;
       },
     );
   }
