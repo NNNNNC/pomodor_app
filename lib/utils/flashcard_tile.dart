@@ -3,7 +3,6 @@ import 'package:pomodoro_app/pages/flashcard_edit.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
 class flashcard_tile extends StatelessWidget {
-
   final String flashcard_name;
   final int flashcard_count;
   final int flashCardIndex;
@@ -22,7 +21,7 @@ class flashcard_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12,right: 12, top: 10),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
       child: GestureDetector(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(
@@ -38,7 +37,8 @@ class flashcard_tile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(flashcard_name, style: Theme.of(context).textTheme.titleLarge),
+                  Text(flashcard_name,
+                      style: Theme.of(context).textTheme.titleLarge),
                   PopupMenuButton(
                     color: Color.fromRGBO(48, 48, 48, 0.9),
                     itemBuilder: (context) => [
@@ -56,10 +56,11 @@ class flashcard_tile extends StatelessWidget {
                     ])
                 ],
               ),
-              Text(flashcard_count.toString()+' Flashcards')
+              Text('$flashcard_count Flashcards')
             ],
-          ),),
+          ),
+        ),
       ),
-      );
+    );
   }
 }

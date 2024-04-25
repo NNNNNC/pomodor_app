@@ -17,11 +17,11 @@ class task_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (Context) => task_edit_page()));
+              MaterialPageRoute(builder: (Context) => const task_edit_page()));
         },
         child: custom_box_2(
           child: Row(
@@ -29,14 +29,18 @@ class task_tile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Checkbox(value: taskcompleted, onChanged: onChanged),
+                  Checkbox(
+                    value: taskcompleted,
+                    onChanged: onChanged,
+                    activeColor: Colors.white,
+                  ),
                   Text(
                     task_name,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 width: 128,
               ),
               Icon(
