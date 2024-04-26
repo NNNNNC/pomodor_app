@@ -20,11 +20,8 @@ ThemeData app_theme = ThemeData(
           fontSize: 16,
           color: Color.fromRGBO(158, 158, 158, 1)),
       bodyMedium: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Color.fromRGBO(192, 192, 192, 1)),
-      bodySmall: TextStyle(
-          color: Color.fromRGBO(158, 158, 158, 1))
-          ),
+          fontWeight: FontWeight.bold, color: Color.fromRGBO(192, 192, 192, 1)),
+      bodySmall: TextStyle(color: Color.fromRGBO(158, 158, 158, 1))),
   // floating button style
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Color.fromRGBO(172, 198, 255, 1),
@@ -40,4 +37,9 @@ ThemeData app_theme = ThemeData(
           color: Color.fromRGBO(192, 192, 192, 1)),
       backgroundColor: Color.fromRGBO(21, 21, 21, 1),
       elevation: 8.0),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.white,
+    selectionColor: Colors.red,
+    selectionHandleColor: Colors.red,
+  ),
 );

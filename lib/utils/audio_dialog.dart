@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class audioDialog extends StatefulWidget {
+  final bool whiteNoise;
+  final bool ringTone;
   final Map<String, String> audioMap;
   final TextEditingController controller;
   final Function(String) onAudioSelected;
 
-  const audioDialog(
-      {super.key, required this.audioMap, required this.controller, required this.onAudioSelected});
+  const audioDialog({
+    super.key,
+    required this.audioMap,
+    required this.controller,
+    required this.onAudioSelected,
+    required this.whiteNoise,
+    required this.ringTone,
+  });
 
   @override
   State<audioDialog> createState() => _audioDialogState();
@@ -33,7 +41,11 @@ class _audioDialogState extends State<audioDialog> {
     return AlertDialog(
       contentPadding: const EdgeInsets.only(left: 10.0, top: 18.0),
       title: Text(
-        'Select Topic',
+        widget.whiteNoise
+            ? 'Select White Noise'
+            : widget.ringTone
+                ? 'Select Ringtone'
+                : 'Select Audio',
         style: Theme.of(context).textTheme.titleLarge,
       ),
       content: SingleChildScrollView(

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class task_edit_page extends StatelessWidget {
-  const task_edit_page({super.key});
+class TaskAdd extends StatelessWidget {
+  final controller;
+  VoidCallback onPressed;
+
+  TaskAdd({
+    super.key,
+    required this.controller,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -10,12 +17,15 @@ class task_edit_page extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            decoration: InputDecoration(
+            maxLength: 27,
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            maxLines: 2,
+            decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: "Add new task",
             ),
           ),
-          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -29,9 +39,7 @@ class task_edit_page extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  // Handle save action here
-                },
+                onPressed: onPressed,
                 icon: Icon(
                   Icons.save,
                   color: Theme.of(context).colorScheme.secondary,

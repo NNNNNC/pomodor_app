@@ -30,18 +30,22 @@ class topic_tile extends StatelessWidget {
                     Text(topic_name,
                         style: Theme.of(context).textTheme.titleLarge),
                     PopupMenuButton(
-                        color: Color.fromRGBO(48, 48, 48, 0.9),
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                  child: Text(
-                                'Edit',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
-                              PopupMenuItem(
-                                  child: Text('Delete',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))
-                            ])
+                      color: const Color.fromRGBO(48, 48, 48, 0.9),
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
                 Row(

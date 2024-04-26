@@ -8,9 +8,11 @@ import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_edit extends StatefulWidget {
   final int profileIndex;
-  final Function(String, int,int,int) onUpdate;
+  final Function(String, int, int, int) onUpdate;
 
-  const profile_edit({Key? key, required this.profileIndex, required this.onUpdate}) : super(key: key);
+  const profile_edit(
+      {Key? key, required this.profileIndex, required this.onUpdate})
+      : super(key: key);
   @override
   State<profile_edit> createState() => _profile_editState();
 }
@@ -72,6 +74,9 @@ class _profile_editState extends State<profile_edit> {
     _ringtoneController.dispose();
     super.dispose();
   }
+
+  bool selectAudio = false;
+  bool selectRingtone = false;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +146,11 @@ class _profile_editState extends State<profile_edit> {
                               onChanged: (value) {
                                 setState(() {
                                   profile.name = value;
-                                  widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
+                                  widget.onUpdate(
+                                      profile.name,
+                                      profile.focusDuration,
+                                      profile.longBreak,
+                                      profile.shortBreak);
                                 });
                               }),
                         ),
@@ -183,7 +192,11 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.focusDuration = int.parse(value!);
-                                      widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
+                                      widget.onUpdate(
+                                          profile.name,
+                                          profile.focusDuration,
+                                          profile.longBreak,
+                                          profile.shortBreak);
                                     });
                                   },
                                 ),
@@ -218,7 +231,11 @@ class _profile_editState extends State<profile_edit> {
                                 onChanged: (value) {
                                   setState(() {
                                     profile.longBreak = int.parse(value!);
-                                    widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
+                                    widget.onUpdate(
+                                        profile.name,
+                                        profile.focusDuration,
+                                        profile.longBreak,
+                                        profile.shortBreak);
                                   });
                                 },
                               ),
@@ -252,7 +269,11 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.shortBreak = int.parse(value!);
-                                      widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
+                                      widget.onUpdate(
+                                          profile.name,
+                                          profile.focusDuration,
+                                          profile.longBreak,
+                                          profile.shortBreak);
                                     });
                                   },
                                 ),
@@ -283,18 +304,22 @@ class _profile_editState extends State<profile_edit> {
                   padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
                   child: GestureDetector(
                     onTap: () {
+                      selectAudio = true;
                       showDialog<String>(
                         barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) => audioDialog(
                           audioMap: whiteNoiseMap,
                           controller: _whiteNoiseController,
+                          whiteNoise: selectAudio,
+                          ringTone: selectRingtone,
                           onAudioSelected: (selectedValue) {
                             Navigator.of(context).pop(selectedValue);
                           },
                         ),
                       ).then((selectedValue) {
                         setState(() {
+                          selectAudio = false;
                           _whiteNoiseController.text = selectedValue!;
                           profile.whiteNoise = _whiteNoiseController.text;
                         });
@@ -335,13 +360,17 @@ class _profile_editState extends State<profile_edit> {
                     ),
                     child: GestureDetector(
                       onTap: () {
+                        selectRingtone = true;
                         showDialog<String>(
                           barrierDismissible: false,
                           context: context,
                           builder: (BuildContext context) => audioDialog(
+                            whiteNoise: selectAudio,
+                            ringTone: selectRingtone,
                             audioMap: ringtoneMap,
                             controller: _ringtoneController,
                             onAudioSelected: (selectedValue) {
+                              selectRingtone = false;
                               Navigator.of(context).pop(selectedValue);
                             },
                           ),
@@ -363,14 +392,14 @@ class _profile_editState extends State<profile_edit> {
                                   'Ringtone',
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 8,
                                 ),
                                 Text(
-                                    getAudioName(
-                                        _ringtoneController.text, ringtoneMap)!,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall)
+                                  getAudioName(
+                                      _ringtoneController.text, ringtoneMap)!,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                )
                               ],
                             ),
                           ],

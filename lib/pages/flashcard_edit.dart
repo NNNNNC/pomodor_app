@@ -100,11 +100,11 @@ class _flashcard_editState extends State<flashcard_edit> {
                           });
                         },
                         child: TextField(
-                          cursorColor: Color.fromRGBO(192, 192, 192, 1),
+                          cursorColor: const Color.fromRGBO(192, 192, 192, 1),
                           controller: _cardSetNameController,
                           enabled: _isEnable,
                           style: Theme.of(context).textTheme.titleLarge,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                           ),
                           onChanged: (value) {

@@ -7,28 +7,28 @@ class flashcard_tile extends StatelessWidget {
   final int flashcard_count;
   final int flashCardIndex;
   final VoidCallback onDelete;
-  final Function(int,String) onUpdate;
+  final Function(int, String) onUpdate;
 
   const flashcard_tile({
-    super.key, 
-    required this.flashcard_name, 
-    required this.flashcard_count, 
-    required this.flashCardIndex, 
-    required this.onDelete, 
+    super.key,
+    required this.flashcard_name,
+    required this.flashcard_count,
+    required this.flashCardIndex,
+    required this.onDelete,
     required this.onUpdate,
-    });
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
       child: GestureDetector(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(
-            builder: (Context) => flashcard_edit(
-              flashCardIndex: flashCardIndex,
-              onUpdate: onUpdate
-              )));
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (Context) => flashcard_edit(
+                      flashCardIndex: flashCardIndex, onUpdate: onUpdate)));
         },
         child: custom_box(
           child: Column(
@@ -40,20 +40,21 @@ class flashcard_tile extends StatelessWidget {
                   Text(flashcard_name,
                       style: Theme.of(context).textTheme.titleLarge),
                   PopupMenuButton(
-                    color: Color.fromRGBO(48, 48, 48, 0.9),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold),
-                         )
-                        ),
-                      PopupMenuItem(
-                        onTap: () {
-                          onDelete();
-                        },
-                        child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)
-                        )
-                        )
-                    ])
+                      color: Color.fromRGBO(48, 48, 48, 0.9),
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                                child: Text(
+                              'Edit',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                            PopupMenuItem(
+                                onTap: () {
+                                  onDelete();
+                                },
+                                child: Text('Delete',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)))
+                          ])
                 ],
               ),
               Text('$flashcard_count Flashcards')
