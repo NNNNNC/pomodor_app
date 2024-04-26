@@ -8,13 +8,10 @@ import 'package:pomodoro_app/utils/flashcard_box.dart';
 
 class flashcard_edit extends StatefulWidget {
   final int flashCardIndex;
-  final Function(int,String) onUpdate;
+  final Function(int, String) onUpdate;
 
-  const flashcard_edit({
-    super.key,
-     required this.flashCardIndex, 
-     required this.onUpdate
-     });
+  const flashcard_edit(
+      {super.key, required this.flashCardIndex, required this.onUpdate});
 
   @override
   State<flashcard_edit> createState() => _flashcard_editState();
@@ -78,15 +75,15 @@ class _flashcard_editState extends State<flashcard_edit> {
               widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
             });
           },
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 45,
           ),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            top: 90,
-            bottom: 50,
+          padding: const EdgeInsets.only(
+            top: 50,
+            bottom: 0,
           ),
           child: Column(
             children: [
@@ -112,7 +109,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                           ),
                           onChanged: (value) {
                             flashcard.cardSetName = value;
-                            widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+                            widget.onUpdate(
+                                flashcard.cards.length, flashcard.cardSetName);
                           },
                           onSubmitted: (value) {
                             setState(() {
@@ -214,7 +212,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                                       )),
                                   onUpdateContent: (editAnswer) {
                                     setState(() {
-                                      flashcard.cards[index]['answer'] = editAnswer;
+                                      flashcard.cards[index]['answer'] =
+                                          editAnswer;
                                     });
                                   },
                                 ));
@@ -254,8 +253,10 @@ class _flashcard_editState extends State<flashcard_edit> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 30, left: 20),
+                padding: const EdgeInsets.only(right: 30, top: 20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                         onPressed: () {
@@ -266,17 +267,19 @@ class _flashcard_editState extends State<flashcard_edit> {
                                   (_currentIndex >= flashcard.cards.length)
                                       ? flashcard.cards.length - 1
                                       : _currentIndex;
-                              widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+                              widget.onUpdate(flashcard.cards.length,
+                                  flashcard.cardSetName);
                             });
                           }
                         },
                         icon: Icon(
+                          size: 30,
                           Icons.close,
                           color: Theme.of(context).colorScheme.secondary,
                         )),
                     SizedBox(
                       height: 5,
-                      width: 300,
+                      width: 280,
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
                         value: (_currentIndex + 1) / flashcard.cards.length,

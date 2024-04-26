@@ -16,8 +16,7 @@ class _custom_boxState extends State<custom_box> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
-      child: widget.child,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(10),
@@ -25,11 +24,12 @@ class _custom_boxState extends State<custom_box> {
           BoxShadow(
             blurRadius: 1.5,
             spreadRadius: 0,
-            offset: const Offset(-4, 4),
+            offset: const Offset(0, 2),
             color: Colors.black.withOpacity(0.25),
           ),
         ],
       ),
+      child: widget.child,
     );
   }
 }

@@ -229,12 +229,14 @@ class _PomodoroPageState extends State<PomodoroPage>
                             barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) {
-                              return CustomDialog(
+                              return const CustomDialog(
                                 listofItems: [
+                                  'None',
                                   'Topic 1',
                                   'Topic 2',
                                   'Topic 3',
                                   'Topic 4',
+                                  'Topic 5',
                                 ],
                               );
                             },

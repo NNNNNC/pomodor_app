@@ -5,9 +5,12 @@ class FlashcardBox extends StatefulWidget {
   final TextButton flipButton;
   final Function(String) onUpdateContent;
 
-  const FlashcardBox(
-      {Key? key, required this.cardContent, required this.flipButton, required this.onUpdateContent})
-      : super(key: key);
+  const FlashcardBox({
+    super.key,
+    required this.cardContent,
+    required this.flipButton,
+    required this.onUpdateContent,
+  });
 
   @override
   State<FlashcardBox> createState() => _FlashcardBoxState();

@@ -52,7 +52,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
             padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
@@ -79,7 +79,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                         controller: _topicController,
                         enabled: _isEnabled,
                         style: Theme.of(context).textTheme.bodyLarge,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                         ),
                         onChanged: (value) {
@@ -98,10 +98,10 @@ class _topic_edit_pageState extends State<topic_edit_page> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30, left: 10, bottom: 5),
+            padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
@@ -128,10 +128,10 @@ class _topic_edit_pageState extends State<topic_edit_page> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30, left: 10, bottom: 5),
+            padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Text(
@@ -159,7 +159,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                             controller: _descriptionController,
                             enabled: _isEnabled,
                             style: Theme.of(context).textTheme.bodyLarge,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                             ),
                             onChanged: (value) {
@@ -189,7 +189,8 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                           controller: _descriptionController,
                           enabled: _isEnabled,
                           style: Theme.of(context).textTheme.bodyLarge,
-                          decoration: InputDecoration(border: InputBorder.none),
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
                           onChanged: (value) {
                             _descriptionController.text = value;
                           },
@@ -209,19 +210,18 @@ class _topic_edit_pageState extends State<topic_edit_page> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30, left: 10, bottom: 5),
+            padding: const EdgeInsets.only(left: 15.0, right: 8.0, top: 15.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 5,
-                ),
                 Text(
                   'TASK',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                SizedBox(
-                  width: 300,
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.add,
+                      size: 24, color: Theme.of(context).colorScheme.secondary),
                 ),
               ],
             ),
@@ -229,24 +229,28 @@ class _topic_edit_pageState extends State<topic_edit_page> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                padding: const EdgeInsets.only(
+                  right: 10,
+                  left: 10,
+                  bottom: 8.0,
+                ),
                 child: custom_box(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(),
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.add,
-                                size: 30,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ))
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     const SizedBox(),
+                      //     IconButton(
+                      //         onPressed: () {},
+                      //         icon: Icon(
+                      //           Icons.add,
+                      //           size: 30,
+                      //           color: Theme.of(context).colorScheme.secondary,
+                      //         ))
+                      //   ],
+                      // ),
                       for (int i = 0; i < taskList.length; i++)
                         task_tile(
                           task_name: taskList[i][0],

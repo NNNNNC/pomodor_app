@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/pages/flashcard_page.dart';
 import 'package:pomodoro_app/pages/pomodoro_page.dart';
@@ -6,75 +7,78 @@ import 'package:pomodoro_app/pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
 
-class Mainpage extends StatefulWidget {
-  const Mainpage({super.key});
-
-  @override
-  State<Mainpage> createState() => _MainpageState();
-}
-
-class _MainpageState extends State<Mainpage> {
-  bool isBottomNavBarVisible = true;
-  int currentIndex = 0;
-  final screens = const [
-    PomodoroPage(),
-    flashcard_page(),
-    topic_page(),
-    profile_page(),
-  ];
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BottomBarVisibility>(
-      builder: (context, value, child) => Scaffold(
-        body: IndexedStack(
-          index: currentIndex,
-          children: screens,
+      builder: (context, value, child) => DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          bottomNavigationBar: value.isVisible ? bottomBar(context) : null,
+          body: const TabBarView(
+            children: [
+              PomodoroPage(),
+              flashcard_page(),
+              topic_page(),
+              profile_page(),
+            ],
+          ),
         ),
-        bottomNavigationBar: value.isVisible
-            ? BottomNavigationBar(
-                currentIndex: currentIndex,
-                onTap: (value) => setState(() => currentIndex = value),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Container(
-                      height: 30,
-                      child: Image.asset(
-                        'assets/icons/pie-chart.png',
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    label: 'Pomodoro',
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Container(
-                        height: 30,
-                        child: Image.asset(
-                          'assets/icons/document.png',
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      label: 'Flash Card'),
-                  BottomNavigationBarItem(
-                      icon: Container(
-                        height: 30,
-                        child: Image.asset(
-                          'assets/icons/bill.png',
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      label: 'Topics'),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.person_outlined,
-                      color: Theme.of(context).colorScheme.secondary,
-                      size: 35,
-                    ),
-                    label: 'Profile',
-                  ),
-                ],
-              )
-            : null,
+      ),
+    );
+  }
+
+  Widget bottomBar(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      ),
+      child: TabBar(
+        tabAlignment: TabAlignment.fill,
+        indicator: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              width: 2.0,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ),
+        indicatorColor: Theme.of(context).colorScheme.secondary,
+        labelColor: Theme.of(context).colorScheme.secondary,
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+        tabs: const [
+          Tab(
+            text: 'Pomodoro',
+            icon: ImageIcon(
+              AssetImage('assets/icons/pie-chart.png'),
+              size: 25,
+            ),
+          ),
+          Tab(
+            text: 'Flashcard',
+            icon: ImageIcon(
+              AssetImage('assets/icons/document.png'),
+              size: 25,
+            ),
+          ),
+          Tab(
+            text: 'Topics',
+            icon: ImageIcon(
+              AssetImage('assets/icons/bill.png'),
+              size: 25,
+            ),
+          ),
+          Tab(
+            text: 'Profile',
+            icon: Icon(
+              Icons.person,
+              size: 25,
+            ),
+          ),
+        ],
       ),
     );
   }

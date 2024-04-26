@@ -18,14 +18,18 @@ class _CustomDialogState extends State<CustomDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Select Topic', style: Theme.of(context).textTheme.titleLarge,),
+      contentPadding: const EdgeInsets.only(left: 10.0, top: 18.0),
+      title: Text(
+        'Select Topic',
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
       content: SingleChildScrollView(
         child: Column(
           children: widget.listofItems.map((topic) {
             return RadioListTile(
               title: Text(
                 topic,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 18),
               ),
               value: topic,
               groupValue: _selectedItem,
@@ -45,13 +49,13 @@ class _CustomDialogState extends State<CustomDialog> {
             Navigator.of(context).pop(_selectedItem);
           },
           child: Text(
-              'OK',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            'DONE',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
+          ),
         ),
       ],
     );
