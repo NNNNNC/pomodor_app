@@ -11,7 +11,7 @@ class profile_tile extends StatelessWidget {
   final String ringtone;
   final int profileIndex;
   final VoidCallback onDelete;
-  final Function(String, int,int,int) onUpdate;
+  final Function(String, int,int,int,String,String) onUpdate;
 
   const profile_tile({
     Key? key,
