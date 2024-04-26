@@ -8,7 +8,9 @@ import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_edit extends StatefulWidget {
   final int profileIndex;
-  const profile_edit({Key? key, required this.profileIndex}) : super(key: key);
+  final Function(String, int,int,int) onUpdate;
+
+  const profile_edit({Key? key, required this.profileIndex, required this.onUpdate}) : super(key: key);
   @override
   State<profile_edit> createState() => _profile_editState();
 }
@@ -32,10 +34,11 @@ class _profile_editState extends State<profile_edit> {
     // Add more entries for other audio files
   };
 
-  // void getAudioName(String path, Map<String, String> itemMap){
-  //   Map<String, String> reverseMap = itemMap.map((key, value) => MapEntry(value, key));
-  //   print(reverseMap);
-  // }
+  String? getAudioName(String path, Map<String, String> originalMap) {
+    Map<String, String> reverseMap =
+        originalMap.map((key, value) => MapEntry(value, key));
+    return reverseMap[path];
+  }
 
   late TextEditingController _nameController;
   late TextEditingController _focusController;
@@ -138,6 +141,7 @@ class _profile_editState extends State<profile_edit> {
                               onChanged: (value) {
                                 setState(() {
                                   profile.name = value;
+                                  widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
                                 });
                               }),
                         ),
@@ -179,6 +183,7 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.focusDuration = int.parse(value!);
+                                      widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
                                     });
                                   },
                                 ),
@@ -213,6 +218,7 @@ class _profile_editState extends State<profile_edit> {
                                 onChanged: (value) {
                                   setState(() {
                                     profile.longBreak = int.parse(value!);
+                                    widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
                                   });
                                 },
                               ),
@@ -246,6 +252,7 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.shortBreak = int.parse(value!);
+                                      widget.onUpdate(profile.name,profile.focusDuration,profile.longBreak,profile.shortBreak);
                                     });
                                   },
                                 ),
@@ -282,10 +289,15 @@ class _profile_editState extends State<profile_edit> {
                         builder: (BuildContext context) => audioDialog(
                           audioMap: whiteNoiseMap,
                           controller: _whiteNoiseController,
+                          onAudioSelected: (selectedValue) {
+                            Navigator.of(context).pop(selectedValue);
+                          },
                         ),
                       ).then((selectedValue) {
-                        _whiteNoiseController.text = selectedValue!;
-                        profile.whiteNoise = _whiteNoiseController.text;
+                        setState(() {
+                          _whiteNoiseController.text = selectedValue!;
+                          profile.whiteNoise = _whiteNoiseController.text;
+                        });
                       });
                     },
                     child: custom_box(
@@ -302,7 +314,9 @@ class _profile_editState extends State<profile_edit> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              Text(_whiteNoiseController.text,
+                              Text(
+                                  getAudioName(_whiteNoiseController.text,
+                                      whiteNoiseMap)!,
                                   style: Theme.of(context).textTheme.bodySmall)
                             ],
                           ),
@@ -327,10 +341,15 @@ class _profile_editState extends State<profile_edit> {
                           builder: (BuildContext context) => audioDialog(
                             audioMap: ringtoneMap,
                             controller: _ringtoneController,
+                            onAudioSelected: (selectedValue) {
+                              Navigator.of(context).pop(selectedValue);
+                            },
                           ),
                         ).then((selectedValue) {
-                          _ringtoneController.text = selectedValue!;
-                          profile.ringtone = _ringtoneController.text;
+                          setState(() {
+                            _ringtoneController.text = selectedValue!;
+                            profile.ringtone = _ringtoneController.text;
+                          });
                         });
                       },
                       child: custom_box(
@@ -347,7 +366,9 @@ class _profile_editState extends State<profile_edit> {
                                 SizedBox(
                                   height: 8,
                                 ),
-                                Text(_ringtoneController.text,
+                                Text(
+                                    getAudioName(
+                                        _ringtoneController.text, ringtoneMap)!,
                                     style:
                                         Theme.of(context).textTheme.bodySmall)
                               ],

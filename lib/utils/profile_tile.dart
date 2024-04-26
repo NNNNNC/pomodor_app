@@ -11,6 +11,7 @@ class profile_tile extends StatelessWidget {
   final String ringtone;
   final int profileIndex;
   final VoidCallback onDelete;
+  final Function(String, int,int,int) onUpdate;
 
   const profile_tile({
     Key? key,
@@ -21,7 +22,7 @@ class profile_tile extends StatelessWidget {
     required this.white_noise,
     required this.ringtone,
     required this.onDelete,
-    required this.profileIndex,
+    required this.profileIndex, required this.onUpdate,
   }) : super(key: key);
 
   @override
@@ -47,8 +48,10 @@ class profile_tile extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (Context) =>
-                        profile_edit(profileIndex: profileIndex)));
+                    builder: (Context) => profile_edit(
+                      profileIndex: profileIndex,
+                      onUpdate: onUpdate
+                      )));
           },
           child: custom_box(
             child: Column(

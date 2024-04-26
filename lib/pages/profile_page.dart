@@ -11,6 +11,18 @@ class profile_page extends StatefulWidget {
 }
 
 class _profile_pageState extends State<profile_page> {
+
+  void updateProfile(int index, String newName, int newFocusDuration, int newShortBreak, int newLongBreak) {
+    setState(() {
+      var profile = profileBox.getAt(index);
+      profile!.name = newName;
+      profile.focusDuration = newFocusDuration;
+      profile.shortBreak = newShortBreak;
+      profile.longBreak = newLongBreak;
+      profileBox.putAt(index, profile);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +65,9 @@ class _profile_pageState extends State<profile_page> {
                 });
               },
               profileIndex: index,
+              onUpdate: (newName,newFocusDuration,newLongBreak,newShortBreak){
+                updateProfile(index, newName, newFocusDuration, newShortBreak, newLongBreak);
+              },
             );
           },
         ));

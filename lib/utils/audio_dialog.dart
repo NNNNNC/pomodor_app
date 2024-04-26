@@ -4,9 +4,10 @@ import 'package:audioplayers/audioplayers.dart';
 class audioDialog extends StatefulWidget {
   final Map<String, String> audioMap;
   final TextEditingController controller;
+  final Function(String) onAudioSelected;
 
   const audioDialog(
-      {super.key, required this.audioMap, required this.controller});
+      {super.key, required this.audioMap, required this.controller, required this.onAudioSelected});
 
   @override
   State<audioDialog> createState() => _audioDialogState();
@@ -60,8 +61,8 @@ class _audioDialogState extends State<audioDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(_selectedItem);
-            // Stop audio when dialog closes (optional)
+            widget.onAudioSelected(widget.audioMap[_selectedItem]!);
+            // Stop audio when dialog closes
             player.stop();
           },
           child: Text(
