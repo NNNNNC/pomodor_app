@@ -12,13 +12,19 @@ class profile_page extends StatefulWidget {
 
 class _profile_pageState extends State<profile_page> {
 
-  void updateProfile(int index, String newName, int newFocusDuration, int newShortBreak, int newLongBreak) {
+  void updateProfile(
+      int index, String newName, int newFocusDuration, 
+      int newShortBreak, int newLongBreak,
+      String newWhiteNoise, String newRingtone
+      ) {
     setState(() {
       var profile = profileBox.getAt(index);
       profile!.name = newName;
       profile.focusDuration = newFocusDuration;
       profile.shortBreak = newShortBreak;
       profile.longBreak = newLongBreak;
+      profile.whiteNoise = newWhiteNoise;
+      profile.ringtone = newRingtone;
       profileBox.putAt(index, profile);
     });
   }
@@ -65,8 +71,12 @@ class _profile_pageState extends State<profile_page> {
                 });
               },
               profileIndex: index,
-              onUpdate: (newName,newFocusDuration,newLongBreak,newShortBreak){
-                updateProfile(index, newName, newFocusDuration, newShortBreak, newLongBreak);
+              onUpdate: (newName,newFocusDuration,newLongBreak,
+              newShortBreak,newWhiteNoise,newRingtone){
+
+                updateProfile(index, newName, newFocusDuration, 
+                newShortBreak, newLongBreak, newWhiteNoise,newRingtone);
+
               },
             );
           },

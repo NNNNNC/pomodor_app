@@ -8,7 +8,7 @@ import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_edit extends StatefulWidget {
   final int profileIndex;
-  final Function(String, int, int, int) onUpdate;
+  final Function(String, int, int, int, String, String) onUpdate;
 
   const profile_edit(
       {Key? key, required this.profileIndex, required this.onUpdate})
@@ -18,6 +18,11 @@ class profile_edit extends StatefulWidget {
 }
 
 class _profile_editState extends State<profile_edit> {
+  void _updateProfile() {
+    widget.onUpdate(profile.name, profile.focusDuration, profile.longBreak,
+        profile.shortBreak, profile.whiteNoise, profile.ringtone);
+  }
+
   final Map<String, String> ringtoneMap = {
     'Ringtone 1': 'audio/ringtone_1.mp3',
     'Ringtone 2': 'audio/ringtone_2.mp3',
@@ -88,8 +93,16 @@ class _profile_editState extends State<profile_edit> {
               padding: const EdgeInsets.only(right: 25),
               child: IconButton(
                   onPressed: () {
-                    profile.save();
-                    Navigator.pop(context);
+                    if (_nameController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please Enter Profile Name'),
+                        ),
+                      );
+                    } else {
+                      profile.save();
+                      Navigator.pop(context);
+                    }
                   },
                   icon: Icon(
                     Icons.check,
@@ -146,11 +159,7 @@ class _profile_editState extends State<profile_edit> {
                               onChanged: (value) {
                                 setState(() {
                                   profile.name = value;
-                                  widget.onUpdate(
-                                      profile.name,
-                                      profile.focusDuration,
-                                      profile.longBreak,
-                                      profile.shortBreak);
+                                  _updateProfile();
                                 });
                               }),
                         ),
@@ -192,11 +201,7 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.focusDuration = int.parse(value!);
-                                      widget.onUpdate(
-                                          profile.name,
-                                          profile.focusDuration,
-                                          profile.longBreak,
-                                          profile.shortBreak);
+                                      _updateProfile();
                                     });
                                   },
                                 ),
@@ -231,11 +236,7 @@ class _profile_editState extends State<profile_edit> {
                                 onChanged: (value) {
                                   setState(() {
                                     profile.longBreak = int.parse(value!);
-                                    widget.onUpdate(
-                                        profile.name,
-                                        profile.focusDuration,
-                                        profile.longBreak,
-                                        profile.shortBreak);
+                                    _updateProfile();
                                   });
                                 },
                               ),
@@ -269,11 +270,7 @@ class _profile_editState extends State<profile_edit> {
                                   onChanged: (value) {
                                     setState(() {
                                       profile.shortBreak = int.parse(value!);
-                                      widget.onUpdate(
-                                          profile.name,
-                                          profile.focusDuration,
-                                          profile.longBreak,
-                                          profile.shortBreak);
+                                      _updateProfile();
                                     });
                                   },
                                 ),
@@ -322,6 +319,7 @@ class _profile_editState extends State<profile_edit> {
                           selectAudio = false;
                           _whiteNoiseController.text = selectedValue!;
                           profile.whiteNoise = _whiteNoiseController.text;
+                          _updateProfile();
                         });
                       });
                     },
@@ -378,6 +376,7 @@ class _profile_editState extends State<profile_edit> {
                           setState(() {
                             _ringtoneController.text = selectedValue!;
                             profile.ringtone = _ringtoneController.text;
+                            _updateProfile();
                           });
                         });
                       },

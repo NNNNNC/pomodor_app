@@ -11,7 +11,7 @@ class profile_tile extends StatelessWidget {
   final String ringtone;
   final int profileIndex;
   final VoidCallback onDelete;
-  final Function(String, int,int,int) onUpdate;
+  final Function(String, int, int, int, String, String) onUpdate;
 
   const profile_tile({
     Key? key,
@@ -22,7 +22,8 @@ class profile_tile extends StatelessWidget {
     required this.white_noise,
     required this.ringtone,
     required this.onDelete,
-    required this.profileIndex, required this.onUpdate,
+    required this.profileIndex,
+    required this.onUpdate,
   }) : super(key: key);
 
   @override
@@ -46,12 +47,14 @@ class profile_tile extends StatelessWidget {
       child: GestureDetector(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (Context) => profile_edit(
-                      profileIndex: profileIndex,
-                      onUpdate: onUpdate
-                      )));
+              context,
+              MaterialPageRoute(
+                builder: (Context) => profile_edit(
+                  profileIndex: profileIndex,
+                  onUpdate: onUpdate,
+                ),
+              ),
+            );
           },
           child: custom_box(
             child: Column(
@@ -130,7 +133,8 @@ class profile_tile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.only(left: 82),
-                      child: Text(fileDisplayNames[white_noise] ?? 'Not Selected',
+                      child: Text(
+                          fileDisplayNames[white_noise] ?? 'Not Selected',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],

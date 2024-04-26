@@ -22,6 +22,26 @@ class audioDialog extends StatefulWidget {
 }
 
 class _audioDialogState extends State<audioDialog> {
+  final Map<String, String> audioNameMap = {
+    'Ringtone 1': 'audio/ringtone_1.mp3',
+    'Ringtone 2': 'audio/ringtone_2.mp3',
+    'Ringtone 3': 'audio/ringtone_3.mp3',
+    'Ringtone 4': 'audio/ringtone_4.mp3',
+    'Ringtone 5': 'audio/ringtone_5.mp3',
+    'Dryer': 'audio/Dryer.mp3',
+    'Fan': 'audio/Fan.mp3',
+    'Rain': 'audio/Rain.mp3',
+    'Train': 'audio/Train.mp3',
+    'Waves': 'audio/Waves.mp3',
+    // Add more entries for other audio files
+  };
+
+  String? getAudioName(String path, Map<String, String> originalMap) {
+    Map<String, String> reverseMap =
+        originalMap.map((key, value) => MapEntry(value, key));
+    return reverseMap[path];
+  }
+
   late String _selectedItem;
   final player = AudioPlayer(); // Create an AudioPlayer instance
 
@@ -33,7 +53,7 @@ class _audioDialogState extends State<audioDialog> {
   @override
   void initState() {
     super.initState();
-    _selectedItem = widget.controller.text;
+    _selectedItem = getAudioName(widget.controller.text, audioNameMap)!;
   }
 
   @override
