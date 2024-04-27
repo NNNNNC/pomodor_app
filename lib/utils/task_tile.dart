@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pomodoro_app/utils/task_add_dialog.dart';
 import 'package:pomodoro_app/utils/custom_box_2.dart';
 
 class task_tile extends StatelessWidget {
   final String task_name;
   final bool taskcompleted;
-  Function(bool?)? onChanged;
-  VoidCallback onPressed;
+  final Function(bool?)? onChanged;
+  final VoidCallback onPressed;
 
-  task_tile({
+  const task_tile({
     super.key,
     required this.task_name,
     required this.taskcompleted,

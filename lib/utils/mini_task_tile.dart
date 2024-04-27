@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class MiniTaskTile extends StatelessWidget {
   final String taskTitle;
   final bool isChecked;
-  void Function(bool?)? onChanged;
+  final void Function(bool?)? onChanged;
 
-  MiniTaskTile({
+  const MiniTaskTile({
     super.key,
     required this.taskTitle,
     required this.isChecked,

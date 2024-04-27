@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class TaskAdd extends StatelessWidget {
   final controller;
-  VoidCallback onPressed;
+  final VoidCallback onPressed;
 
-  TaskAdd({
+  const TaskAdd({
     super.key,
     required this.controller,
     required this.onPressed,

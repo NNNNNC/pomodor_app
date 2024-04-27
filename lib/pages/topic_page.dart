@@ -14,32 +14,31 @@ class _topic_pageState extends State<topic_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Topics"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'topic',
-        onPressed: () {
-          setState(() {
-            topicTiles.add(
-              topic_tile(
-                topic_name: 'Lemonade',
-                description: "Make lemonade the old fashion way",
-              ),
-            );
-          });
-        },
-        child: Icon(
-          Icons.add,
-          size: 45,
+        appBar: AppBar(
+          title: const Text("Topics"),
         ),
-      ),
-      body: ListView.builder(
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'topic',
+          onPressed: () {
+            setState(() {
+              topicTiles.add(
+                topic_tile(
+                  topic_name: 'Lemonade',
+                  description: "Make lemonade the old fashion way",
+                ),
+              );
+            });
+          },
+          child: const Icon(
+            Icons.add,
+            size: 45,
+          ),
+        ),
+        body: ListView.builder(
           itemCount: topicTiles.length,
           itemBuilder: (context, index) {
             return topicTiles[index];
           },
-        )
-    );
+        ));
   }
 }
