@@ -13,7 +13,7 @@ ThemeData app_theme = ThemeData(
       // title font style
       titleLarge: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 20,
           color: Color.fromRGBO(172, 198, 255, 1)),
       titleMedium: TextStyle(
           fontWeight: FontWeight.bold,

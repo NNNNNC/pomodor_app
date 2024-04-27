@@ -5,14 +5,14 @@ part 'topicModel.g.dart';
 @HiveType(typeId: 3, adapterName: "TopicAdapter")
 class TopicModel extends HiveObject {
   TopicModel({
-    required this.name,
+    this.name,
     this.description,
     this.cardSet,
     this.tasks,
   });
 
   @HiveField(0)
-  String name;
+  String? name;
 
   @HiveField(1)
   String? description;
@@ -21,5 +21,5 @@ class TopicModel extends HiveObject {
   String? cardSet;
 
   @HiveField(3)
-  List<dynamic>? tasks;
+  List<dynamic>? tasks = [];
 }

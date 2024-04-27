@@ -11,12 +11,15 @@ class profile_page extends StatefulWidget {
 }
 
 class _profile_pageState extends State<profile_page> {
-
   void updateProfile(
-      int index, String newName, int newFocusDuration, 
-      int newShortBreak, int newLongBreak,
-      String newWhiteNoise, String newRingtone
-      ) {
+    int index,
+    String newName,
+    int newFocusDuration,
+    int newShortBreak,
+    int newLongBreak,
+    String newWhiteNoise,
+    String newRingtone,
+  ) {
     setState(() {
       var profile = profileBox.getAt(index);
       profile!.name = newName;
@@ -33,7 +36,7 @@ class _profile_pageState extends State<profile_page> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile"),
+          title: const Text("Profile"),
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: 'profile',
@@ -49,7 +52,7 @@ class _profile_pageState extends State<profile_page> {
               ));
             });
           },
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 45,
           ),
@@ -71,12 +74,10 @@ class _profile_pageState extends State<profile_page> {
                 });
               },
               profileIndex: index,
-              onUpdate: (newName,newFocusDuration,newLongBreak,
-              newShortBreak,newWhiteNoise,newRingtone){
-
-                updateProfile(index, newName, newFocusDuration, 
-                newShortBreak, newLongBreak, newWhiteNoise,newRingtone);
-
+              onUpdate: (newName, newFocusDuration, newLongBreak, newShortBreak,
+                  newWhiteNoise, newRingtone) {
+                updateProfile(index, newName, newFocusDuration, newShortBreak,
+                    newLongBreak, newWhiteNoise, newRingtone);
               },
             );
           },

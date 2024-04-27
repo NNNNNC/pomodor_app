@@ -17,7 +17,7 @@ class TopicAdapter extends TypeAdapter<TopicModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TopicModel(
-      name: fields[0] as String,
+      name: fields[0] as String?,
       description: fields[1] as String?,
       cardSet: fields[2] as String?,
       tasks: (fields[3] as List?)?.cast<dynamic>(),

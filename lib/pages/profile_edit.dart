@@ -87,7 +87,7 @@ class _profile_editState extends State<profile_edit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Profile Edit"),
+          title: const Text("Profile Edit"),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 25),
@@ -95,7 +95,7 @@ class _profile_editState extends State<profile_edit> {
                   onPressed: () {
                     if (_nameController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Please Enter Profile Name'),
                         ),
                       );
@@ -104,7 +104,7 @@ class _profile_editState extends State<profile_edit> {
                       Navigator.pop(context);
                     }
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.check,
                     size: 30,
                   )),
@@ -125,45 +125,48 @@ class _profile_editState extends State<profile_edit> {
                         'PROFILE NAME',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      SizedBox(),
+                      const SizedBox(),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10),
                   child: custom_box(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Name :',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        SizedBox(
-                          width: 180,
-                          child: TextField(
-                              controller: _nameController,
-                              cursorColor:
-                                  const Color.fromRGBO(192, 192, 192, 1),
-                              decoration: const InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Color.fromRGBO(192, 192, 192, 1),
-                                )),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Name :',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          SizedBox(
+                            width: 180,
+                            child: TextField(
+                                controller: _nameController,
+                                cursorColor:
+                                    const Color.fromRGBO(192, 192, 192, 1),
+                                decoration: const InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
                                     color: Color.fromRGBO(192, 192, 192, 1),
+                                  )),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color.fromRGBO(192, 192, 192, 1),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  profile.name = value;
-                                  _updateProfile();
-                                });
-                              }),
-                        ),
-                      ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    profile.name = value;
+                                    _updateProfile();
+                                  });
+                                }),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -184,35 +187,40 @@ class _profile_editState extends State<profile_edit> {
                 Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10),
                   child: custom_box(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Focus Duration :',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                child: customTextField(
-                                  items: ['5', '10', '15', '20', '25', '30'],
-                                  controller: _focusController,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      profile.focusDuration = int.parse(value!);
-                                      _updateProfile();
-                                    });
-                                  },
-                                ),
-                              ),
-                              Text(' Minutes',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium),
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Focus Duration :',
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  child: customTextField(
+                                    items: ['5', '10', '15', '20', '25', '30'],
+                                    controller: _focusController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        profile.focusDuration =
+                                            int.parse(value!);
+                                        _updateProfile();
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Text(' Minutes',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -220,45 +228,13 @@ class _profile_editState extends State<profile_edit> {
                 Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
                   child: custom_box(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Long Break Length :',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              child: customTextField(
-                                items: ['5', '10', '15', '20', '25', '30'],
-                                controller: _longBreakController,
-                                onChanged: (value) {
-                                  setState(() {
-                                    profile.longBreak = int.parse(value!);
-                                    _updateProfile();
-                                  });
-                                },
-                              ),
-                            ),
-                            Text(' Minutes',
-                                style: Theme.of(context).textTheme.titleMedium),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Padding(
-                    padding:
-                        const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                    child: custom_box(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Short Break Length :',
+                            'Long Break Length :',
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           Row(
@@ -266,10 +242,10 @@ class _profile_editState extends State<profile_edit> {
                               SizedBox(
                                 child: customTextField(
                                   items: ['5', '10', '15', '20', '25', '30'],
-                                  controller: _shortBreakController,
+                                  controller: _longBreakController,
                                   onChanged: (value) {
                                     setState(() {
-                                      profile.shortBreak = int.parse(value!);
+                                      profile.longBreak = int.parse(value!);
                                       _updateProfile();
                                     });
                                   },
@@ -281,6 +257,46 @@ class _profile_editState extends State<profile_edit> {
                             ],
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Padding(
+                    padding:
+                        const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                    child: custom_box(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Short Break Length :',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  child: customTextField(
+                                    items: ['5', '10', '15', '20', '25', '30'],
+                                    controller: _shortBreakController,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        profile.shortBreak = int.parse(value!);
+                                        _updateProfile();
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Text(' Minutes',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )),
                 Padding(
@@ -324,26 +340,30 @@ class _profile_editState extends State<profile_edit> {
                       });
                     },
                     child: custom_box(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'White Noise',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                  getAudioName(_whiteNoiseController.text,
-                                      whiteNoiseMap)!,
-                                  style: Theme.of(context).textTheme.bodySmall)
-                            ],
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'White Noise',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                    getAudioName(_whiteNoiseController.text,
+                                        whiteNoiseMap)!,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall)
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -381,27 +401,32 @@ class _profile_editState extends State<profile_edit> {
                         });
                       },
                       child: custom_box(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Ringtone',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  getAudioName(
-                                      _ringtoneController.text, ringtoneMap)!,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                )
-                              ],
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Ringtone',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    getAudioName(
+                                        _ringtoneController.text, ringtoneMap)!,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )),
