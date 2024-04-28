@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
 class FlashcardBox extends StatefulWidget {
-  final String cardContent;
+  final String? cardContent;
   final TextButton flipButton;
-  final Function(String) onUpdateContent;
+  final Function(String)? onUpdateContent;
+  final bool? isFlashcardEdit;
+  final bool? isQuestion;
 
   const FlashcardBox({
     super.key,
     required this.cardContent,
     required this.flipButton,
-    required this.onUpdateContent,
+    this.onUpdateContent,
+    this.isFlashcardEdit,
+    this.isQuestion,
   });
 
   @override
@@ -65,11 +69,12 @@ class _FlashcardBoxState extends State<FlashcardBox> {
                 IconButton(
                   onPressed: () {
                     setState(() {
-                      _isEnable = true;
+                      _isEnable = !_isEnable;
                     });
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
                   icon: Icon(
-                    Icons.edit,
+                    _isEnable ? Icons.edit : Icons.edit_off,
                     size: 25,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
@@ -83,20 +88,15 @@ class _FlashcardBoxState extends State<FlashcardBox> {
                     textAlign: TextAlign.center,
                     controller: _controller,
                     enabled: _isEnable,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
+                      hintText: (widget.isQuestion ?? false)
+                          ? "Enter Question"
+                          : "Enter Answer",
                     ),
                     onChanged: (value) {
-                      widget.onUpdateContent(value);
+                      widget.onUpdateContent!(value);
                     },
-                    focusNode: FocusNode()
-                      ..addListener(() {
-                        if (!_controller.text.isNotEmpty) {
-                          setState(() {
-                            _isEnable = false;
-                          });
-                        }
-                      }),
                   ),
                 ),
                 widget.flipButton

@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 
 final _formKey = GlobalKey<FormState>();
 
-class TaskAdd extends StatelessWidget {
+class add_tile_dialog extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onPressed;
-  final bool? isTopic;
+  final bool? isFlashcard;
 
-  const TaskAdd({
-    super.key,
-    required this.controller,
-    required this.onPressed,
-    this.isTopic,
-  });
+  const add_tile_dialog(
+      {super.key,
+      required this.controller,
+      required this.onPressed,
+      this.isFlashcard});
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +28,14 @@ class TaskAdd extends StatelessWidget {
                 }
                 return null;
               },
-              maxLength: 30,
+              maxLength: 20,
               controller: controller,
               keyboardType: TextInputType.multiline,
               maxLines: 1,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: (isTopic ?? false) ? "Add new topic" : "Add new task",
+                hintText:
+                    (isFlashcard ?? false) ? "Add new set" : "Add new profile",
               ),
             ),
             Row(

@@ -42,21 +42,12 @@ class _flashcard_editState extends State<flashcard_edit> {
     }
   }
 
-  late TextEditingController _cardSetNameController;
   late Flashcard flashcard;
-  bool _isEnable = false;
 
   @override
   void initState() {
     super.initState();
     flashcard = flashcardBox.getAt(widget.flashCardIndex)!;
-    _cardSetNameController = TextEditingController(text: flashcard.cardSetName);
-  }
-
-  @override
-  void dispose() {
-    _cardSetNameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -68,8 +59,8 @@ class _flashcard_editState extends State<flashcard_edit> {
             setState(() {
               // Add a new question and answer flashcard to the list
               Map<String, String> newCard = {
-                'question': 'New question',
-                'answer': 'New answer',
+                'question': '',
+                'answer': '',
               };
               flashcard.cards.add(newCard);
               widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
@@ -88,44 +79,17 @@ class _flashcard_editState extends State<flashcard_edit> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 35, right: 35),
+                padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isEnable = true;
-                          });
-                        },
-                        child: TextField(
-                          cursorColor: const Color.fromRGBO(192, 192, 192, 1),
-                          controller: _cardSetNameController,
-                          enabled: _isEnable,
-                          style: Theme.of(context).textTheme.titleLarge,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {
-                            flashcard.cardSetName = value;
-                            widget.onUpdate(
-                                flashcard.cards.length, flashcard.cardSetName);
-                          },
-                          onSubmitted: (value) {
-                            setState(() {
-                              _isEnable = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                        onTap: () {
+                    Text(flashcard.cardSetName, style: Theme.of(context).textTheme.titleLarge,),
+                    IconButton(
+                        onPressed: () {
                           flashcard.save();
                           Navigator.pop(context);
                         },
-                        child: Icon(
+                        icon: Icon(
                           Icons.check,
                           size: 30,
                           color: Theme.of(context).colorScheme.secondary,
@@ -144,8 +108,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                           itemCount: flashcard.cards.length,
                           itemBuilder: (context, index, realIndex) {
                             final card = flashcard.cards[index];
-                            final question = card['question'] ?? '';
-                            final answer = card['answer'] ?? '';
+                            final question = card['question'];
+                            final answer = card['answer'];
                             return FlipCard(
                                 controller: _controller,
                                 direction: FlipDirection.HORIZONTAL,
@@ -182,6 +146,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                           editQuestion;
                                     });
                                   },
+                                  isQuestion: true,
                                 ),
                                 back: FlashcardBox(
                                   cardContent: answer,

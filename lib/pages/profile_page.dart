@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/utils/add_tile_dialog.dart';
 import 'package:pomodoro_app/utils/profile_tile.dart';
 
 class profile_page extends StatefulWidget {
@@ -32,6 +33,35 @@ class _profile_pageState extends State<profile_page> {
     });
   }
 
+  late TextEditingController _nameController;
+
+  void createNewTopic() {
+    setState(() {
+      profileBox.add(profileModel(
+        _nameController.text,
+        25,
+        5,
+        15,
+        'audio/Rain.mp3',
+        'audio/ringtone_1.mp3',
+      ));
+      _nameController.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    _nameController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,16 +71,15 @@ class _profile_pageState extends State<profile_page> {
         floatingActionButton: FloatingActionButton(
           heroTag: 'profile',
           onPressed: () {
-            setState(() {
-              profileBox.add(profileModel(
-                'John Doe',
-                25,
-                5,
-                15,
-                'audio/Rain.mp3',
-                'audio/ringtone_5.mp3',
-              ));
-            });
+            showDialog(
+            context: context,
+            builder: (context) {
+              return add_tile_dialog(
+                controller: _nameController,
+                onPressed: createNewTopic,
+              );
+            },
+          );
           },
           child: const Icon(
             Icons.add,

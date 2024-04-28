@@ -276,7 +276,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                         });
                       },
                       icon: Icon(
-                        isMuted ? Icons.headset_off : Icons.headphones,
+                        isMuted ? Icons.headphones : Icons.headset_off,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),

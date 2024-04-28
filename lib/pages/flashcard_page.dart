@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/flashcardModel.dart';
+import 'package:pomodoro_app/utils/add_tile_dialog.dart';
 import 'package:pomodoro_app/utils/flashcard_tile.dart';
 
 class flashcard_page extends StatefulWidget {
@@ -12,6 +13,7 @@ class flashcard_page extends StatefulWidget {
 }
 
 class _flashcard_pageState extends State<flashcard_page> {
+  late TextEditingController _nameController;
   void updateFlashcard(int index, int newCount, newCardSetName) {
     setState(() {
       var flashcardSet = flashcardBox.getAt(index);
@@ -19,6 +21,31 @@ class _flashcard_pageState extends State<flashcard_page> {
       flashcardSet.cardSetName = newCardSetName;
       flashcardBox.putAt(index, flashcardSet);
     });
+  }
+
+  void createNewTopic() {
+    setState(() {
+      flashcardBox.add(Flashcard(
+        cardSetName: _nameController.text,
+        cards: [
+          {'question': '', 'answer': ''},
+        ],
+      ));
+      _nameController.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+    @override
+  void initState() {
+    _nameController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,14 +58,15 @@ class _flashcard_pageState extends State<flashcard_page> {
         floatingActionButton: FloatingActionButton(
           heroTag: 'flashcard',
           onPressed: () {
-            setState(() {
-              flashcardBox.add(Flashcard(
-                cardSetName: 'Card Set Name',
-                cards: [
-                  {'question': 'Enter Question?', 'answer': 'Enter Answer'},
-                ],
-              ));
-            });
+            showDialog(
+            context: context,
+            builder: (context) {
+              return add_tile_dialog(
+                controller: _nameController,
+                onPressed: createNewTopic,
+              );
+            },
+          );
           },
           child: Icon(
             Icons.add,
@@ -49,11 +77,11 @@ class _flashcard_pageState extends State<flashcard_page> {
           itemCount: flashcardBox.length,
           itemBuilder: (context, index) {
             var flashcardSet = flashcardBox.getAt(index);
-            var cardSetName = flashcardSet?.cardSetName;
-            var cardSetLength = flashcardSet?.cards.length;
+            var cardSetName = flashcardSet!.cardSetName;
+            var cardSetLength = flashcardSet.cards.length;
             return flashcard_tile(
-              flashcard_name: cardSetName ?? 'No Name',
-              flashcard_count: cardSetLength ?? 0,
+              flashcard_name: cardSetName,
+              flashcard_count: cardSetLength,
               flashCardIndex: index,
               onDelete: () {
                 setState(() {

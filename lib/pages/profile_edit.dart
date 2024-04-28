@@ -93,16 +93,8 @@ class _profile_editState extends State<profile_edit> {
               padding: const EdgeInsets.only(right: 25),
               child: IconButton(
                   onPressed: () {
-                    if (_nameController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please Enter Profile Name'),
-                        ),
-                      );
-                    } else {
-                      profile.save();
-                      Navigator.pop(context);
-                    }
+                    profile.save();
+                    Navigator.pop(context);
                   },
                   icon: const Icon(
                     Icons.check,
@@ -116,60 +108,6 @@ class _profile_editState extends State<profile_edit> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 15, bottom: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'PROFILE NAME',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10, left: 10),
-                  child: custom_box(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Name :',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          SizedBox(
-                            width: 180,
-                            child: TextField(
-                                controller: _nameController,
-                                cursorColor:
-                                    const Color.fromRGBO(192, 192, 192, 1),
-                                decoration: const InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color: Color.fromRGBO(192, 192, 192, 1),
-                                  )),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromRGBO(192, 192, 192, 1),
-                                    ),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    profile.name = value;
-                                    _updateProfile();
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
                   child: Row(
