@@ -140,8 +140,8 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       IconButton(
-                        onPressed: () {
-                          showDialog<void>(
+                        onPressed: () async {
+                          await showDialog<void>(
                             barrierDismissible: false,
                             context: context,
                             builder: (BuildContext context) {
@@ -150,6 +150,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                               );
                             },
                           );
+                          setState(() {});
                         },
                         icon: Icon(
                           Icons.archive,

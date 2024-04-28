@@ -32,9 +32,16 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _selectedItem = topicBox.getAt(widget.currentIndex)?.cardSet;
+  void initState() {
+    setState(() {
+      _selectedItem = topicBox.getAt(widget.currentIndex)?.cardSet ?? 'None';
+    });
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.only(left: 10.0, top: 18.0),
       title: Text(
@@ -50,10 +57,10 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
                 style: const TextStyle(fontSize: 18),
               ),
               value: card,
-              groupValue: _selectedItem ?? 'None',
+              groupValue: _selectedItem,
               onChanged: (String? value) {
                 setState(() {
-                  _selectedItem = value;
+                  _selectedItem = card;
                 });
               },
               activeColor: Theme.of(context).colorScheme.secondary,
