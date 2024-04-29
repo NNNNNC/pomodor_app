@@ -74,7 +74,7 @@ class MainPage extends StatelessWidget {
           Tab(
             text: 'Profile',
             icon: Icon(
-              Icons.person,
+              Icons.person_outline,
               size: 25,
             ),
           ),

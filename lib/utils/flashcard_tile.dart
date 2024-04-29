@@ -37,8 +37,13 @@ class flashcard_tile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(flashcard_name,
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Flexible(
+                    child: Text(
+                      maxLines: 2,
+                      flashcard_name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
                   PopupMenuButton(
                       color: Color.fromRGBO(48, 48, 48, 0.9),
                       itemBuilder: (context) => [

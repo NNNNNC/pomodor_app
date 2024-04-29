@@ -29,9 +29,12 @@ class topic_tile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      topic_name,
-                      style: Theme.of(context).textTheme.titleLarge,
+                    Flexible(
+                      child: Text(
+                        maxLines: 2,
+                        topic_name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                     PopupMenuButton(
                       color: const Color.fromRGBO(48, 48, 48, 0.9),

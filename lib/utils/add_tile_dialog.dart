@@ -16,6 +16,12 @@ class add_tile_dialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: const EdgeInsets.only(
+        left: 18.0,
+        right: 18.0,
+        top: 8.0,
+        bottom: 4.0,
+      ),
       content: Form(
         key: _formKey,
         child: Column(

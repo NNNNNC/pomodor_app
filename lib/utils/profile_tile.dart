@@ -62,8 +62,13 @@ class profile_tile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(profile_name,
-                        style: Theme.of(context).textTheme.titleLarge),
+                    Flexible(
+                      child: Text(
+                        maxLines: 2,
+                        profile_name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
                     PopupMenuButton(
                         color: Color.fromRGBO(48, 48, 48, 0.9),
                         itemBuilder: (context) => [
