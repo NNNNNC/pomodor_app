@@ -43,11 +43,19 @@ class _flashcard_editState extends State<flashcard_edit> {
   }
 
   late Flashcard flashcard;
+  late TextEditingController _nameController;
 
   @override
   void initState() {
     super.initState();
     flashcard = flashcardBox.getAt(widget.flashCardIndex)!;
+    _nameController = TextEditingController(text: flashcard.cardSetName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,9 +91,18 @@ class _flashcard_editState extends State<flashcard_edit> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(flashcard.cardSetName, style: Theme.of(context).textTheme.titleLarge,),
+                    Expanded(child: TextField(
+                      cursorColor: Colors.white,
+                      controller: _nameController,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),),
                     IconButton(
                         onPressed: () {
+                          flashcard.cardSetName = _nameController.text;
+                          widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
                           flashcard.save();
                           Navigator.pop(context);
                         },
@@ -159,7 +176,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                             MainAxisAlignment.end,
                                         children: [
                                           Text(
-                                            'Check Answer ',
+                                            'Check Question ',
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme

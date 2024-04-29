@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/pages/profile_edit.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
@@ -41,7 +42,6 @@ class profile_tile extends StatelessWidget {
       'audio/ringtone_5.mp3': 'Ringtone 5',
       // Add more mappings as needed
     };
-
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 5),
       child: GestureDetector(
@@ -68,10 +68,25 @@ class profile_tile extends StatelessWidget {
                         color: Color.fromRGBO(48, 48, 48, 0.9),
                         itemBuilder: (context) => [
                               PopupMenuItem(
+                                  onTap: () {
+                                    onUpdate(
+                                        profileBox.getAt(profileIndex)!.name,
+                                        profileBox.getAt(profileIndex)!.focusDuration =
+                                        25,
+                                        profileBox.getAt(profileIndex)!.longBreak =
+                                        15,
+                                        profileBox.getAt(profileIndex)!.shortBreak =
+                                        5,
+                                        profileBox.getAt(profileIndex)!.whiteNoise =
+                                        'audio/Rain.mp3',
+                                        profileBox.getAt(profileIndex)!.ringtone =
+                                        'audio/ringtone_1.mp3');
+                                  },
                                   child: Text(
-                                'Set Default',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
+                                    'Set Default',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )),
                               PopupMenuItem(
                                   onTap: () {
                                     onDelete();

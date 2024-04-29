@@ -86,12 +86,21 @@ class _profile_editState extends State<profile_edit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Profile Edit"),
+          title: TextField(
+                      cursorColor: Colors.white,
+                      controller: _nameController,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 25),
               child: IconButton(
                   onPressed: () {
+                    profile.name =_nameController.text;
+                    _updateProfile();
                     profile.save();
                     Navigator.pop(context);
                   },

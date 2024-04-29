@@ -39,22 +39,7 @@ class flashcard_tile extends StatelessWidget {
                 children: [
                   Text(flashcard_name,
                       style: Theme.of(context).textTheme.titleLarge),
-                  PopupMenuButton(
-                      color: Color.fromRGBO(48, 48, 48, 0.9),
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                                child: Text(
-                              'Edit',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                            PopupMenuItem(
-                                onTap: () {
-                                  onDelete();
-                                },
-                                child: Text('Delete',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)))
-                          ])
+                 IconButton(onPressed: (){onDelete();}, icon: Icon(Icons.delete_outline,color: Theme.of(context).colorScheme.secondary,))
                 ],
               ),
               Text('$flashcard_count Flashcards')
