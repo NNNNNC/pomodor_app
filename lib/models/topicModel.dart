@@ -18,7 +18,7 @@ class TopicModel extends HiveObject {
   String? description;
 
   @HiveField(2)
-  String? cardSet;
+  int? cardSet;
 
   @HiveField(3)
   List<dynamic>? tasks = [];

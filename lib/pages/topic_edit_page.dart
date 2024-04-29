@@ -75,6 +75,10 @@ class _topic_edit_pageState extends State<topic_edit_page> {
     Navigator.of(context).pop();
   }
 
+  int? getCardKey(int index) {
+    return topicBox.getAt(index)?.cardSet;
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentTopic = topicBox.getAt(widget.currentIndex);
@@ -136,7 +140,10 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        currentTopic!.cardSet ?? 'Not selected',
+                        flashcardBox
+                                .get(getCardKey(widget.currentIndex))
+                                ?.cardSetName ??
+                            'Not selected',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       IconButton(
@@ -259,7 +266,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: currentTopic.tasks?.length ?? 0,
+                        itemCount: currentTopic!.tasks?.length ?? 0,
                         itemBuilder: (context, index) {
                           return task_tile(
                             task_name: currentTopic.tasks![index][0],

@@ -19,7 +19,7 @@ class TopicAdapter extends TypeAdapter<TopicModel> {
     return TopicModel(
       name: fields[0] as String?,
       description: fields[1] as String?,
-      cardSet: fields[2] as String?,
+      cardSet: fields[2] as int?,
       tasks: (fields[3] as List?)?.cast<dynamic>(),
     );
   }

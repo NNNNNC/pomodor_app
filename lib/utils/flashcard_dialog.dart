@@ -16,25 +16,40 @@ class FlashcardDialog extends StatefulWidget {
 class _FlashcardDialogState extends State<FlashcardDialog> {
   String? _selectedItem;
 
-  List<String> getCardNames() {
-    List<String> listofItems = [];
+  // List<String> getCardNames() {
+  //   List<String> listofItems = [];
 
-    listofItems.add('None');
+  //   listofItems.add('None');
+
+  //   for (int i = 0; i < flashcardBox.length; i++) {
+  //     var flashcard = flashcardBox.getAt(i)!.cardSetName;
+  //     if (flashcard.isNotEmpty) {
+  //       listofItems.add(flashcard);
+  //     }
+  //   }
+
+  //   return listofItems;
+  // }
+
+  Map<String, int> getCardMap() {
+    Map<String, int> cardMap = {};
+    cardMap.addAll({'None': -1});
 
     for (int i = 0; i < flashcardBox.length; i++) {
       var flashcard = flashcardBox.getAt(i)!.cardSetName;
+      var key = flashcardBox.getAt(i)!.key;
       if (flashcard.isNotEmpty) {
-        listofItems.add(flashcard);
+        cardMap.addAll({flashcard: key});
       }
     }
-
-    return listofItems;
+    return cardMap;
   }
 
   @override
   void initState() {
+    int? currentKey = topicBox.getAt(widget.currentIndex)?.cardSet;
     setState(() {
-      _selectedItem = topicBox.getAt(widget.currentIndex)?.cardSet ?? 'None';
+      _selectedItem = flashcardBox.get(currentKey)?.cardSetName ?? 'None';
     });
 
     super.initState();
@@ -50,7 +65,7 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
       ),
       content: SingleChildScrollView(
         child: Column(
-          children: getCardNames().map((card) {
+          children: getCardMap().keys.map((card) {
             return RadioListTile(
               title: Text(
                 card,
@@ -72,7 +87,12 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
         TextButton(
           onPressed: () {
             setState(() {
-              topicBox.getAt(widget.currentIndex)!.cardSet = _selectedItem;
+              if (_selectedItem == 'None') {
+                topicBox.getAt(widget.currentIndex)!.cardSet = null;
+              } else {
+                topicBox.getAt(widget.currentIndex)!.cardSet =
+                    getCardMap()[_selectedItem];
+              }
             });
             Navigator.of(context).pop(_selectedItem);
           },

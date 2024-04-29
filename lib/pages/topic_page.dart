@@ -13,8 +13,6 @@ class topic_page extends StatefulWidget {
 }
 
 class _topic_pageState extends State<topic_page> {
-  // List<String> topicTiles = ['My Topic'];
-
   late TextEditingController _topicController;
 
   @override
@@ -68,7 +66,7 @@ class _topic_pageState extends State<topic_page> {
           return topic_tile(
             topic_name: topics!.name!,
             description: topics.description,
-            cardSet: topics.cardSet,
+            cardSet: flashcardBox.get(topics.cardSet)?.cardSetName,
             onDelete: () {
               setState(() {
                 topicBox.deleteAt(index);

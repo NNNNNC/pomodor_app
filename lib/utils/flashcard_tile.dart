@@ -44,7 +44,15 @@ class flashcard_tile extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
-                 IconButton(onPressed: (){onDelete();}, icon: Icon(Icons.delete_outline,color: Theme.of(context).colorScheme.secondary,))
+                  IconButton(
+                    onPressed: () {
+                      onDelete();
+                    },
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white70,
+                    ),
+                  )
                 ],
               ),
               Text('$flashcard_count Flashcards')

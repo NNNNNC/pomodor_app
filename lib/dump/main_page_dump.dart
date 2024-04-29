@@ -37,7 +37,7 @@ class _MainpageState extends State<Mainpage> {
                 onTap: (value) => setState(() => currentIndex = value),
                 items: [
                   BottomNavigationBarItem(
-                    icon: Container(
+                    icon: SizedBox(
                       height: 30,
                       child: Image.asset(
                         'assets/icons/pie-chart.png',
@@ -47,7 +47,7 @@ class _MainpageState extends State<Mainpage> {
                     label: 'Pomodoro',
                   ),
                   BottomNavigationBarItem(
-                      icon: Container(
+                      icon: SizedBox(
                         height: 30,
                         child: Image.asset(
                           'assets/icons/document.png',
@@ -56,7 +56,7 @@ class _MainpageState extends State<Mainpage> {
                       ),
                       label: 'Flash Card'),
                   BottomNavigationBarItem(
-                      icon: Container(
+                      icon: SizedBox(
                         height: 30,
                         child: Image.asset(
                           'assets/icons/bill.png',
