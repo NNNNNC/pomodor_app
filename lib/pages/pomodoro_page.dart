@@ -4,6 +4,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
@@ -192,6 +193,20 @@ class _PomodoroPageState extends State<PomodoroPage>
     });
   }
 
+  List<String> getTopics() {
+    List<String> topicList = [];
+    topicList.add("None");
+
+    if (topicBox.isNotEmpty) {
+      for (int i = 0; i < topicBox.length; i++) {
+        String topic = topicBox.getAt(i)!.name!;
+
+        topicList.add(topic);
+      }
+    }
+    return topicList;
+  }
+
   @override
   Widget build(BuildContext context) {
     final int totalDuration = isFocusing ? 25 : (isBreak ? 5 : 15);
@@ -228,15 +243,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                           barrierDismissible: false,
                           context: context,
                           builder: (BuildContext context) {
-                            return const CustomDialog(
-                              listofItems: [
-                                'None',
-                                'Topic 1',
-                                'Topic 2',
-                                'Topic 3',
-                                'Topic 4',
-                                'Topic 5',
-                              ],
+                            return CustomDialog(
+                              listofItems: getTopics(),
                             );
                           },
                         );

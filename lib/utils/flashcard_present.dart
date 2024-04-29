@@ -56,7 +56,6 @@ class FlashcardPresentState extends State<FlashcardPresent> {
       TextEditingController(text: 'Card Set Name');
   bool _isEnable = false;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,30 +67,28 @@ class FlashcardPresentState extends State<FlashcardPresent> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 35, right: 35),
-              child: Expanded(
-                child: GestureDetector(
-                  onTap: () {
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isEnable = true;
+                  });
+                },
+                child: TextField(
+                  cursorColor: const Color.fromRGBO(192, 192, 192, 1),
+                  controller: _cardSetNameController,
+                  enabled: _isEnable,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    _cardSetNameController.text = value;
+                  },
+                  onSubmitted: (value) {
                     setState(() {
-                      _isEnable = true;
+                      _isEnable = false;
                     });
                   },
-                  child: TextField(
-                    cursorColor: const Color.fromRGBO(192, 192, 192, 1),
-                    controller: _cardSetNameController,
-                    enabled: _isEnable,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (value) {
-                      _cardSetNameController.text = value;
-                    },
-                    onSubmitted: (value) {
-                      setState(() {
-                        _isEnable = false;
-                      });
-                    },
-                  ),
                 ),
               ),
             ),
@@ -122,46 +119,18 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     horizontal: 48.0,
                     vertical: 18.0,
                   ),
-                  child: Expanded(
-                    child: Center(
-                      child: CarouselSlider.builder(
-                        carouselController: controller,
-                        itemCount: texts.length,
-                        itemBuilder: (context, index, realIndex) {
-                          final text = texts[index];
-                          return FlipCard(
-                            controller: _controller,
-                            direction: FlipDirection.HORIZONTAL,
-                            front: FlashcardBox(
-                              cardContent: text,
-                              flipButton: TextButton(
-                                  onPressed: () {
-                                    _controller.toggleCard();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'Check Answer ',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        size: 20,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            back: FlashcardBox(
-                              cardContent: 'Jake Sacay',
-                              flipButton: TextButton(
+                  child: Center(
+                    child: CarouselSlider.builder(
+                      carouselController: controller,
+                      itemCount: texts.length,
+                      itemBuilder: (context, index, realIndex) {
+                        final text = texts[index];
+                        return FlipCard(
+                          controller: _controller,
+                          direction: FlipDirection.HORIZONTAL,
+                          front: FlashcardBox(
+                            cardContent: text,
+                            flipButton: TextButton(
                                 onPressed: () {
                                   _controller.toggleCard();
                                 },
@@ -184,22 +153,47 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                           .secondary,
                                     ),
                                   ],
-                                ),
+                                )),
+                          ),
+                          back: FlashcardBox(
+                            cardContent: 'Jake Sacay',
+                            flipButton: TextButton(
+                              onPressed: () {
+                                _controller.toggleCard();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Check Answer ',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: 20,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                        options: CarouselOptions(
-                            enableInfiniteScroll: false,
-                            height: 360,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            }),
-                      ),
+                          ),
+                        );
+                      },
+                      options: CarouselOptions(
+                          enableInfiniteScroll: false,
+                          height: 360,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          }),
                     ),
                   ),
                 ),

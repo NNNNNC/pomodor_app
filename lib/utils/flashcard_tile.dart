@@ -37,8 +37,13 @@ class flashcard_tile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(flashcard_name,
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Flexible(
+                    child: Text(
+                      maxLines: 2,
+                      flashcard_name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
                  IconButton(onPressed: (){onDelete();}, icon: Icon(Icons.delete_outline,color: Theme.of(context).colorScheme.secondary,))
                 ],
               ),
