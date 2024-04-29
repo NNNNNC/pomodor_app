@@ -3,7 +3,7 @@ import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/pages/profile_edit.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
 
-class profile_tile extends StatelessWidget {
+class profile_tile extends StatefulWidget {
   final String profile_name;
   final int focus_duration;
   final int long_break;
@@ -13,6 +13,7 @@ class profile_tile extends StatelessWidget {
   final int profileIndex;
   final VoidCallback onDelete;
   final Function(String, int, int, int, String, String) onUpdate;
+  final Function(int) onSelect;
 
   const profile_tile({
     Key? key,
@@ -25,8 +26,14 @@ class profile_tile extends StatelessWidget {
     required this.onDelete,
     required this.profileIndex,
     required this.onUpdate,
+    required this.onSelect,
   }) : super(key: key);
 
+  @override
+  State<profile_tile> createState() => _profile_tileState();
+}
+
+class _profile_tileState extends State<profile_tile> {
   @override
   Widget build(BuildContext context) {
     final Map<String, String> fileDisplayNames = {
@@ -49,9 +56,9 @@ class profile_tile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (Context) => profile_edit(
-                  profileIndex: profileIndex,
-                  onUpdate: onUpdate,
+                builder: (context) => profile_edit(
+                  profileIndex: widget.profileIndex,
+                  onUpdate: widget.onUpdate,
                 ),
               ),
             );
@@ -63,43 +70,76 @@ class profile_tile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Text(
-                        maxLines: 2,
-                        profile_name,
-                        style: Theme.of(context).textTheme.titleLarge,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            maxLines: 2,
+                            widget.profile_name,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          if (defaultKey.get(0)?.selectedProfile ==
+                              profileBox.getAt(widget.profileIndex)!.key)
+                            Text(
+                              '  (Selected)',
+                              style: TextStyle(
+                                color: Colors.green[600],
+                                fontSize: 17,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     PopupMenuButton(
-                        color: Color.fromRGBO(48, 48, 48, 0.9),
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                  onTap: () {
-                                    onUpdate(
-                                        profileBox.getAt(profileIndex)!.name,
-                                        profileBox.getAt(profileIndex)!.focusDuration =
-                                        25,
-                                        profileBox.getAt(profileIndex)!.longBreak =
-                                        15,
-                                        profileBox.getAt(profileIndex)!.shortBreak =
-                                        5,
-                                        profileBox.getAt(profileIndex)!.whiteNoise =
-                                        'audio/Rain.mp3',
-                                        profileBox.getAt(profileIndex)!.ringtone =
-                                        'audio/ringtone_1.mp3');
-                                  },
-                                  child: Text(
-                                    'Set Default',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )),
-                              PopupMenuItem(
-                                  onTap: () {
-                                    onDelete();
-                                  },
-                                  child: Text('Delete',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)))
-                            ])
+                      color: const Color.fromRGBO(48, 48, 48, 0.9),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () {
+                            widget.onSelect(widget.profileIndex);
+                          },
+                          child: Text(
+                            (defaultKey.get(0)?.selectedProfile ==
+                                    profileBox.getAt(widget.profileIndex)!.key)
+                                ? 'Unselect'
+                                : 'Select Profile',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            widget.onUpdate(
+                              profileBox.getAt(widget.profileIndex)!.name,
+                              profileBox
+                                  .getAt(widget.profileIndex)!
+                                  .focusDuration = 25,
+                              profileBox.getAt(widget.profileIndex)!.longBreak =
+                                  15,
+                              profileBox
+                                  .getAt(widget.profileIndex)!
+                                  .shortBreak = 5,
+                              profileBox
+                                  .getAt(widget.profileIndex)!
+                                  .whiteNoise = 'audio/Rain.mp3',
+                              profileBox.getAt(widget.profileIndex)!.ringtone =
+                                  'audio/ringtone_1.mp3',
+                            );
+                          },
+                          child: const Text(
+                            'Reset Values',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () {
+                            widget.onDelete();
+                          },
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
                 SizedBox(
@@ -111,7 +151,7 @@ class profile_tile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.only(left: 60),
-                      child: Text(focus_duration.toString() + ' minutes',
+                      child: Text(widget.focus_duration.toString() + ' minutes',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],
@@ -125,7 +165,7 @@ class profile_tile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.only(left: 90),
-                      child: Text(long_break.toString() + ' minutes',
+                      child: Text(widget.long_break.toString() + ' minutes',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],
@@ -139,7 +179,7 @@ class profile_tile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.only(left: 85),
-                      child: Text(short_break.toString() + ' minutes',
+                      child: Text(widget.short_break.toString() + ' minutes',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],
@@ -154,7 +194,8 @@ class profile_tile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 82),
                       child: Text(
-                          fileDisplayNames[white_noise] ?? 'Not Selected',
+                          fileDisplayNames[widget.white_noise] ??
+                              'Not Selected',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],
@@ -168,7 +209,8 @@ class profile_tile extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium),
                     Padding(
                       padding: const EdgeInsets.only(left: 107),
-                      child: Text(fileDisplayNames[ringtone] ?? 'Not Selected',
+                      child: Text(
+                          fileDisplayNames[widget.ringtone] ?? 'Not Selected',
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ],

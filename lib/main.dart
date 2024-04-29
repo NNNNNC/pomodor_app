@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/models/selectedModel.dart';
 import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/pages/main_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
@@ -14,6 +15,7 @@ import 'theme/theme.dart';
 late Box<Flashcard> flashcardBox;
 late Box<profileModel> profileBox;
 late Box<TopicModel> topicBox;
+late Box<SelectedModel> defaultKey;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +25,12 @@ void main() async {
   Hive.registerAdapter<Flashcard>(flashcardAdapter());
   Hive.registerAdapter<profileModel>(profileAdapter());
   Hive.registerAdapter<TopicModel>(TopicAdapter());
+  Hive.registerAdapter<SelectedModel>(KeyAdapter());
 
   flashcardBox = await Hive.openBox<Flashcard>('flashcard');
   profileBox = await Hive.openBox<profileModel>('profile');
   topicBox = await Hive.openBox<TopicModel>('topic');
+  defaultKey = await Hive.openBox<SelectedModel>('key');
 
   runApp(
     ChangeNotifierProvider(

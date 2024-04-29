@@ -58,7 +58,7 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: const EdgeInsets.only(left: 10.0, top: 18.0),
+      contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Flashcard',
         style: Theme.of(context).textTheme.titleLarge,
@@ -87,14 +87,15 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
         TextButton(
           onPressed: () {
             setState(() {
+              var currentTopic = topicBox.getAt(widget.currentIndex);
               if (_selectedItem == 'None') {
-                topicBox.getAt(widget.currentIndex)!.cardSet = null;
+                currentTopic!.cardSet = null;
               } else {
-                topicBox.getAt(widget.currentIndex)!.cardSet =
-                    getCardMap()[_selectedItem];
+                currentTopic!.cardSet = getCardMap()[_selectedItem];
               }
+              currentTopic.save();
             });
-            Navigator.of(context).pop(_selectedItem);
+            Navigator.of(context).pop();
           },
           child: Text(
             'DONE',

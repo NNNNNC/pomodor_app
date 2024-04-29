@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
 
 class TaskDialog extends StatefulWidget {
-  const TaskDialog({
-    super.key,
-  });
+  final int currentIndex;
+  const TaskDialog({super.key, required this.currentIndex});
 
   @override
   State<TaskDialog> createState() => _TaskDialogState();
 }
 
 class _TaskDialogState extends State<TaskDialog> {
-  List tasks = [
-    ['Do chapter 1', false],
-    ['Memorize periodic table', false],
-    ['Catch fish', false],
-    ['Watch movie', false],
-    ['Make lemonade', false],
-    ['Drink coffee', true],
-  ];
+  List? tasks = [];
+  late TopicModel? currentTopic;
 
   void _taskStatusChange(bool? value, int index) {
     setState(() {
-      tasks[index][1] = !tasks[index][1];
+      tasks![index][1] = !tasks![index][1];
+      currentTopic!.save();
     });
+  }
+
+  @override
+  void initState() {
+    currentTopic = topicBox.get(widget.currentIndex);
+    tasks = currentTopic!.tasks;
+    super.initState();
   }
 
   @override
@@ -70,11 +73,11 @@ class _TaskDialogState extends State<TaskDialog> {
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: tasks.length,
+                      itemCount: tasks!.length,
                       itemBuilder: (context, index) {
                         return MiniTaskTile(
-                          taskTitle: tasks[index][0],
-                          isChecked: tasks[index][1],
+                          taskTitle: tasks![index][0],
+                          isChecked: tasks![index][1],
                           onChanged: (value) => _taskStatusChange(value, index),
                         );
                       },

@@ -87,19 +87,19 @@ class _profile_editState extends State<profile_edit> {
     return Scaffold(
         appBar: AppBar(
           title: TextField(
-                      cursorColor: Colors.white,
-                      controller: _nameController,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                    ),
+            cursorColor: Colors.white,
+            controller: _nameController,
+            style: Theme.of(context).textTheme.titleLarge,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 25),
               child: IconButton(
                   onPressed: () {
-                    profile.name =_nameController.text;
+                    profile.name = _nameController.text;
                     _updateProfile();
                     profile.save();
                     Navigator.pop(context);

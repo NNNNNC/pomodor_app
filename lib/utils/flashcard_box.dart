@@ -66,19 +66,23 @@ class _FlashcardBoxState extends State<FlashcardBox> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isEnable = !_isEnable;
-                    });
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                  icon: Icon(
-                    _isEnable ? Icons.edit : Icons.edit_off,
-                    size: 25,
-                    color: Theme.of(context).colorScheme.secondary,
+                if (widget.isFlashcardEdit ?? false)
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isEnable = !_isEnable;
+                      });
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    icon: Icon(
+                      _isEnable ? Icons.edit : Icons.edit_off,
+                      size: 25,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
-                ),
+                if (widget.isFlashcardEdit == false ||
+                    widget.isFlashcardEdit == null)
+                  const SizedBox(height: 50),
                 Center(
                   child: TextField(
                     keyboardType: TextInputType.multiline,

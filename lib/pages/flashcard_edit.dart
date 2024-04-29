@@ -91,18 +91,22 @@ class _flashcard_editState extends State<flashcard_edit> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: TextField(
-                      cursorColor: Colors.white,
-                      controller: _nameController,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
+                    Expanded(
+                      child: TextField(
+                        cursorColor: Colors.white,
+                        controller: _nameController,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                       ),
-                    ),),
+                    ),
                     IconButton(
                         onPressed: () {
                           flashcard.cardSetName = _nameController.text;
-                          widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+                          flashcard.save();
+                          widget.onUpdate(
+                              flashcard.cards.length, flashcard.cardSetName);
                           flashcard.save();
                           Navigator.pop(context);
                         },
@@ -131,6 +135,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                 controller: _controller,
                                 direction: FlipDirection.HORIZONTAL,
                                 front: FlashcardBox(
+                                  isFlashcardEdit: true,
                                   cardContent: question,
                                   flipButton: TextButton(
                                       onPressed: () {
@@ -161,11 +166,13 @@ class _flashcard_editState extends State<flashcard_edit> {
                                     setState(() {
                                       flashcard.cards[index]['question'] =
                                           editQuestion;
+                                      flashcard.save();
                                     });
                                   },
                                   isQuestion: true,
                                 ),
                                 back: FlashcardBox(
+                                  isFlashcardEdit: true,
                                   cardContent: answer,
                                   flipButton: TextButton(
                                       onPressed: () {
@@ -196,6 +203,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                     setState(() {
                                       flashcard.cards[index]['answer'] =
                                           editAnswer;
+                                      flashcard.save();
                                     });
                                   },
                                 ));

@@ -2,10 +2,17 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/utils/flashcard_box.dart';
 
 class FlashcardPresent extends StatefulWidget {
-  const FlashcardPresent({super.key});
+  final int? topicKey;
+
+  const FlashcardPresent({
+    super.key,
+    required this.topicKey,
+  });
 
   @override
   State<FlashcardPresent> createState() => FlashcardPresentState();
@@ -13,29 +20,11 @@ class FlashcardPresent extends StatefulWidget {
 
 class FlashcardPresentState extends State<FlashcardPresent> {
   final controller = CarouselController();
-  FlipCardController _controller = FlipCardController();
-  List<String> texts = [
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-    'NICO',
-    'ANGELO',
-    'CELIS',
-    'VILLONO',
-  ];
+  final FlipCardController _controller = FlipCardController();
   int _currentIndex = 0;
 
   void next() {
-    if (_currentIndex < texts.length - 1) {
+    if (_currentIndex < cardList.length - 1) {
       setState(() {
         _currentIndex = (_currentIndex + 1);
         controller.nextPage(duration: const Duration(milliseconds: 400));
@@ -52,9 +41,27 @@ class FlashcardPresentState extends State<FlashcardPresent> {
     }
   }
 
-  TextEditingController _cardSetNameController =
-      TextEditingController(text: 'Card Set Name');
-  bool _isEnable = false;
+  Key _flipCardKey = UniqueKey();
+
+  void updateKey() {
+    setState(() {
+      _flipCardKey = UniqueKey();
+    });
+  }
+
+  Flashcard? flashCard;
+  List<Map<String, String>> cardList = [];
+
+  @override
+  void initState() {
+    int? cardKey = topicBox.get(widget.topicKey)!.cardSet;
+    setState(() {
+      flashCard = flashcardBox.get(cardKey);
+      cardList = flashCard!.cards;
+      cardList.shuffle();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,29 +74,9 @@ class FlashcardPresentState extends State<FlashcardPresent> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 35, right: 35),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isEnable = true;
-                  });
-                },
-                child: TextField(
-                  cursorColor: const Color.fromRGBO(192, 192, 192, 1),
-                  controller: _cardSetNameController,
-                  enabled: _isEnable,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    _cardSetNameController.text = value;
-                  },
-                  onSubmitted: (value) {
-                    setState(() {
-                      _isEnable = false;
-                    });
-                  },
-                ),
+              child: Text(
+                flashCard!.cardSetName,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             const SizedBox(
@@ -105,9 +92,17 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     'Flashcard 0${_currentIndex + 1}',
                     style: const TextStyle(fontSize: 19),
                   ),
-                  Icon(
-                    Icons.shuffle,
-                    color: Theme.of(context).colorScheme.secondary,
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        cardList.shuffle();
+                        updateKey();
+                      });
+                    },
+                    icon: Icon(
+                      Icons.shuffle,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ],
               ),
@@ -122,14 +117,14 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                   child: Center(
                     child: CarouselSlider.builder(
                       carouselController: controller,
-                      itemCount: texts.length,
+                      itemCount: cardList.length,
                       itemBuilder: (context, index, realIndex) {
-                        final text = texts[index];
                         return FlipCard(
+                          key: _flipCardKey,
                           controller: _controller,
                           direction: FlipDirection.HORIZONTAL,
                           front: FlashcardBox(
-                            cardContent: text,
+                            cardContent: cardList[index]['question'],
                             flipButton: TextButton(
                                 onPressed: () {
                                   _controller.toggleCard();
@@ -138,25 +133,18 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
-                                      'Check Answer ',
+                                      '',
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary,
                                       ),
                                     ),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      size: 20,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
                                   ],
                                 )),
                           ),
                           back: FlashcardBox(
-                            cardContent: 'Jake Sacay',
+                            cardContent: cardList[index]['answer'],
                             flipButton: TextButton(
                               onPressed: () {
                                 _controller.toggleCard();
@@ -165,18 +153,12 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    'Check Answer ',
+                                    '',
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
                                     ),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    size: 20,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ],
                               ),
@@ -206,16 +188,18 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                          onPressed: previous,
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Theme.of(context).colorScheme.secondary,
-                          )),
+                        onPressed: previous,
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
                       IconButton(
-                          onPressed: next,
-                          icon: Icon(Icons.arrow_forward_ios,
-                              size: 25,
-                              color: Theme.of(context).colorScheme.secondary)),
+                        onPressed: next,
+                        icon: Icon(Icons.arrow_forward_ios,
+                            size: 25,
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
                     ],
                   ),
                 ),
@@ -233,7 +217,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                       width: 280,
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
-                        value: (_currentIndex + 1) / texts.length,
+                        value: (_currentIndex + 1) / cardList.length,
                         minHeight: 5,
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -252,7 +236,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    '${_currentIndex + 1}' + '/' + texts.length.toString(),
+                    '${_currentIndex + 1}' + '/' + cardList.length.toString(),
                     style: const TextStyle(fontSize: 14),
                   ),
                 ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/models/selectedModel.dart';
 import 'package:pomodoro_app/utils/add_tile_dialog.dart';
 import 'package:pomodoro_app/utils/profile_tile.dart';
 
@@ -30,6 +31,26 @@ class _profile_pageState extends State<profile_page> {
       profile.whiteNoise = newWhiteNoise;
       profile.ringtone = newRingtone;
       profileBox.putAt(index, profile);
+    });
+  }
+
+  void onSelect(int index) {
+    setState(() {
+      var topic = defaultKey.get(0)?.selectedTopic;
+      if (defaultKey.get(0)?.selectedProfile == profileBox.getAt(index)!.key) {
+        defaultKey.put(
+          0,
+          SelectedModel(selectedProfile: null, selectedTopic: topic),
+        );
+      } else {
+        defaultKey.put(
+          0,
+          SelectedModel(
+            selectedProfile: profileBox.getAt(index)!.key,
+            selectedTopic: topic,
+          ),
+        );
+      }
     });
   }
 
@@ -72,14 +93,14 @@ class _profile_pageState extends State<profile_page> {
           heroTag: 'profile',
           onPressed: () {
             showDialog(
-            context: context,
-            builder: (context) {
-              return add_tile_dialog(
-                controller: _nameController,
-                onPressed: createNewTopic,
-              );
-            },
-          );
+              context: context,
+              builder: (context) {
+                return add_tile_dialog(
+                  controller: _nameController,
+                  onPressed: createNewTopic,
+                );
+              },
+            );
           },
           child: const Icon(
             Icons.add,
@@ -102,6 +123,7 @@ class _profile_pageState extends State<profile_page> {
                   profileBox.deleteAt(index);
                 });
               },
+              onSelect: onSelect,
               profileIndex: index,
               onUpdate: (newName, newFocusDuration, newLongBreak, newShortBreak,
                   newWhiteNoise, newRingtone) {

@@ -1,31 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro_app/main.dart';
+import 'package:pomodoro_app/models/selectedModel.dart';
 
-class CustomDialog extends StatefulWidget {
-  final List<String> listofItems;
-
-  const CustomDialog({
-    Key? key,
-    required this.listofItems,
-  }) : super(key: key);
+class TopicDialog extends StatefulWidget {
+  const TopicDialog({
+    super.key,
+  });
 
   @override
-  State<CustomDialog> createState() => _CustomDialogState();
+  State<TopicDialog> createState() => _TopicDialogState();
 }
 
-class _CustomDialogState extends State<CustomDialog> {
+class _TopicDialogState extends State<TopicDialog> {
   String? _selectedItem;
+
+  Map<String, int> getTopicMap() {
+    Map<String, int> topicMap = {};
+    topicMap.addAll({"None": -1});
+
+    if (topicBox.isNotEmpty) {
+      for (int i = 0; i < topicBox.length; i++) {
+        String topic = topicBox.getAt(i)!.name!;
+        int key = topicBox.getAt(i)!.key;
+
+        topicMap.addAll({topic: key});
+      }
+    }
+    return topicMap;
+  }
+
+  @override
+  void initState() {
+    int? topicKey = defaultKey.get(0)?.selectedTopic;
+    setState(() {
+      _selectedItem = topicBox.get(topicKey)?.name ?? 'None';
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: const EdgeInsets.only(left: 10.0, top: 18.0),
+      contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Topic',
         style: Theme.of(context).textTheme.titleLarge,
       ),
       content: SingleChildScrollView(
         child: Column(
-          children: widget.listofItems.map((topic) {
+          children: getTopicMap().keys.map((topic) {
             return RadioListTile(
               title: Text(
                 topic,
@@ -46,7 +69,19 @@ class _CustomDialogState extends State<CustomDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(_selectedItem);
+            setState(() {
+              var profile = defaultKey.get(0)?.selectedProfile;
+              defaultKey.put(
+                0,
+                SelectedModel(
+                  selectedTopic: (_selectedItem == 'None')
+                      ? null
+                      : getTopicMap()[_selectedItem],
+                  selectedProfile: profile,
+                ),
+              );
+            });
+            Navigator.of(context).pop();
           },
           child: Text(
             'DONE',

@@ -47,8 +47,9 @@ class _topic_edit_pageState extends State<topic_edit_page> {
 
   void clickcheckbox(int index) {
     setState(() {
-      topicBox.getAt(widget.currentIndex)!.tasks![index][1] =
-          !topicBox.getAt(widget.currentIndex)!.tasks![index][1];
+      var currentTopic = topicBox.getAt(widget.currentIndex);
+      currentTopic!.tasks?[index][1] = !currentTopic.tasks?[index][1];
+      currentTopic.save();
     });
   }
 
@@ -101,6 +102,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                 setState(() {
                   currentTopic!.description = _descriptionController.text;
                   currentTopic.name = _topicController.text;
+                  currentTopic.save();
                 });
 
                 Navigator.pop(context);

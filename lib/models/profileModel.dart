@@ -3,8 +3,7 @@ import 'package:hive/hive.dart';
 part 'profileModel.g.dart';
 
 @HiveType(typeId: 1, adapterName: 'profileAdapter')
-class profileModel extends HiveObject{
-
+class profileModel extends HiveObject {
   @HiveField(0)
   String name;
 
@@ -22,7 +21,6 @@ class profileModel extends HiveObject{
 
   @HiveField(5)
   String ringtone;
-  
 
   profileModel(
     this.name,
@@ -31,6 +29,5 @@ class profileModel extends HiveObject{
     this.longBreak,
     this.whiteNoise,
     this.ringtone,
-    );
-
+  );
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,21 @@ class PomodoroPage extends StatefulWidget {
 class _PomodoroPageState extends State<PomodoroPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _slideController;
+  int? topicKey;
+  int? profileKey;
+  String whiteNoise = '', ringTone = '';
+  List<dynamic>? topicTasks;
 
   @override
   void initState() {
+    topicKey = defaultKey.get(0)?.selectedTopic;
+    profileKey = defaultKey.get(0)?.selectedProfile;
+    topicTasks = topicBox.get(topicKey)?.tasks;
+    whiteNoise = profileBox.get(profileKey)?.whiteNoise ?? 'audio/Dryer.mp3';
+    ringTone = profileBox.get(profileKey)?.ringtone ?? 'audio/ringtone_1.mp3';
+
     super.initState();
+
     _slideController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -40,6 +52,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     super.dispose();
   }
 
+  bool isPlaying = false;
   bool isMuted = false;
   bool isFocusing = false;
   bool isBreak = false;
@@ -51,20 +64,35 @@ class _PomodoroPageState extends State<PomodoroPage>
   int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
-
-  List tasks = [
-    ['Do chapter 1', false],
-    ['Memorize periodic table', false],
-    ['Catch fish', false],
-    ['Watch movie', false],
-    ['Make lemonade', false],
-    ['Drink coffee', true],
-  ];
+  final audioPlayer = AudioPlayer();
 
   void _taskStatusChange(bool? value, int index) {
     setState(() {
-      tasks[index][1] = !tasks[index][1];
+      topicTasks![index][1] = !topicTasks![index][1];
     });
+  }
+
+  void playSound(String filepath) async {
+    await audioPlayer.play(
+      AssetSource(filepath),
+      mode: PlayerMode.lowLatency,
+    );
+  }
+
+  void loop() async {
+    await audioPlayer.setReleaseMode(ReleaseMode.loop);
+  }
+
+  void muteAudio() async {
+    await audioPlayer.setVolume(0.0);
+  }
+
+  void unmuteAudio() async {
+    await audioPlayer.setVolume(1.0);
+  }
+
+  void stopAudio() async {
+    await audioPlayer.stop();
   }
 
   // timer methods
@@ -238,16 +266,18 @@ class _PomodoroPageState extends State<PomodoroPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        showDialog<void>(
+                      onPressed: () async {
+                        await showDialog<void>(
                           barrierDismissible: false,
                           context: context,
                           builder: (BuildContext context) {
-                            return CustomDialog(
-                              listofItems: getTopics(),
-                            );
+                            return const TopicDialog();
                           },
                         );
+                        setState(() {
+                          topicKey = defaultKey.get(0)?.selectedTopic;
+                          topicTasks = topicBox.get(topicKey)?.tasks;
+                        });
                       },
                       child: Text(
                         'SELECT TOPIC',
@@ -259,32 +289,14 @@ class _PomodoroPageState extends State<PomodoroPage>
                       ),
                     ),
                     IconButton(
-                      // onPressed: () => showMenu(
-                      //   context: context,
-                      //   position: const RelativeRect.fromLTRB(
-                      //       270.0, 140.0, 300.0, 150.0),
-                      //   items: const [
-                      //     PopupMenuItem(
-                      //       child: Text('No Sound'),
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: Text('Rain'),
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: Text('TV Static'),
-                      //     ),
-                      //     PopupMenuItem(
-                      //       child: Text('Fan'),
-                      //     ),
-                      //   ],
-                      // ),
                       onPressed: () {
                         setState(() {
                           isMuted = !isMuted;
+                          isMuted ? muteAudio() : unmuteAudio();
                         });
                       },
                       icon: Icon(
-                        isMuted ? Icons.headphones : Icons.headset_off,
+                        isMuted ? Icons.headset_off : Icons.headphones,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
@@ -444,11 +456,18 @@ class _PomodoroPageState extends State<PomodoroPage>
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () => isBreak
-                        ? shortBreak()
-                        : isLongBreak
-                            ? longBreak()
-                            : focus(),
+                    onTap: () {
+                      setState(() {
+                        isPlaying = !isPlaying;
+                        isPlaying ? playSound(whiteNoise) : stopAudio();
+                        loop();
+                      });
+                      isBreak
+                          ? shortBreak()
+                          : isLongBreak
+                              ? longBreak()
+                              : focus();
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 700),
                       width: 251,
@@ -534,7 +553,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
               // will only show on focus mode
               // tasks
-              if (value.isVisible == false)
+              if (value.isVisible == false &&
+                  (topicKey != null && topicTasks != null))
                 Expanded(
                   child: Container(
                     width: 330,
@@ -559,20 +579,36 @@ class _PomodoroPageState extends State<PomodoroPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Tasks',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Tasks',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' (${topicBox.get(topicKey)?.name})',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ),
+                                ],
                               ),
                               IconButton(
                                 onPressed: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const TaskDialog();
+                                      return TaskDialog(
+                                        currentIndex: topicKey!,
+                                      );
                                     },
                                   );
                                 },
@@ -593,11 +629,11 @@ class _PomodoroPageState extends State<PomodoroPage>
                               child: ListView.builder(
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
-                                itemCount: tasks.length,
+                                itemCount: topicTasks?.length,
                                 itemBuilder: (context, index) {
                                   return MiniTaskTile(
-                                    taskTitle: tasks[index][0],
-                                    isChecked: tasks[index][1],
+                                    taskTitle: topicTasks![index][0],
+                                    isChecked: topicTasks![index][1],
                                     onChanged: (value) =>
                                         _taskStatusChange(value, index),
                                   );
@@ -607,6 +643,19 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+
+              if (value.isVisible == false &&
+                  (topicKey == null || topicTasks == null))
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      (topicKey == null)
+                          ? 'Select a topic first to see your tasks.'
+                          : 'Create tasks for more productivity!',
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
@@ -639,37 +688,40 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(
-                                PageRouteBuilder(
-                                  transitionDuration:
-                                      const Duration(milliseconds: 200),
-                                  reverseTransitionDuration:
-                                      const Duration(milliseconds: 200),
-                                  opaque: true,
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                    return const FlashcardPresent();
-                                  },
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(0, 1),
-                                        end: Offset.zero,
-                                      ).animate(animation),
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
+                              if (topicBox.get(topicKey)?.cardSet != null) {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionDuration:
+                                        const Duration(milliseconds: 200),
+                                    reverseTransitionDuration:
+                                        const Duration(milliseconds: 200),
+                                    opaque: true,
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) {
+                                      return FlashcardPresent(
+                                        topicKey: topicKey,
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(0, 1),
+                                          end: Offset.zero,
+                                        ).animate(animation),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
                             },
                             child: Image.asset(
                               'assets/icons/document.png',
                               height: 40,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
-                                  .withOpacity(0.5),
+                              color: (topicBox.get(topicKey)?.cardSet != null)
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Colors.white38,
                             ),
                           ),
                           const SizedBox(
