@@ -315,109 +315,100 @@ class _PomodoroPageState extends State<PomodoroPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Focus state
-                    GestureDetector(
-                      onTap: () => focus(),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        decoration: BoxDecoration(
-                          color: isFocusing ? Colors.grey[900] : Colors.grey,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(77),
-                            bottomLeft: Radius.circular(77),
-                            topRight: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 1.5,
-                              spreadRadius: 0,
-                              offset: const Offset(-4, 4),
-                              color: Colors.black.withOpacity(0.25),
-                            ),
-                          ],
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      decoration: BoxDecoration(
+                        color: isFocusing ? Colors.grey[900] : Colors.grey,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(77),
+                          bottomLeft: Radius.circular(77),
+                          topRight: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
                         ),
-                        height: 32,
-                        width: 71,
-                        child: const Center(
-                          child: Text(
-                            'Focus',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 1.5,
+                            spreadRadius: 0,
+                            offset: const Offset(-4, 4),
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                        ],
+                      ),
+                      height: 32,
+                      width: 71,
+                      child: const Center(
+                        child: Text(
+                          'Focus',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
 
                     // Long Break State
-                    GestureDetector(
-                      onTap: () => longBreak(),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        margin: const EdgeInsets.only(left: 5.0),
-                        decoration: BoxDecoration(
-                          color: isLongBreak ? Colors.grey[900] : Colors.grey,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(6)),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 1.5,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 4),
-                              color: Colors.black.withOpacity(0.25),
-                            ),
-                          ],
-                        ),
-                        height: 32,
-                        width: 90,
-                        child: const Center(
-                          child: Text(
-                            'Long Break',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      margin: const EdgeInsets.only(left: 5.0),
+                      decoration: BoxDecoration(
+                        color: isLongBreak ? Colors.grey[900] : Colors.grey,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(6)),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 1.5,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 4),
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                        ],
+                      ),
+                      height: 32,
+                      width: 90,
+                      child: const Center(
+                        child: Text(
+                          'Long Break',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
 
                     // Short break state
-                    GestureDetector(
-                      onTap: () => shortBreak(),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        margin: const EdgeInsets.only(left: 5.0),
-                        decoration: BoxDecoration(
-                          color: isBreak ? Colors.grey[900] : Colors.grey,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            bottomLeft: Radius.circular(16),
-                            topRight: Radius.circular(77),
-                            bottomRight: Radius.circular(77),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 1.5,
-                              spreadRadius: 0,
-                              offset: const Offset(4, 4),
-                              color: Colors.black.withOpacity(0.25),
-                            ),
-                          ],
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      margin: const EdgeInsets.only(left: 5.0),
+                      decoration: BoxDecoration(
+                        color: isBreak ? Colors.grey[900] : Colors.grey,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          bottomLeft: Radius.circular(16),
+                          topRight: Radius.circular(77),
+                          bottomRight: Radius.circular(77),
                         ),
-                        height: 32,
-                        width: 71,
-                        child: const Center(
-                          child: Text(
-                            'Break',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 1.5,
+                            spreadRadius: 0,
+                            offset: const Offset(4, 4),
+                            color: Colors.black.withOpacity(0.25),
+                          ),
+                        ],
+                      ),
+                      height: 32,
+                      width: 71,
+                      child: const Center(
+                        child: Text(
+                          'Break',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
