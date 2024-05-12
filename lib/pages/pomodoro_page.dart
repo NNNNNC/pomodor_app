@@ -23,7 +23,11 @@ class PomodoroPage extends StatefulWidget {
 }
 
 class _PomodoroPageState extends State<PomodoroPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive =>
+      isFocusing || isBreak || isLongBreak || isMuted || isPlaying;
+
   late AnimationController _slideController;
   int? topicKey;
   int? profileKey;
@@ -64,7 +68,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
-  final audioPlayer = AudioPlayer();
+  final audioPlayer = AudioPlayer(playerId: 'main');
 
   void _taskStatusChange(bool? value, int index) {
     setState(() {
@@ -237,6 +241,7 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final int totalDuration = isFocusing ? 25 : (isBreak ? 5 : 15);
     final double progress =
         (totalDuration * 60 - (seconds + minutes * 60)) / (totalDuration * 60);
