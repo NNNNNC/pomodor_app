@@ -8,7 +8,23 @@ import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+  MainPage({super.key});
+
+  final PageStorageBucket bucket = PageStorageBucket();
+  final List<Widget> pages = const [
+    PomodoroPage(
+      key: PageStorageKey('PomodoroPage'),
+    ),
+    flashcard_page(
+      key: PageStorageKey('FlashcardPage'),
+    ),
+    topic_page(
+      key: PageStorageKey('TopicPage'),
+    ),
+    profile_page(
+      key: PageStorageKey('ProfilePage'),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +33,11 @@ class MainPage extends StatelessWidget {
         length: 4,
         child: Scaffold(
           bottomNavigationBar: value.isVisible ? bottomBar(context) : null,
-          body: const TabBarView(
-            children: [
-              PomodoroPage(),
-              flashcard_page(),
-              topic_page(),
-              profile_page(),
-            ],
+          body: PageStorage(
+            bucket: bucket,
+            child: TabBarView(
+              children: pages,
+            ),
           ),
         ),
       ),
