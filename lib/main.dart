@@ -6,9 +6,11 @@ import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/models/selectedModel.dart';
 import 'package:pomodoro_app/models/topicModel.dart';
+import 'package:pomodoro_app/onBoarding/Onboarding.dart';
 import 'package:pomodoro_app/pages/main_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/theme.dart';
 
 // Hive Boxes
@@ -19,6 +21,9 @@ late Box<SelectedModel> defaultKey;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final onboarding = prefs.getBool('onboarding') ?? false;
+  
 
   await Hive.initFlutter();
 
@@ -35,20 +40,21 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => BottomBarVisibility(),
-      child: const MyApp(),
+      child: MyApp(onboarding: onboarding,),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool onboarding;
+  const MyApp({super.key, this.onboarding = false});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: app_theme,
-      home: MainPage(),
+      home: onboarding? MainPage() : OnboardingScreen(),
     );
   }
 }
