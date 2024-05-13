@@ -61,22 +61,26 @@ class _flashcard_editState extends State<flashcard_edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'flashcard edit',
-          onPressed: () {
-            setState(() {
-              // Add a new question and answer flashcard to the list
-              Map<String, String> newCard = {
-                'question': '',
-                'answer': '',
-              };
-              flashcard.cards.add(newCard);
-              widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
-            });
-          },
-          child: const Icon(
-            Icons.add,
-            size: 45,
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: FloatingActionButton(
+            heroTag: 'flashcard edit',
+            onPressed: () {
+              setState(() {
+                // Add a new question and answer flashcard to the list
+                Map<String, String> newCard = {
+                  'question': '',
+                  'answer': '',
+                };
+                flashcard.cards.add(newCard);
+                widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              size: 45,
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -121,126 +125,123 @@ class _flashcard_editState extends State<flashcard_edit> {
               SizedBox(
                 height: 100,
               ),
-              Stack(
-                children: [
-                  Center(
-                      child: CarouselSlider.builder(
-                          carouselController: controller,
-                          itemCount: flashcard.cards.length,
-                          itemBuilder: (context, index, realIndex) {
-                            final card = flashcard.cards[index];
-                            final question = card['question'];
-                            final answer = card['answer'];
-                            return FlipCard(
-                                controller: _controller,
-                                direction: FlipDirection.HORIZONTAL,
-                                front: FlashcardBox(
-                                  isFlashcardEdit: true,
-                                  cardContent: question,
-                                  flipButton: TextButton(
-                                      onPressed: () {
-                                        _controller.toggleCard();
+              Center(
+                child: Stack(
+                  children: [
+                    Center(
+                        child: CarouselSlider.builder(
+                            carouselController: controller,
+                            itemCount: flashcard.cards.length,
+                            itemBuilder: (context, index, realIndex) {
+                              final card = flashcard.cards[index];
+                              final question = card['question'];
+                              final answer = card['answer'];
+                              return Container(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: FlipCard(
+                                    controller: _controller,
+                                    direction: FlipDirection.HORIZONTAL,
+                                    front: FlashcardBox(
+                                      isFlashcardEdit: true,
+                                      cardContent: question,
+                                      flipButton: TextButton(
+                                          onPressed: () {
+                                            _controller.toggleCard();
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Check Answer ',
+                                                style: Theme.of(context).textTheme.labelSmall
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward,
+                                                size: 15,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
+                                              ),
+                                            ],
+                                          )),
+                                      onUpdateContent: (editQuestion) {
+                                        setState(() {
+                                          flashcard.cards[index]['question'] =
+                                              editQuestion;
+                                          flashcard.save();
+                                        });
                                       },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            'Check Answer ',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward,
-                                            size: 20,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
-                                        ],
-                                      )),
-                                  onUpdateContent: (editQuestion) {
-                                    setState(() {
-                                      flashcard.cards[index]['question'] =
-                                          editQuestion;
-                                      flashcard.save();
-                                    });
-                                  },
-                                  isQuestion: true,
-                                ),
-                                back: FlashcardBox(
-                                  isFlashcardEdit: true,
-                                  cardContent: answer,
-                                  flipButton: TextButton(
-                                      onPressed: () {
-                                        _controller.toggleCard();
+                                      isQuestion: true,
+                                    ),
+                                    back: FlashcardBox(
+                                      isFlashcardEdit: true,
+                                      cardContent: answer,
+                                      flipButton: TextButton(
+                                          onPressed: () {
+                                            _controller.toggleCard();
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Check Question ',
+                                                style: Theme.of(context).textTheme.labelSmall
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward,
+                                                size: 15,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
+                                              ),
+                                            ],
+                                          )),
+                                      onUpdateContent: (editAnswer) {
+                                        setState(() {
+                                          flashcard.cards[index]['answer'] =
+                                              editAnswer;
+                                          flashcard.save();
+                                        });
                                       },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            'Check Question ',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward,
-                                            size: 20,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
-                                        ],
-                                      )),
-                                  onUpdateContent: (editAnswer) {
-                                    setState(() {
-                                      flashcard.cards[index]['answer'] =
-                                          editAnswer;
-                                      flashcard.save();
-                                    });
-                                  },
-                                ));
-                          },
-                          options: CarouselOptions(
-                              enableInfiniteScroll: false,
-                              height: 400,
-                              viewportFraction: 1,
-                              initialPage: 0,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentIndex = index;
-                                });
-                              }))),
-                  Positioned(
-                      left: 5,
-                      right: 5,
-                      top: 0,
-                      bottom: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                              onPressed: previous,
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                color: Theme.of(context).colorScheme.secondary,
-                              )),
-                          IconButton(
-                              onPressed: next,
-                              icon: Icon(Icons.arrow_forward_ios,
-                                  size: 25,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary)),
-                        ],
-                      ))
-                ],
+                                    )),
+                              );
+                            },
+                            options: CarouselOptions(
+                                enableInfiniteScroll: false,
+                                height: 350,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentIndex = index;
+                                  });
+                                }))),
+                    Positioned(
+                        left: 5,
+                        right: 5,
+                        top: 0,
+                        bottom: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: previous,
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                )),
+                            IconButton(
+                                onPressed: next,
+                                icon: Icon(Icons.arrow_forward_ios,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary)),
+                          ],
+                        ))
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 30, top: 20),
@@ -263,12 +264,12 @@ class _flashcard_editState extends State<flashcard_edit> {
                           }
                         },
                         icon: Icon(
-                          size: 30,
+                          size: 25,
                           Icons.close,
                           color: Theme.of(context).colorScheme.secondary,
                         )),
                     SizedBox(
-                      height: 5,
+                      height: 3.5,
                       width: 280,
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(10),
@@ -284,7 +285,7 @@ class _flashcard_editState extends State<flashcard_edit> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 68,
+                  left: 50,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,

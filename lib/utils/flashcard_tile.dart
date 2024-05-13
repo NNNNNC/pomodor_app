@@ -41,21 +41,22 @@ class flashcard_tile extends StatelessWidget {
                     child: Text(
                       maxLines: 2,
                       flashcard_name,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                   IconButton(
                     onPressed: () {
                       onDelete();
                     },
-                    icon: const Icon(
+                    icon: Icon(
+                      size: 20,
                       Icons.delete_outline,
-                      color: Colors.white70,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   )
                 ],
               ),
-              Text('$flashcard_count Flashcards')
+              Text('$flashcard_count Flashcards', style: Theme.of(context).textTheme.labelMedium,)
             ],
           ),
         ),

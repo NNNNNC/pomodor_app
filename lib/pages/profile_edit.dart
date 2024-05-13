@@ -125,7 +125,7 @@ class _profile_editState extends State<profile_edit> {
                       ),
                       Text(
                         'TIMER',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -140,7 +140,7 @@ class _profile_editState extends State<profile_edit> {
                         children: [
                           Text(
                             'Focus Duration :',
-                            style: Theme.of(context).textTheme.titleLarge,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           SizedBox(
                             child: Row(
@@ -161,7 +161,7 @@ class _profile_editState extends State<profile_edit> {
                                 Text(' Minutes',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleMedium),
+                                        .titleSmall),
                               ],
                             ),
                           ),
@@ -181,7 +181,7 @@ class _profile_editState extends State<profile_edit> {
                         children: [
                           Text(
                             'Long Break Length :',
-                            style: Theme.of(context).textTheme.titleLarge,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           Row(
                             children: [
@@ -199,7 +199,7 @@ class _profile_editState extends State<profile_edit> {
                               ),
                               Text(' Minutes',
                                   style:
-                                      Theme.of(context).textTheme.titleMedium),
+                                      Theme.of(context).textTheme.titleSmall),
                             ],
                           ),
                         ],
@@ -219,7 +219,7 @@ class _profile_editState extends State<profile_edit> {
                           children: [
                             Text(
                               'Short Break Length :',
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                             Row(
                               children: [
@@ -238,7 +238,7 @@ class _profile_editState extends State<profile_edit> {
                                 Text(' Minutes',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleMedium),
+                                        .titleSmall),
                               ],
                             ),
                           ],
@@ -254,7 +254,7 @@ class _profile_editState extends State<profile_edit> {
                       ),
                       Text(
                         'SOUND',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -296,7 +296,7 @@ class _profile_editState extends State<profile_edit> {
                               children: [
                                 Text(
                                   'White Noise',
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(
                                   height: 8,
@@ -358,7 +358,7 @@ class _profile_editState extends State<profile_edit> {
                                   Text(
                                     'Ringtone',
                                     style:
-                                        Theme.of(context).textTheme.titleLarge,
+                                        Theme.of(context).textTheme.titleMedium,
                                   ),
                                   const SizedBox(
                                     height: 8,
@@ -391,11 +391,11 @@ class _profile_editState extends State<profile_edit> {
         items.contains(controller.text) ? controller.text : null;
     return DropdownButton<String>(
       value: selectedValue,
-      icon: const Icon(Icons.keyboard_arrow_down),
+      icon: Icon(Icons.keyboard_arrow_down,size: 20,),
       items: items.map((item) {
         return DropdownMenuItem(
           value: item,
-          child: Text(item),
+          child: Text(item, style: Theme.of(context).textTheme.titleSmall,),
         );
       }).toList(),
       onChanged: (value) {

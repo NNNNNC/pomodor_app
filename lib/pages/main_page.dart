@@ -46,6 +46,7 @@ class MainPage extends StatelessWidget {
 
   Widget bottomBar(BuildContext context) {
     return Container(
+      height: 70,
       decoration: BoxDecoration(
         color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
       ),
@@ -61,35 +62,47 @@ class MainPage extends StatelessWidget {
         ),
         indicatorColor: Theme.of(context).colorScheme.secondary,
         labelColor: Theme.of(context).colorScheme.secondary,
-        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
         tabs: const [
-          Tab(
-            text: 'Pomodoro',
-            icon: ImageIcon(
-              AssetImage('assets/icons/pie-chart.png'),
-              size: 25,
+          SizedBox(
+            width: 70,
+            child: Tab(
+              text: 'Pomodoro',
+              icon: ImageIcon(
+                AssetImage('assets/icons/pie-chart.png'),
+                size: 20,
+              ),
             ),
           ),
-          Tab(
-            text: 'Flashcard',
-            icon: ImageIcon(
-              AssetImage('assets/icons/document.png'),
-              size: 25,
+          SizedBox(
+            width: 70,
+            child: Tab(
+              text: 'Flashcard',
+              icon: ImageIcon(
+                AssetImage('assets/icons/document.png'),
+                size: 20,
+              ),
             ),
           ),
-          Tab(
-            text: 'Topics',
-            icon: ImageIcon(
-              AssetImage('assets/icons/bill.png'),
-              size: 25,
+          SizedBox(
+            width: 70,
+            child: Tab(
+              text: 'Topics',
+              icon: ImageIcon(
+                AssetImage('assets/icons/bill.png'),
+                size: 20,
+              ),
             ),
           ),
-          Tab(
-            text: 'Profile',
-            icon: Icon(
-              Icons.person_outline,
-              size: 25,
+          SizedBox(
+            width: 70,
+            child: Tab(
+              text: 'Profile',
+              icon: Icon(
+                Icons.person_outline,
+                size: 20,
+              ),
             ),
           ),
         ],

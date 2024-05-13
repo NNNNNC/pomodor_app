@@ -89,22 +89,26 @@ class _profile_pageState extends State<profile_page> {
         appBar: AppBar(
           title: const Text("Profile"),
         ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'profile',
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return add_tile_dialog(
-                  controller: _nameController,
-                  onPressed: createNewTopic,
-                );
-              },
-            );
-          },
-          child: const Icon(
-            Icons.add,
-            size: 45,
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: FloatingActionButton(
+            heroTag: 'profile',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return add_tile_dialog(
+                    controller: _nameController,
+                    onPressed: createNewTopic,
+                  );
+                },
+              );
+            },
+            child: const Icon(
+              Icons.add,
+              size: 45,
+            ),
           ),
         ),
         body: ListView.builder(

@@ -28,6 +28,7 @@ class add_tile_dialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              style: TextStyle(fontSize: 13.5),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return '';
@@ -55,7 +56,7 @@ class add_tile_dialog extends StatelessWidget {
                       'Cancel',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 16,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
@@ -69,7 +70,7 @@ class add_tile_dialog extends StatelessWidget {
                       'Save',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 16,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
                     ))

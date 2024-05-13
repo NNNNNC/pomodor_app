@@ -76,7 +76,7 @@ class _profile_tileState extends State<profile_tile> {
                           Text(
                             maxLines: 2,
                             widget.profile_name,
-                            style: Theme.of(context).textTheme.titleLarge,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           if (defaultKey.get(0)?.selectedProfile ==
                               profileBox.getAt(widget.profileIndex)!.key)
@@ -84,13 +84,14 @@ class _profile_tileState extends State<profile_tile> {
                               '  (Selected)',
                               style: TextStyle(
                                 color: Colors.green[600],
-                                fontSize: 17,
+                                fontSize: 13,
                               ),
                             ),
                         ],
                       ),
                     ),
                     PopupMenuButton(
+                      iconSize: 25,
                       color: const Color.fromRGBO(48, 48, 48, 0.9),
                       itemBuilder: (context) => [
                         PopupMenuItem(
@@ -147,13 +148,13 @@ class _profile_tileState extends State<profile_tile> {
                 ),
                 Row(
                   children: [
-                    Text('Focus Duration :',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 60),
-                      child: Text(widget.focus_duration.toString() + ' minutes',
-                          style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      width: 180,
+                      child: Text('Focus Duration :',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
+                    Text(widget.focus_duration.toString() + ' minutes',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 SizedBox(
@@ -161,13 +162,13 @@ class _profile_tileState extends State<profile_tile> {
                 ),
                 Row(
                   children: [
-                    Text('Long Break :',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 90),
-                      child: Text(widget.long_break.toString() + ' minutes',
-                          style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      width: 180,
+                      child: Text('Long Break :',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
+                    Text(widget.long_break.toString() + ' minutes',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 SizedBox(
@@ -175,13 +176,13 @@ class _profile_tileState extends State<profile_tile> {
                 ),
                 Row(
                   children: [
-                    Text('Short Break :',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 85),
-                      child: Text(widget.short_break.toString() + ' minutes',
-                          style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      width: 180,
+                      child: Text('Short Break :',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
+                    Text(widget.short_break.toString() + ' minutes',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 SizedBox(
@@ -189,15 +190,15 @@ class _profile_tileState extends State<profile_tile> {
                 ),
                 Row(
                   children: [
-                    Text('White Noise :',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 82),
-                      child: Text(
-                          fileDisplayNames[widget.white_noise] ??
-                              'Not Selected',
-                          style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      width: 180,
+                      child: Text('White Noise :',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
+                    Text(
+                        fileDisplayNames[widget.white_noise] ??
+                            'Not Selected',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
                 SizedBox(
@@ -205,14 +206,14 @@ class _profile_tileState extends State<profile_tile> {
                 ),
                 Row(
                   children: [
-                    Text('Ringtone :',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 107),
-                      child: Text(
-                          fileDisplayNames[widget.ringtone] ?? 'Not Selected',
-                          style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      width: 180,
+                      child: Text('Ringtone :',
+                          style: Theme.of(context).textTheme.titleSmall),
                     ),
+                    Text(
+                        fileDisplayNames[widget.ringtone] ?? 'Not Selected',
+                        style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
               ],

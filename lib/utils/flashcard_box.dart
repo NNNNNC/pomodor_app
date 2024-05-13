@@ -76,7 +76,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
                     },
                     icon: Icon(
                       _isEnable ? Icons.edit : Icons.edit_off,
-                      size: 25,
+                      size: 20,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
@@ -85,6 +85,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
                   const SizedBox(height: 50),
                 Center(
                   child: TextField(
+                    style: TextStyle(fontSize: 13.5),
                     keyboardType: TextInputType.multiline,
                     minLines: 1,
                     maxLines: 5,

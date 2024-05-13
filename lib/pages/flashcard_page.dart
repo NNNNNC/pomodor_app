@@ -55,22 +55,26 @@ class _flashcard_pageState extends State<flashcard_page> {
           title: Text("Flashcards"),
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'flashcard',
-          onPressed: () {
-            showDialog(
-            context: context,
-            builder: (context) {
-              return add_tile_dialog(
-                controller: _nameController,
-                onPressed: createNewTopic,
-              );
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: FloatingActionButton(
+            heroTag: 'flashcard',
+            onPressed: () {
+              showDialog(
+              context: context,
+              builder: (context) {
+                return add_tile_dialog(
+                  controller: _nameController,
+                  onPressed: createNewTopic,
+                );
+              },
+            );
             },
-          );
-          },
-          child: Icon(
-            Icons.add,
-            size: 45,
+            child: Icon(
+              Icons.add,
+              size: 45,
+            ),
           ),
         ),
         body: ListView.builder(

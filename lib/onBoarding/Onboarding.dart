@@ -25,25 +25,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       
       bottomSheet: Container(
         color: Theme.of(context).colorScheme.background,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: isLastPage? getStarted() : Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
 
             TextButton(
               onPressed: () => pageController.jumpToPage(controller.items.length-1), 
-              child: Text('Skip', style: Theme.of(context).textTheme.titleLarge,)),
+              child: Text('Skip', style: Theme.of(context).textTheme.titleMedium,)),
 
             SmoothPageIndicator(
               controller: pageController,
               count: controller.items.length,
               effect: WormEffect(
+                dotHeight: 12,
+                dotWidth: 12,
                 activeDotColor: Theme.of(context).colorScheme.secondary,
 
               ),
             ),
 
-            TextButton(onPressed: () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn), child: Text('Next', style: Theme.of(context).textTheme.titleLarge,))
+            TextButton(onPressed: () => pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeIn), child: Text('Next', style: Theme.of(context).textTheme.titleMedium,))
         
           ],
         ),
@@ -76,14 +78,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     boxShadow: [
                       BoxShadow(
                         color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.25),
-                        spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(-15, 15), // changes position of shadow
                       ),
                     ],
                   ),
-                  width: 250,
-                  height: 500,
+                  width: 200,
+                  height: 400,
                   child: ClipRRect(
                     child: Image.asset(controller.items[index].image, fit: BoxFit.cover,),
                     borderRadius: BorderRadius.circular(18),
@@ -112,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             if(!mounted)return;
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
           }, 
-          child: Text('Get Started', style: Theme.of(context).textTheme.titleLarge,)
+          child: Text('Get Started', style: Theme.of(context).textTheme.titleMedium,)
           ),
       );
     }

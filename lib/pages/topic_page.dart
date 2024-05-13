@@ -41,22 +41,26 @@ class _topic_pageState extends State<topic_page> {
       appBar: AppBar(
         title: const Text("Topics"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return TaskAdd(
-                controller: _topicController,
-                onPressed: createNewTopic,
-                isTopic: true,
-              );
-            },
-          );
-        },
-        child: const Icon(
-          Icons.add,
-          size: 45,
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return TaskAdd(
+                  controller: _topicController,
+                  onPressed: createNewTopic,
+                  isTopic: true,
+                );
+              },
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            size: 45,
+          ),
         ),
       ),
       body: ListView.builder(

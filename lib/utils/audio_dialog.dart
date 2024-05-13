@@ -66,15 +66,16 @@ class _audioDialogState extends State<audioDialog> {
             : widget.ringTone
                 ? 'Select Ringtone'
                 : 'Select Audio',
-        style: Theme.of(context).textTheme.titleLarge,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       content: SingleChildScrollView(
         child: Column(
           children: widget.audioMap.keys.toList().map((topic) {
             return RadioListTile(
+              dense: true,
               title: Text(
                 topic,
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 15),
               ),
               value: topic,
               groupValue: _selectedItem,
@@ -101,7 +102,7 @@ class _audioDialogState extends State<audioDialog> {
             'Save',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
