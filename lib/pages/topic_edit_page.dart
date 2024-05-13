@@ -127,7 +127,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                   ),
                   Text(
                     'FLASHCARD SET',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -146,7 +146,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                                 .get(getCardKey(widget.currentIndex))
                                 ?.cardSetName ??
                             'Not selected',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                       IconButton(
                         onPressed: () async {
@@ -162,6 +162,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                           setState(() {});
                         },
                         icon: Icon(
+                          size: 20,
                           Icons.archive,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -180,7 +181,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                   ),
                   Text(
                     'DESCRIPTION',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -225,13 +226,13 @@ class _topic_edit_pageState extends State<topic_edit_page> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15.0, right: 8.0, top: 50),
+              padding: const EdgeInsets.only(left: 15.0, right: 8.0, top: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'TASKS',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   IconButton(
                     onPressed: () {

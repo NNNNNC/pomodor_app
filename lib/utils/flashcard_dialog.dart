@@ -61,15 +61,16 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
       contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Flashcard',
-        style: Theme.of(context).textTheme.titleLarge,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       content: SingleChildScrollView(
         child: Column(
           children: getCardMap().keys.map((card) {
             return RadioListTile(
+              dense: true,
               title: Text(
                 card,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 15),
               ),
               value: card,
               groupValue: _selectedItem,
@@ -101,7 +102,7 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
             'DONE',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),

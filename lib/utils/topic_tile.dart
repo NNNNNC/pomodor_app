@@ -33,7 +33,7 @@ class topic_tile extends StatelessWidget {
                       child: Text(
                         maxLines: 2,
                         topic_name,
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     PopupMenuButton(
@@ -78,7 +78,7 @@ class topic_tile extends StatelessWidget {
                           maxLines: null,
                           overflow: TextOverflow.ellipsis,
                           description!,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ],
                     ),
@@ -86,13 +86,13 @@ class topic_tile extends StatelessWidget {
                   children: [
                     Text(
                       'Flashcard set :',
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
                         cardSet ?? 'Not selected',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                   ],
