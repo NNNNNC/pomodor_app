@@ -9,6 +9,7 @@ import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/onBoarding/Onboarding.dart';
 import 'package:pomodoro_app/pages/main_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:pomodoro_app/utils/notification_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/theme.dart';
@@ -21,9 +22,9 @@ late Box<SelectedModel> defaultKey;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationHelper.init();
   final prefs = await SharedPreferences.getInstance();
   final onboarding = prefs.getBool('onboarding') ?? false;
-  
 
   await Hive.initFlutter();
 
@@ -40,7 +41,9 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => BottomBarVisibility(),
-      child: MyApp(onboarding: onboarding,),
+      child: MyApp(
+        onboarding: onboarding,
+      ),
     ),
   );
 }
@@ -54,7 +57,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: app_theme,
-      home: onboarding? MainPage() : OnboardingScreen(),
+      home: onboarding ? MainPage() : OnboardingScreen(),
     );
   }
 }

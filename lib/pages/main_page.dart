@@ -6,6 +6,7 @@ import 'package:pomodoro_app/pages/profile_page.dart';
 import 'package:pomodoro_app/pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
@@ -30,13 +31,41 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => DefaultTabController(
+        initialIndex: 0,
         length: 4,
-        child: Scaffold(
-          bottomNavigationBar: value.isVisible ? bottomBar(context) : null,
-          body: PageStorage(
-            bucket: bucket,
-            child: TabBarView(
-              children: pages,
+        child: PopScope(
+          canPop: value.isVisible ? true : false,
+          // onPopInvoked: (didPop) {
+          //   if (didPop) {
+          //     return;
+          //   }
+          //   _showLeaveDialog(context);
+          // },
+          child: Scaffold(
+            bottomNavigationBar: value.isVisible ? bottomBar(context) : null,
+            body: PageStorage(
+              bucket: bucket,
+              child: DoubleBackToCloseApp(
+                snackBar: SnackBar(
+                  duration: Durations.medium4,
+                  backgroundColor: const Color.fromARGB(255, 22, 22, 22),
+                  content: Text(
+                    value.isVisible
+                        ? 'Tap back again to leave the app.'
+                        : 'You cannot leave while on lock mode',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                child: TabBarView(
+                  physics: value.isVisible
+                      ? const PageScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+                  children: pages,
+                ),
+              ),
             ),
           ),
         ),

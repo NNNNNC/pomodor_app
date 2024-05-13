@@ -81,8 +81,8 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                 height: 30.0,
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 36.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 36.0, vertical: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -217,7 +217,8 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                           borderRadius: BorderRadius.circular(10),
                           value: (_currentIndex + 1) / cardList.length,
                           minHeight: 5,
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           valueColor: AlwaysStoppedAnimation<Color>(
                               Theme.of(context).colorScheme.secondary),
                         ),

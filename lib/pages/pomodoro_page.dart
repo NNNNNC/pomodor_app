@@ -26,11 +26,17 @@ class _PomodoroPageState extends State<PomodoroPage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive =>
-      isFocusing || isBreak || isLongBreak || isMuted || isPlaying;
+      isFocusing ||
+      isBreak ||
+      isLongBreak ||
+      isMuted ||
+      isPlaying ||
+      timerStarted;
 
   late AnimationController _slideController;
   int? topicKey;
   int? profileKey;
+  int? focusDur, breakDur, longBreakDur;
   String whiteNoise = '', ringTone = '';
   List<dynamic>? topicTasks;
 
@@ -41,6 +47,9 @@ class _PomodoroPageState extends State<PomodoroPage>
     topicTasks = topicBox.get(topicKey)?.tasks;
     whiteNoise = profileBox.get(profileKey)?.whiteNoise ?? 'audio/Dryer.mp3';
     ringTone = profileBox.get(profileKey)?.ringtone ?? 'audio/ringtone_1.mp3';
+    focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
+    breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
+    longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
 
     super.initState();
 
@@ -62,13 +71,14 @@ class _PomodoroPageState extends State<PomodoroPage>
   bool isBreak = false;
   bool isLongBreak = false;
   bool timerStarted = false;
+  bool pause = false;
   Timer? timer;
   int seconds = 0, minutes = 0;
   int breakCounter = 0;
   int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
-  final audioPlayer = AudioPlayer(playerId: 'main');
+  final audioPlayer = AudioPlayer();
 
   void _taskStatusChange(bool? value, int index) {
     setState(() {
@@ -111,14 +121,48 @@ class _PomodoroPageState extends State<PomodoroPage>
 
       timerStarted = false;
 
+      isPlaying = false;
+      stopAudio();
+
+      playSound(ringTone);
+      loop();
+
       // transition to other states
       transition();
     });
   }
 
+  void terminateTimer() {
+    final visibility = context.read<BottomBarVisibility>();
+
+    timer!.cancel();
+    setState(() {
+      isFocusing = false;
+      isBreak = false;
+      isLongBreak = false;
+      seconds = 0;
+      minutes = 0;
+      digitMin = '00';
+      digitSec = '00';
+
+      timerStarted = false;
+
+      isPlaying = false;
+      stopAudio();
+
+      visibility.toggleVisibility(true);
+    });
+  }
+
   void startTimer() {
+    stopAudio();
+
     minutes = setMinute;
     timerStarted = true;
+
+    isPlaying = true;
+    playSound(whiteNoise);
+    loop();
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -151,14 +195,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
       visibility.toggleVisibility(!isFocusing);
 
-      setMinute = 25;
+      setMinute = focusDur!;
       digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
-
-      if (timerStarted) {
-        timerStop();
-      } else {
-        startTimer();
-      }
     });
   }
 
@@ -172,14 +210,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
       visibility.toggleVisibility(!isBreak);
 
-      setMinute = 5;
+      setMinute = breakDur!;
       digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
-
-      if (timerStarted) {
-        timerStop();
-      } else {
-        startTimer();
-      }
     });
   }
 
@@ -193,19 +225,14 @@ class _PomodoroPageState extends State<PomodoroPage>
 
       visibility.toggleVisibility(!isLongBreak);
 
-      setMinute = 15;
+      setMinute = longBreakDur!;
       digitMin = (setMinute >= 10) ? "$setMinute" : "0$setMinute";
-
-      if (timerStarted) {
-        timerStop();
-      } else {
-        startTimer();
-      }
     });
   }
 
   void transition() {
     setState(() {
+      pause = true;
       if (isFocusing) {
         isFocusing = false;
 
@@ -242,7 +269,8 @@ class _PomodoroPageState extends State<PomodoroPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final int totalDuration = isFocusing ? 25 : (isBreak ? 5 : 15);
+    final int totalDuration =
+        isFocusing ? focusDur! : (isBreak ? breakDur! : longBreakDur!);
     final double progress =
         (totalDuration * 60 - (seconds + minutes * 60)) / (totalDuration * 60);
     return Consumer<BottomBarVisibility>(
@@ -453,16 +481,32 @@ class _PomodoroPageState extends State<PomodoroPage>
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
+                      if (isFocusing == false &&
+                          isBreak == false &&
+                          isLongBreak == false) {
+                        setState(() {
+                          // reinitialize keys
+                          topicKey = defaultKey.get(0)?.selectedTopic;
+                          profileKey = defaultKey.get(0)?.selectedProfile;
+                          topicTasks = topicBox.get(topicKey)?.tasks;
+                          whiteNoise = profileBox.get(profileKey)?.whiteNoise ??
+                              'audio/Dryer.mp3';
+                          ringTone = profileBox.get(profileKey)?.ringtone ??
+                              'audio/ringtone_1.mp3';
+                          focusDur =
+                              profileBox.get(profileKey)?.focusDuration ?? 25;
+                          breakDur =
+                              profileBox.get(profileKey)?.shortBreak ?? 5;
+                          longBreakDur =
+                              profileBox.get(profileKey)?.longBreak ?? 15;
+
+                          focus();
+                        });
+                      }
                       setState(() {
-                        isPlaying = !isPlaying;
-                        isPlaying ? playSound(whiteNoise) : stopAudio();
-                        loop();
+                        timerStarted ? terminateTimer() : startTimer();
+                        pause = false;
                       });
-                      isBreak
-                          ? shortBreak()
-                          : isLongBreak
-                              ? longBreak()
-                              : focus();
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 700),
@@ -492,7 +536,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              isFocusing
+                              isFocusing && pause == false
                                   ? 'FOCUSING'
                                   : isBreak
                                       ? 'BREAK'
@@ -508,9 +552,11 @@ class _PomodoroPageState extends State<PomodoroPage>
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              isFocusing || isBreak || isLongBreak
-                                  ? '$digitMin:$digitSec'
-                                  : 'Click here to start Pomodoro',
+                              pause
+                                  ? 'Click here to start timer'
+                                  : isFocusing || isBreak || isLongBreak
+                                      ? '$digitMin:$digitSec'
+                                      : 'Click here to start Pomodoro',
                               style: const TextStyle(
                                 color: Color(0xffc0c0c0),
                                 fontSize: 15,
@@ -550,7 +596,10 @@ class _PomodoroPageState extends State<PomodoroPage>
               // will only show on focus mode
               // tasks
               if (value.isVisible == false &&
-                  (topicKey != null && topicTasks != null))
+                  (topicKey != null &&
+                      topicTasks != null &&
+                      isBreak == false &&
+                      isLongBreak == false))
                 Expanded(
                   child: Container(
                     width: 330,
@@ -639,6 +688,17 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+
+              if (value.isVisible == false && (isBreak || isLongBreak))
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'Rest, relax, and recharge.\nYour productivity will thank you.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
