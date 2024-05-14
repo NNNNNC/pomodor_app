@@ -173,7 +173,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                           options: CarouselOptions(
                               enableInfiniteScroll: false,
                               height: MediaQuery.of(context).size.height *
-                                  0.5, // Adjust height based on screen size
+                                  0.45, // Adjust height based on screen size
                               viewportFraction: 1,
                               initialPage: 0,
                               onPageChanged: (index, reason) {
