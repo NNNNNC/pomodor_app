@@ -462,7 +462,7 @@ class _PomodoroPageState extends State<PomodoroPage>
               SizedBox(
                 height: value.isVisible
                     ? 72
-                    : (topicTasks == null)
+                    : (topicTasks == null || isBreak || isLongBreak)
                         ? 125
                         : 30,
               ),
