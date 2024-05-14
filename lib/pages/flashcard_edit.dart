@@ -123,7 +123,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                 ),
               ),
               SizedBox(
-                height: 100,
+                height: 80,
               ),
               Center(
                 child: Stack(
@@ -137,7 +137,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                               final question = card['question'];
                               final answer = card['answer'];
                               return Container(
-                                width: MediaQuery.of(context).size.width * 0.7,
+                                height: MediaQuery.of(context).size.height * 2,
+                                width: MediaQuery.of(context).size.width * 0.75,
                                 child: FlipCard(
                                     controller: _controller,
                                     direction: FlipDirection.HORIZONTAL,
@@ -152,10 +153,10 @@ class _flashcard_editState extends State<flashcard_edit> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
-                                              Text(
-                                                'Check Answer ',
-                                                style: Theme.of(context).textTheme.labelSmall
-                                              ),
+                                              Text('Check Answer ',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelSmall),
                                               Icon(
                                                 Icons.arrow_forward,
                                                 size: 15,
@@ -185,10 +186,10 @@ class _flashcard_editState extends State<flashcard_edit> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
-                                              Text(
-                                                'Check Question ',
-                                                style: Theme.of(context).textTheme.labelSmall
-                                              ),
+                                              Text('Check Question ',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelSmall),
                                               Icon(
                                                 Icons.arrow_forward,
                                                 size: 15,
@@ -210,7 +211,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                             },
                             options: CarouselOptions(
                                 enableInfiniteScroll: false,
-                                height: 350,
+                                height: 425,
                                 viewportFraction: 1,
                                 initialPage: 0,
                                 onPageChanged: (index, reason) {
@@ -230,14 +231,16 @@ class _flashcard_editState extends State<flashcard_edit> {
                                 onPressed: previous,
                                 icon: Icon(
                                   Icons.arrow_back_ios,
-                                  color: Theme.of(context).colorScheme.secondary,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 )),
                             IconButton(
                                 onPressed: next,
                                 icon: Icon(Icons.arrow_forward_ios,
                                     size: 25,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary)),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary)),
                           ],
                         ))
                   ],

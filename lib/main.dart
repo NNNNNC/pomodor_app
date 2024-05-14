@@ -13,6 +13,7 @@ import 'package:pomodoro_app/utils/notification_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/theme.dart';
+import 'package:flutter/services.dart';
 
 // Hive Boxes
 late Box<Flashcard> flashcardBox;
@@ -54,6 +55,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: app_theme,

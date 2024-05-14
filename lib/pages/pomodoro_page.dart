@@ -280,7 +280,15 @@ class _PomodoroPageState extends State<PomodoroPage>
           visible: value.isVisible,
           child: value.isVisible
               ? AppBar(
-                  title: const Text("Pomodoro"),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: const Text(
+                      "Pomodoro",
+                      style: TextStyle(
+                        fontSize: 18.5,
+                      ),
+                    ),
+                  ),
                 )
               : const PreferredSize(
                   preferredSize: Size.fromHeight(100.0),
@@ -294,7 +302,7 @@ class _PomodoroPageState extends State<PomodoroPage>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(25.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -316,7 +324,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                         'SELECT TOPIC',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 16,
+                          fontSize: 13.5,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -329,6 +337,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                         });
                       },
                       icon: Icon(
+                        size: 22,
                         isMuted ? Icons.headset_off : Icons.headphones,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -367,14 +376,14 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ],
                       ),
-                      height: 32,
-                      width: 71,
+                      height: 32 - 4,
+                      width: 71 - 4,
                       child: const Center(
                         child: Text(
                           'Focus',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -398,14 +407,14 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ],
                       ),
-                      height: 32,
-                      width: 90,
+                      height: 32 - 4,
+                      width: 90 - 4,
                       child: const Center(
                         child: Text(
                           'Long Break',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -433,14 +442,14 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ],
                       ),
-                      height: 32,
-                      width: 71,
+                      height: 32 - 4,
+                      width: 71 - 4,
                       child: const Center(
                         child: Text(
                           'Break',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -450,8 +459,12 @@ class _PomodoroPageState extends State<PomodoroPage>
                 ),
               ),
 
-              const SizedBox(
-                height: 72,
+              SizedBox(
+                height: value.isVisible
+                    ? 72
+                    : (topicTasks == null)
+                        ? 125
+                        : 30,
               ),
 
               // Focus Button
@@ -459,6 +472,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                 children: [
                   // progress indicator
                   Positioned.fill(
+                    top: 8,
                     child: CircularProgressIndicator(
                       value: progress,
                       backgroundColor: isBreak
@@ -510,8 +524,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 700),
-                      width: 251,
-                      height: 251,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.3,
                       decoration: BoxDecoration(
                         color: isFocusing == true
                             ? const Color(0xffc50e0e)
@@ -559,7 +573,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                       : 'Click here to start Pomodoro',
                               style: const TextStyle(
                                 color: Color(0xffc0c0c0),
-                                fontSize: 15,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -629,7 +643,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   Text(
                                     'Tasks',
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 13.0,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
@@ -638,7 +652,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   Text(
                                     ' (${topicBox.get(topicKey)?.name})',
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 13.0,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
@@ -659,7 +673,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                 },
                                 icon: Icon(
                                   Icons.fullscreen,
-                                  size: 24,
+                                  size: 22,
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
@@ -698,7 +712,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                     child: Text(
                       'Rest, relax, and recharge.\nYour productivity will thank you.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
@@ -711,7 +725,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                       (topicKey == null)
                           ? 'Select a topic first to see your tasks.'
                           : 'Create tasks for more productivity!',
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
@@ -731,7 +745,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                           IconButton(
                             icon: Icon(
                               Icons.lock_open_outlined,
-                              size: 32,
+                              size: 28,
                               color: isBreak || isLongBreak
                                   ? Colors.grey[300]
                                   : Colors.grey[850],
@@ -774,7 +788,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                             },
                             child: Image.asset(
                               'assets/icons/document.png',
-                              height: 40,
+                              height: 32,
                               color: (topicBox.get(topicKey)?.cardSet != null)
                                   ? Theme.of(context).colorScheme.secondary
                                   : Colors.white38,

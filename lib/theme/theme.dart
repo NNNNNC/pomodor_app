@@ -13,20 +13,21 @@ ThemeData app_theme = ThemeData(
       // title font style
       titleLarge: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 18,
           color: Color.fromRGBO(172, 198, 255, 1)),
       titleMedium: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Color.fromRGBO(172, 198, 255, 1)),
+          fontWeight: FontWeight.bold, color: Color.fromRGBO(172, 198, 255, 1)),
       titleSmall: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Color.fromRGBO(158, 158, 158, 1)),
+          fontWeight: FontWeight.bold, color: Color.fromRGBO(158, 158, 158, 1)),
       bodyMedium: TextStyle(
           fontWeight: FontWeight.bold, color: Color.fromRGBO(192, 192, 192, 1)),
-      bodySmall: TextStyle(color: Color.fromRGBO(158, 158, 158, 1), fontWeight: FontWeight.bold),
-      labelMedium: TextStyle(color: Color.fromRGBO(158, 158, 158, 1), fontWeight: FontWeight.bold),
-      labelSmall: TextStyle(color: Color.fromRGBO(172, 198, 255, 1), fontWeight: FontWeight.bold)
-      ),
+      bodySmall: TextStyle(
+          color: Color.fromRGBO(158, 158, 158, 1), fontWeight: FontWeight.bold),
+      labelMedium: TextStyle(
+          color: Color.fromRGBO(158, 158, 158, 1), fontWeight: FontWeight.bold),
+      labelSmall: TextStyle(
+          color: Color.fromRGBO(172, 198, 255, 1),
+          fontWeight: FontWeight.bold)),
   // floating button style
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Color.fromRGBO(172, 198, 255, 1),

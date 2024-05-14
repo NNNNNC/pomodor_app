@@ -88,7 +88,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                   children: [
                     Text(
                       'Flashcard 0${_currentIndex + 1}',
-                      style: const TextStyle(fontSize: 19),
+                      style: const TextStyle(fontSize: 17),
                     ),
                     IconButton(
                       onPressed: () {
@@ -100,6 +100,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                       icon: Icon(
                         Icons.shuffle,
                         color: Theme.of(context).colorScheme.secondary,
+                        size: 22,
                       ),
                     ),
                   ],
@@ -117,13 +118,35 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                         carouselController: controller,
                         itemCount: cardList.length,
                         itemBuilder: (context, index, realIndex) {
-                          return FlipCard(
-                            key: _flipCardKey,
-                            controller: _controller,
-                            direction: FlipDirection.HORIZONTAL,
-                            front: FlashcardBox(
-                              cardContent: cardList[index]['question'],
-                              flipButton: TextButton(
+                          return Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: FlipCard(
+                              key: _flipCardKey,
+                              controller: _controller,
+                              direction: FlipDirection.HORIZONTAL,
+                              front: FlashcardBox(
+                                cardContent: cardList[index]['question'],
+                                flipButton: TextButton(
+                                    onPressed: () {
+                                      _controller.toggleCard();
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                              back: FlashcardBox(
+                                cardContent: cardList[index]['answer'],
+                                flipButton: TextButton(
                                   onPressed: () {
                                     _controller.toggleCard();
                                   },
@@ -139,26 +162,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                         ),
                                       ),
                                     ],
-                                  )),
-                            ),
-                            back: FlashcardBox(
-                              cardContent: cardList[index]['answer'],
-                              flipButton: TextButton(
-                                onPressed: () {
-                                  _controller.toggleCard();
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -166,7 +170,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                         },
                         options: CarouselOptions(
                             enableInfiniteScroll: false,
-                            height: 360,
+                            height: 425,
                             viewportFraction: 1,
                             initialPage: 0,
                             onPageChanged: (index, reason) {
@@ -212,7 +216,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     children: [
                       SizedBox(
                         height: 5,
-                        width: 280,
+                        width: 300,
                         child: LinearProgressIndicator(
                           borderRadius: BorderRadius.circular(10),
                           value: (_currentIndex + 1) / cardList.length,
@@ -257,7 +261,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                         'FLIP CARD',
                         style: TextStyle(
                           color: Colors.grey[300],
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -272,7 +276,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     icon: Icon(
                       Icons.close,
                       color: Colors.grey[400],
-                      size: 36,
+                      size: 28,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();

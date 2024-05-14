@@ -87,7 +87,15 @@ class _profile_pageState extends State<profile_page> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Profile"),
+          title: Padding(
+            padding: const EdgeInsets.only(left: 6.0),
+            child: const Text(
+              "Profiles",
+              style: TextStyle(
+                fontSize: 18.5,
+              ),
+            ),
+          ),
         ),
         floatingActionButton: SizedBox(
           height: 50,

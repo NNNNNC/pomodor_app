@@ -36,7 +36,7 @@ class _flashcard_pageState extends State<flashcard_page> {
     Navigator.of(context).pop();
   }
 
-    @override
+  @override
   void initState() {
     _nameController = TextEditingController();
     super.initState();
@@ -52,8 +52,15 @@ class _flashcard_pageState extends State<flashcard_page> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Flashcards"),
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 6.0),
+            child: const Text(
+              "Flashcards",
+              style: TextStyle(
+                fontSize: 18.5,
+              ),
+            ),
+          ),
         ),
         floatingActionButton: SizedBox(
           height: 50,
@@ -62,14 +69,14 @@ class _flashcard_pageState extends State<flashcard_page> {
             heroTag: 'flashcard',
             onPressed: () {
               showDialog(
-              context: context,
-              builder: (context) {
-                return add_tile_dialog(
-                  controller: _nameController,
-                  onPressed: createNewTopic,
-                );
-              },
-            );
+                context: context,
+                builder: (context) {
+                  return add_tile_dialog(
+                    controller: _nameController,
+                    onPressed: createNewTopic,
+                  );
+                },
+              );
             },
             child: Icon(
               Icons.add,

@@ -27,15 +27,15 @@ class MiniTaskTile extends StatelessWidget {
             vertical: -4.0,
           ),
           tileColor: Colors.grey,
-          horizontalTitleGap: 7,
-          contentPadding: const EdgeInsets.only(left: 5),
+          horizontalTitleGap: 4,
+          contentPadding: const EdgeInsets.only(left: 0),
           leading: Checkbox(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
             side: const BorderSide(
               color: Color(0xff252525),
-              width: 2.0,
+              width: 1.5,
             ),
             value: isChecked,
             onChanged: onChanged,
@@ -45,7 +45,7 @@ class MiniTaskTile extends StatelessWidget {
             taskTitle,
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),

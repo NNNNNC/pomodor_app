@@ -39,7 +39,15 @@ class _topic_pageState extends State<topic_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Topics"),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6.0),
+          child: const Text(
+            "Topics",
+            style: TextStyle(
+              fontSize: 18.5,
+            ),
+          ),
+        ),
       ),
       floatingActionButton: SizedBox(
         height: 50,

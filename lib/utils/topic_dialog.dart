@@ -44,15 +44,16 @@ class _TopicDialogState extends State<TopicDialog> {
       contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Topic',
-        style: Theme.of(context).textTheme.titleLarge,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       content: SingleChildScrollView(
         child: Column(
           children: getTopicMap().keys.map((topic) {
             return RadioListTile(
+              dense: true,
               title: Text(
                 topic,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 15),
               ),
               value: topic,
               groupValue: _selectedItem,
@@ -87,7 +88,7 @@ class _TopicDialogState extends State<TopicDialog> {
             'DONE',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),

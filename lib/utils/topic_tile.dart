@@ -86,13 +86,13 @@ class topic_tile extends StatelessWidget {
                   children: [
                     Text(
                       'Flashcard set :',
-                      style: Theme.of(context).textTheme.titleSmall,
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
                         cardSet ?? 'Not selected',
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
                   ],
