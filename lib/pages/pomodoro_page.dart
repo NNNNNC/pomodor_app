@@ -472,7 +472,10 @@ class _PomodoroPageState extends State<PomodoroPage>
                 children: [
                   // progress indicator
                   Positioned.fill(
-                    top: MediaQuery.of(context).size.width / 50,
+                    top: MediaQuery.of(context).size.width / 60,
+                    bottom: MediaQuery.of(context).size.width / 60,
+                    left: 0,
+                    right: 0,
                     child: CircularProgressIndicator(
                       value: progress,
                       backgroundColor: isBreak
@@ -481,15 +484,17 @@ class _PomodoroPageState extends State<PomodoroPage>
                               ? const Color(0xff0e15c5)
                               : Colors.transparent,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        isFocusing
-                            ? const Color(0xff1dc50e)
-                            : isBreak
-                                ? const Color(0xff252525)
-                                : isLongBreak
+                        pause
+                            ? Colors.transparent
+                            : isFocusing
+                                ? const Color(0xff1dc50e)
+                                : isBreak
                                     ? const Color(0xff252525)
-                                    : Colors.transparent,
+                                    : isLongBreak
+                                        ? const Color(0xff252525)
+                                        : Colors.transparent,
                       ),
-                      strokeWidth: 10,
+                      strokeWidth: 8,
                     ),
                   ),
                   GestureDetector(
@@ -514,7 +519,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                           longBreakDur =
                               profileBox.get(profileKey)?.longBreak ?? 15;
 
-                          focus();
+                          shortBreak();
                         });
                       }
                       setState(() {
@@ -718,7 +723,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                 ),
 
               if (value.isVisible == false &&
-                  (topicKey == null || topicTasks == null))
+                  (topicKey == null || topicTasks == null) &&
+                  (isBreak == false && isLongBreak == false))
                 Expanded(
                   child: Center(
                     child: Text(

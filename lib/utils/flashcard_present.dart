@@ -64,110 +64,119 @@ class FlashcardPresentState extends State<FlashcardPresent> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35.0),
-            child: Text(
-              flashCard!.cardSetName,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontSize:  MediaQuery.of(context).size.width > 600 ? 20 : 16,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              child: Text(
+                flashCard!.cardSetName,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize:
+                          MediaQuery.of(context).size.width > 600 ? 20 : 16,
+                    ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Flashcard 0${_currentIndex + 1}',
-                  style: const TextStyle(fontSize: 14),
-                ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      cardList.shuffle();
-                      updateKey();
-                    });
-                  },
-                  icon: Icon(
-                    Icons.shuffle,
-                    color: Theme.of(context).colorScheme.secondary,
-                    size: 22,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            children: [
-              Stack(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 36.0, vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 18.0),
-                    child: Center(
-                      child: CarouselSlider.builder(
-                        carouselController: controller,
-                        itemCount: cardList.length,
-                        itemBuilder: (context, index, realIndex) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: FlipCard(
-                              key: _flipCardKey,
-                              controller: _controller,
-                              direction: FlipDirection.HORIZONTAL,
-                              front: FlashcardBox(
-                                cardContent: cardList[index]['question'],
-                                flipButton: TextButton(
-                                  onPressed: () {
-                                    _controller.toggleCard();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '',
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.secondary,
+                  Text(
+                    'Flashcard 0${_currentIndex + 1}',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        cardList.shuffle();
+                        updateKey();
+                      });
+                    },
+                    icon: Icon(
+                      Icons.shuffle,
+                      color: Theme.of(context).colorScheme.secondary,
+                      size: 22,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 48.0, vertical: 18.0),
+                      child: Center(
+                        child: CarouselSlider.builder(
+                          carouselController: controller,
+                          itemCount: cardList.length,
+                          itemBuilder: (context, index, realIndex) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: FlipCard(
+                                key: _flipCardKey,
+                                controller: _controller,
+                                direction: FlipDirection.HORIZONTAL,
+                                front: FlashcardBox(
+                                  isQuestion: true,
+                                  cardContent: cardList[index]['question'],
+                                  flipButton: TextButton(
+                                    onPressed: () {
+                                      _controller.toggleCard();
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                back: FlashcardBox(
+                                  cardContent: cardList[index]['answer'],
+                                  flipButton: TextButton(
+                                    onPressed: () {
+                                      _controller.toggleCard();
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                              back: FlashcardBox(
-                                cardContent: cardList[index]['answer'],
-                                flipButton: TextButton(
-                                  onPressed: () {
-                                    _controller.toggleCard();
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '',
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.secondary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        options: CarouselOptions(
-                          enableInfiniteScroll: false,
-                          height: MediaQuery.of(context).size.height * 0.4, // Adjust height based on screen size
-                          viewportFraction: 1,
-                          initialPage: 0,
-                          onPageChanged: (index, reason) {
+                            );
+                          },
+                          options: CarouselOptions(
+                              enableInfiniteScroll: false,
+                              height: MediaQuery.of(context).size.height *
+                                  0.45, // Adjust height based on screen size
+                              viewportFraction: 1,
+                              initialPage: 0,
+                              onPageChanged: (index, reason) {
                                 setState(() {
                                   _currentIndex = index;
                                 });
