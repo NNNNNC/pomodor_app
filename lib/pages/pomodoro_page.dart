@@ -519,7 +519,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                           longBreakDur =
                               profileBox.get(profileKey)?.longBreak ?? 15;
 
-                          shortBreak();
+                          focus();
                         });
                       }
                       setState(() {
