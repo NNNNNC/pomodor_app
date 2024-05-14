@@ -74,6 +74,7 @@ class _flashcard_pageState extends State<flashcard_page> {
                   return add_tile_dialog(
                     controller: _nameController,
                     onPressed: createNewTopic,
+                    isFlashcard: true,
                   );
                 },
               );
