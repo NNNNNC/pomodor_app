@@ -472,7 +472,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                 children: [
                   // progress indicator
                   Positioned.fill(
-                    top: 8,
+                    top: MediaQuery.of(context).size.width / 50,
                     child: CircularProgressIndicator(
                       value: progress,
                       backgroundColor: isBreak
