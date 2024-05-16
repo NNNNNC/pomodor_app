@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/pages/topic_edit_page.dart';
+import 'package:pomodoro_app/user_manual/flashcardManual_display.dart';
+import 'package:pomodoro_app/user_manual/topicManual_display.dart';
 import 'package:pomodoro_app/utils/task_add_dialog.dart';
 import 'package:pomodoro_app/utils/topic_tile.dart';
 
@@ -48,6 +50,20 @@ class _topic_pageState extends State<topic_page> {
             ),
           ),
         ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(Icons.info_outline_rounded, color: Theme.of(context).colorScheme.secondary,),
+              onPressed: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => topicManualDisplay()),
+              );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: SizedBox(
         height: 50,

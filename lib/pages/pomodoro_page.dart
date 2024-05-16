@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:pomodoro_app/user_manual/flashcardManual_display.dart';
+import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
 import 'package:pomodoro_app/utils/sliding_app_bar.dart';
@@ -289,6 +291,20 @@ class _PomodoroPageState extends State<PomodoroPage>
                       ),
                     ),
                   ),
+                  actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(Icons.info_outline_rounded, color: Theme.of(context).colorScheme.secondary,),
+              onPressed: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => pomodoroManualDisplay()), // Replace ManualDisplay() with your actual screen widget
+              );
+              },
+            ),
+          ),
+        ],
                 )
               : const PreferredSize(
                   preferredSize: Size.fromHeight(100.0),
