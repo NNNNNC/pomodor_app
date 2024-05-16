@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/models/selectedModel.dart';
-import 'package:pomodoro_app/user_manual/flashcardManual_display.dart';
 import 'package:pomodoro_app/user_manual/profileManual_display.dart';
 import 'package:pomodoro_app/utils/add_tile_dialog.dart';
 import 'package:pomodoro_app/utils/profile_tile.dart';

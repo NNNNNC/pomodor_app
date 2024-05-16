@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
-import 'package:pomodoro_app/user_manual/flashcardManual_display.dart';
 import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';

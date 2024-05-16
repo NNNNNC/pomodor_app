@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/pages/topic_edit_page.dart';
-import 'package:pomodoro_app/user_manual/flashcardManual_display.dart';
 import 'package:pomodoro_app/user_manual/topicManual_display.dart';
 import 'package:pomodoro_app/utils/task_add_dialog.dart';
 import 'package:pomodoro_app/utils/topic_tile.dart';
