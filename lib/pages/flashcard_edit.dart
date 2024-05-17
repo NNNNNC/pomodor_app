@@ -74,8 +74,7 @@ class _flashcard_editState extends State<flashcard_edit> {
             : _currentIndex;
         widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
       });
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Flashcard deleted'),
         action: SnackBarAction(
@@ -84,6 +83,7 @@ class _flashcard_editState extends State<flashcard_edit> {
         ),
       ),
     );
+    }
   }
 
   late Flashcard flashcard;
