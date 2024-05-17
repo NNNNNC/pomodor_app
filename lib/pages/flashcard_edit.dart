@@ -25,6 +25,8 @@ class _flashcard_editState extends State<flashcard_edit> {
 
   int _currentIndex = 0;
 
+  List<Map<String, String>> _undoStack = [];
+
   void next() {
     if (_currentIndex < flashcard.cards.length - 1) {
       setState(() {
@@ -43,6 +45,48 @@ class _flashcard_editState extends State<flashcard_edit> {
     }
   }
 
+  void _undo() {
+  if (_undoStack.isNotEmpty) {
+    setState(() {
+      // Retrieve the last deleted flashcard
+      Map<String, String> deletedCard = _undoStack.removeLast();
+      // Add the deleted flashcard back to the list
+      flashcard.cards.add(deletedCard);
+      // Update the UI
+      widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+    });
+    // Show Snackbar indicating undo was successful
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Undo successful'),
+      ),
+    );
+  }
+}
+
+  void _deleteFlashcard() {
+  setState(() {
+    if (flashcard.cards.length > 1) {
+      // Remove the last flashcard
+      Map<String, String> deletedCard = flashcard.cards.removeLast();
+      // Add the deleted flashcard to the undo stack
+      _undoStack.add(deletedCard);
+      // Update the UI
+      widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+    }
+  });
+  // Show Snackbar with an Undo option
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Flashcard deleted'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: _undo,
+      ),
+    ),
+  );
+}
+
   late Flashcard flashcard;
   late TextEditingController _nameController;
 
@@ -56,6 +100,7 @@ class _flashcard_editState extends State<flashcard_edit> {
   @override
   void dispose() {
     _nameController.dispose();
+    _undoStack.clear();
     super.dispose();
   }
 
@@ -252,19 +297,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () {
-                                  if (flashcard.cards.length > 1) {
-                                    setState(() {
-                                      flashcard.cards.removeLast();
-                                      _currentIndex = (_currentIndex >=
-                                              flashcard.cards.length)
-                                          ? flashcard.cards.length - 1
-                                          : _currentIndex;
-                                      widget.onUpdate(flashcard.cards.length,
-                                          flashcard.cardSetName);
-                                    });
-                                  }
-                                },
+                                onPressed: _deleteFlashcard,
                                 icon: Icon(
                                   size: 25,
                                   Icons.close,
