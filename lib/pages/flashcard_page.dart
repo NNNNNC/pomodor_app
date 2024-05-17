@@ -29,7 +29,7 @@ class _flashcard_pageState extends State<flashcard_page> {
       flashcardBox.add(Flashcard(
         cardSetName: _nameController.text,
         cards: [
-          {'question': '', 'answer': ''},
+          {'Question': '', 'Answer': ''},
         ],
       ));
       _nameController.clear();
@@ -63,21 +63,24 @@ class _flashcard_pageState extends State<flashcard_page> {
             ),
           ),
           actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: Icon(Icons.info_outline_rounded, color: Theme.of(context).colorScheme.secondary,),
-              onPressed: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => flashcardManualDisplay()),
-              );
-              },
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                icon: Icon(
+                  Icons.info_outline_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => flashcardManualDisplay()),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
         ),
-        
         floatingActionButton: SizedBox(
           height: 50,
           width: 50,

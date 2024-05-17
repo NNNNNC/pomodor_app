@@ -36,10 +36,9 @@ class TaskAdd extends StatelessWidget {
                 }
                 return null;
               },
-              maxLength: 30,
               controller: controller,
               keyboardType: TextInputType.multiline,
-              maxLines: 1,
+              maxLines: null,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: (isTopic ?? false) ? "Add new topic" : "Add new task",

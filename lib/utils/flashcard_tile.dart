@@ -21,7 +21,7 @@ class flashcard_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 10),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 0),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -56,7 +56,10 @@ class flashcard_tile extends StatelessWidget {
                   )
                 ],
               ),
-              Text('$flashcard_count Flashcards', style: Theme.of(context).textTheme.labelMedium,)
+              Text(
+                '$flashcard_count Flashcards',
+                style: Theme.of(context).textTheme.labelMedium,
+              )
             ],
           ),
         ),

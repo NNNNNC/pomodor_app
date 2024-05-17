@@ -9,6 +9,8 @@ import 'package:pomodoro_app/models/topicModel.dart';
 import 'package:pomodoro_app/onBoarding/Onboarding.dart';
 import 'package:pomodoro_app/pages/main_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:pomodoro_app/utils/initial_cards.dart';
+import 'package:pomodoro_app/utils/initial_topics.dart';
 import 'package:pomodoro_app/utils/notification_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +40,17 @@ void main() async {
   profileBox = await Hive.openBox<profileModel>('profile');
   topicBox = await Hive.openBox<TopicModel>('topic');
   defaultKey = await Hive.openBox<SelectedModel>('key');
+
+  // Add preset cards and topics
+  if (flashcardBox.isEmpty && topicBox.isEmpty) {
+    for (var flashcard in InitialCards().cards) {
+      await flashcardBox.add(flashcard);
+    }
+
+    for (var topic in InitialTopics().topics) {
+      await topicBox.add(topic);
+    }
+  }
 
   runApp(
     ChangeNotifierProvider(

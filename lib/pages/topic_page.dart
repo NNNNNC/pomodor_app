@@ -23,6 +23,13 @@ class _topic_pageState extends State<topic_page> {
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void dispose() {
     _topicController.dispose();
     super.dispose();
@@ -53,12 +60,15 @@ class _topic_pageState extends State<topic_page> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              icon: Icon(Icons.info_outline_rounded, color: Theme.of(context).colorScheme.secondary,),
+              icon: Icon(
+                Icons.info_outline_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               onPressed: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => topicManualDisplay()),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => topicManualDisplay()),
+                );
               },
             ),
           ),

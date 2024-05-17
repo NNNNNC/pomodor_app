@@ -41,12 +41,16 @@ class MiniTaskTile extends StatelessWidget {
             onChanged: onChanged,
             checkColor: Colors.grey,
           ),
-          title: Text(
-            taskTitle,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          title: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Text(
+              taskTitle,
+              textAlign: TextAlign.start,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),

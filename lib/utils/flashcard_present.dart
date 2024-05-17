@@ -126,7 +126,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                 direction: FlipDirection.HORIZONTAL,
                                 front: FlashcardBox(
                                   isQuestion: true,
-                                  cardContent: cardList[index]['question'],
+                                  cardContent: cardList[index]['Question'],
                                   flipButton: TextButton(
                                     onPressed: () {
                                       _controller.toggleCard();
@@ -147,7 +147,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                                   ),
                                 ),
                                 back: FlashcardBox(
-                                  cardContent: cardList[index]['answer'],
+                                  cardContent: cardList[index]['Answer'],
                                   flipButton: TextButton(
                                     onPressed: () {
                                       _controller.toggleCard();

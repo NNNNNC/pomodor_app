@@ -14,6 +14,8 @@ import 'package:pomodoro_app/utils/sliding_app_bar.dart';
 import 'package:pomodoro_app/utils/taskDialog.dart';
 import 'package:pomodoro_app/utils/topic_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dnd/flutter_dnd.dart';
+import 'package:flutter/services.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({
@@ -87,6 +89,34 @@ class _PomodoroPageState extends State<PomodoroPage>
     });
   }
 
+  void suppressNotifications() async {
+    final bool? isNotificationPolicyAccessGranted =
+        await FlutterDnd.isNotificationPolicyAccessGranted;
+
+    // turn on do not disturb (still allows alarms)
+    if (isNotificationPolicyAccessGranted != null &&
+        isNotificationPolicyAccessGranted) {
+      await FlutterDnd.setInterruptionFilter(
+          FlutterDnd.INTERRUPTION_FILTER_ALARMS);
+    } else {
+      FlutterDnd.gotoPolicySettings();
+    }
+  }
+
+  void allowNotifications() async {
+    final bool? isNotificationPolicyAccessGranted =
+        await FlutterDnd.isNotificationPolicyAccessGranted;
+
+    // turn off do not disturb
+    if (isNotificationPolicyAccessGranted != null &&
+        isNotificationPolicyAccessGranted) {
+      await FlutterDnd.setInterruptionFilter(
+          FlutterDnd.INTERRUPTION_FILTER_ALL);
+    } else {
+      FlutterDnd.gotoPolicySettings();
+    }
+  }
+
   void playSound(String filepath) async {
     await audioPlayer.play(
       AssetSource(filepath),
@@ -135,6 +165,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   void terminateTimer() {
     final visibility = context.read<BottomBarVisibility>();
+
+    allowNotifications();
 
     timer!.cancel();
     setState(() {
@@ -186,8 +218,10 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   // focus methods
 
-  void focus() {
+  void focus() async {
     final visibility = context.read<BottomBarVisibility>();
+
+    suppressNotifications();
 
     setState(() {
       isFocusing = !isFocusing;
@@ -201,8 +235,10 @@ class _PomodoroPageState extends State<PomodoroPage>
     });
   }
 
-  void shortBreak() {
+  void shortBreak() async {
     final visibility = context.read<BottomBarVisibility>();
+
+    allowNotifications();
 
     setState(() {
       isFocusing = false;
@@ -216,8 +252,10 @@ class _PomodoroPageState extends State<PomodoroPage>
     });
   }
 
-  void longBreak() {
+  void longBreak() async {
     final visibility = context.read<BottomBarVisibility>();
+
+    allowNotifications();
 
     setState(() {
       isFocusing = false;
@@ -291,19 +329,24 @@ class _PomodoroPageState extends State<PomodoroPage>
                     ),
                   ),
                   actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: Icon(Icons.info_outline_rounded, color: Theme.of(context).colorScheme.secondary,),
-              onPressed: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => pomodoroManualDisplay()), // Replace ManualDisplay() with your actual screen widget
-              );
-              },
-            ),
-          ),
-        ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.info_outline_rounded,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    pomodoroManualDisplay()), // Replace ManualDisplay() with your actual screen widget
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 )
               : const PreferredSize(
                   preferredSize: Size.fromHeight(100.0),
@@ -772,6 +815,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   : Colors.grey[850],
                             ),
                             onPressed: () {
+                              allowNotifications();
                               setState(() {
                                 value.toggleVisibility(!value.isVisible);
                               });
