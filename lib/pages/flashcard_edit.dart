@@ -72,8 +72,8 @@ class _flashcard_editState extends State<flashcard_edit> {
               setState(() {
                 // Add a new question and answer flashcard to the list
                 Map<String, String> newCard = {
-                  'question': '',
-                  'answer': '',
+                  'Question': '',
+                  'Answer': '',
                 };
                 flashcard.cards.add(newCard);
                 widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
@@ -130,8 +130,8 @@ class _flashcard_editState extends State<flashcard_edit> {
                           itemCount: flashcard.cards.length,
                           itemBuilder: (context, index, realIndex) {
                             final card = flashcard.cards[index];
-                            final question = card['question'];
-                            final answer = card['answer'];
+                            final question = card['Question'];
+                            final answer = card['Answer'];
                             return Container(
                               height: MediaQuery.of(context).size.height * 2,
                               width: MediaQuery.of(context).size.width * 0.75,
@@ -164,7 +164,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                         )),
                                     onUpdateContent: (editQuestion) {
                                       setState(() {
-                                        flashcard.cards[index]['question'] =
+                                        flashcard.cards[index]['Question'] =
                                             editQuestion;
                                         flashcard.save();
                                       });
@@ -197,7 +197,7 @@ class _flashcard_editState extends State<flashcard_edit> {
                                         )),
                                     onUpdateContent: (editAnswer) {
                                       setState(() {
-                                        flashcard.cards[index]['answer'] =
+                                        flashcard.cards[index]['Answer'] =
                                             editAnswer;
                                         flashcard.save();
                                       });

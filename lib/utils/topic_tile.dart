@@ -20,7 +20,7 @@ class topic_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 5),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 0),
       child: GestureDetector(
           onTap: onEdit,
           child: custom_box(
