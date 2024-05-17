@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/user_manual/flashcardManual_items.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class flashcardManualDisplay extends StatefulWidget {
   const flashcardManualDisplay({super.key});
@@ -33,6 +34,15 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
                         'Skip',
                         style: Theme.of(context).textTheme.titleMedium,
                       )),
+                  SmoothPageIndicator(
+                    controller: pageController,
+                    count: controller.items.length,
+                    effect: WormEffect(
+                      dotHeight: 10,
+                      dotWidth: 10,
+                      activeDotColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                   TextButton(
                       onPressed: () => pageController.nextPage(
                           duration: Duration(milliseconds: 300),

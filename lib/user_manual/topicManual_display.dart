@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/user_manual/topicManual_items.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class topicManualDisplay extends StatefulWidget {
   const topicManualDisplay({super.key});
@@ -33,6 +34,15 @@ class _topicManualDisplayState extends State<topicManualDisplay> {
                         'Skip',
                         style: Theme.of(context).textTheme.titleMedium,
                       )),
+                  SmoothPageIndicator(
+                    controller: pageController,
+                    count: controller.items.length,
+                    effect: WormEffect(
+                      dotHeight: 10,
+                      dotWidth: 10,
+                      activeDotColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
                   TextButton(
                       onPressed: () => pageController.nextPage(
                           duration: Duration(milliseconds: 300),

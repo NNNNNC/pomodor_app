@@ -21,6 +21,6 @@ class profileManualItems {
     manualInfo(
         title:
             'You can also edit your name by tapping the profile title, then press the check icon to save your profile study environment',
-        image: 'assets/images/manual_images/profile_manual/timer_audio.png'),
+        image: 'assets/images/manual_images/profile_manual/name_save.png'),
   ];
 }
