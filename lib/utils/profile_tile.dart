@@ -151,10 +151,10 @@ class _profile_tileState extends State<profile_tile> {
                     SizedBox(
                       width: 180,
                       child: Text('Focus Duration :',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.labelMedium),
                     ),
                     Text(widget.focus_duration.toString() + ' minutes',
-                        style: Theme.of(context).textTheme.titleSmall),
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
                 SizedBox(
@@ -165,10 +165,10 @@ class _profile_tileState extends State<profile_tile> {
                     SizedBox(
                       width: 180,
                       child: Text('Long Break :',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.labelMedium),
                     ),
                     Text(widget.long_break.toString() + ' minutes',
-                        style: Theme.of(context).textTheme.titleSmall),
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
                 SizedBox(
@@ -179,10 +179,10 @@ class _profile_tileState extends State<profile_tile> {
                     SizedBox(
                       width: 180,
                       child: Text('Short Break :',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.labelMedium),
                     ),
                     Text(widget.short_break.toString() + ' minutes',
-                        style: Theme.of(context).textTheme.titleSmall),
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
                 SizedBox(
@@ -193,12 +193,10 @@ class _profile_tileState extends State<profile_tile> {
                     SizedBox(
                       width: 180,
                       child: Text('White Noise :',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.labelMedium),
                     ),
-                    Text(
-                        fileDisplayNames[widget.white_noise] ??
-                            'Not Selected',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(fileDisplayNames[widget.white_noise] ?? 'Not Selected',
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
                 SizedBox(
@@ -209,11 +207,10 @@ class _profile_tileState extends State<profile_tile> {
                     SizedBox(
                       width: 180,
                       child: Text('Ringtone :',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.labelMedium),
                     ),
-                    Text(
-                        fileDisplayNames[widget.ringtone] ?? 'Not Selected',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(fileDisplayNames[widget.ringtone] ?? 'Not Selected',
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
               ],

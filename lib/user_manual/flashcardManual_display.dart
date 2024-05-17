@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/user_manual/flashcardManual_items.dart';
 
-
-
 class flashcardManualDisplay extends StatefulWidget {
-
-
   const flashcardManualDisplay({super.key});
 
   @override
@@ -37,7 +33,6 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
                         'Skip',
                         style: Theme.of(context).textTheme.titleMedium,
                       )),
-
                   TextButton(
                       onPressed: () => pageController.nextPage(
                           duration: Duration(milliseconds: 300),
@@ -50,7 +45,7 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
               ),
       ),
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: PageView.builder(
             onPageChanged: (index) => setState(
                 () => isLastPage = controller.items.length - 1 == index),
@@ -65,14 +60,16 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
                     child: Text(
                       controller.items[index].title,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
@@ -95,7 +92,6 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
-                  SizedBox(),
                 ],
               );
             }),
@@ -112,10 +108,10 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
       height: 55,
       child: TextButton(
           onPressed: () {
-              Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: Text(
-            'Get Started',
+            'Proceed',
             style: Theme.of(context).textTheme.titleMedium,
           )),
     );

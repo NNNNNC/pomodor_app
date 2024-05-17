@@ -22,7 +22,7 @@ class FlashcardBox extends StatefulWidget {
 
 class _FlashcardBoxState extends State<FlashcardBox> {
   late TextEditingController _controller;
-  bool _isEnable = false;
+  bool _isEnable = true;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
     return GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
-          _isEnable = false;
+          _isEnable = true;
         },
         child: Container(
           height: 300,

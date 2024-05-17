@@ -62,6 +62,7 @@ class _flashcard_editState extends State<flashcard_edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         floatingActionButton: SizedBox(
           height: 50,
           width: 50,

@@ -146,7 +146,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                                 .get(getCardKey(widget.currentIndex))
                                 ?.cardSetName ??
                             'Not selected',
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: Theme.of(context).textTheme.labelMedium,
                       ),
                       IconButton(
                         onPressed: () async {
@@ -204,6 +204,8 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter Description Here',
+                          hintStyle: TextStyle(fontSize: 11),
+                          counterStyle: TextStyle(fontSize: 8),
                         ),
                       ),
                     ),

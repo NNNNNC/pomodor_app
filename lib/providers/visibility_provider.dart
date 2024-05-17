@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BottomBarVisibility extends ChangeNotifier {
   bool _isVisible = true;
@@ -6,6 +7,16 @@ class BottomBarVisibility extends ChangeNotifier {
 
   void toggleVisibility(bool value) {
     _isVisible = value;
+
+    if (value == false) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
+
+    if (value == true) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values);
+    }
+
     notifyListeners();
   }
 }
