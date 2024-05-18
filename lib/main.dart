@@ -64,7 +64,10 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool onboarding;
-  const MyApp({super.key, this.onboarding = false});
+  const MyApp({
+    super.key,
+    this.onboarding = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +75,14 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: app_theme,
-      home: onboarding ? MainPage() : OnboardingScreen(),
+    return Consumer<BottomBarVisibility>(
+      builder: (context, value, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: app_theme_light,
+        darkTheme: app_theme,
+        themeMode: value.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        home: onboarding ? MainPage() : OnboardingScreen(),
+      ),
     );
   }
 }

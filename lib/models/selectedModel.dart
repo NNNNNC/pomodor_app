@@ -7,6 +7,7 @@ class SelectedModel extends HiveObject {
   SelectedModel({
     this.selectedTopic,
     this.selectedProfile,
+    this.isDarkMode,
   });
 
   @HiveField(0)
@@ -14,4 +15,7 @@ class SelectedModel extends HiveObject {
 
   @HiveField(1)
   int? selectedProfile;
+
+  @HiveField(2)
+  bool? isDarkMode;
 }

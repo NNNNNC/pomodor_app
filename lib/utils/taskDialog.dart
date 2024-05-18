@@ -36,7 +36,7 @@ class _TaskDialogState extends State<TaskDialog> {
         padding: const EdgeInsets.all(36.0),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xff3a3939),
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Column(

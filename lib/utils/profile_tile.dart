@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/pages/profile_edit.dart';
-import 'package:pomodoro_app/utils/custom_box.dart';
 
 class profile_tile extends StatefulWidget {
   final String profile_name;
@@ -50,7 +49,7 @@ class _profile_tileState extends State<profile_tile> {
       // Add more mappings as needed
     };
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 5),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 7, bottom: 5),
       child: GestureDetector(
           onTap: () {
             Navigator.push(
@@ -63,7 +62,21 @@ class _profile_tileState extends State<profile_tile> {
               ),
             );
           },
-          child: custom_box(
+          child: Container(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 1.5,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 2),
+                  color: Colors.black.withOpacity(0.25),
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 Row(
@@ -92,7 +105,6 @@ class _profile_tileState extends State<profile_tile> {
                     ),
                     PopupMenuButton(
                       iconSize: 25,
-                      color: const Color.fromRGBO(48, 48, 48, 0.9),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           onTap: () {
@@ -103,7 +115,7 @@ class _profile_tileState extends State<profile_tile> {
                                     profileBox.getAt(widget.profileIndex)!.key)
                                 ? 'Unselect'
                                 : 'Select Profile',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).popupMenuTheme.textStyle,
                           ),
                         ),
                         PopupMenuItem(
@@ -125,18 +137,18 @@ class _profile_tileState extends State<profile_tile> {
                                   'audio/ringtone_1.mp3',
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             'Reset Values',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).popupMenuTheme.textStyle,
                           ),
                         ),
                         PopupMenuItem(
                           onTap: () {
                             widget.onDelete();
                           },
-                          child: const Text(
+                          child: Text(
                             'Delete',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: Theme.of(context).popupMenuTheme.textStyle,
                           ),
                         ),
                       ],

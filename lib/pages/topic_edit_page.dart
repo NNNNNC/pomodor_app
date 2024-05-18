@@ -22,10 +22,14 @@ class _topic_edit_pageState extends State<topic_edit_page> {
   late TextEditingController _topicController;
   late TextEditingController _descriptionController;
   late TextEditingController _taskController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+
     _topicController = TextEditingController(
       text: topicBox.getAt(widget.currentIndex)?.name,
     );
@@ -40,10 +44,17 @@ class _topic_edit_pageState extends State<topic_edit_page> {
     _topicController.dispose();
     _descriptionController.dispose();
     _taskController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
-  bool _isEnabled = false;
+  bool _isEnabled = true;
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {}
+  }
 
   void clickcheckbox(int index) {
     setState(() {
@@ -189,6 +200,7 @@ class _topic_edit_pageState extends State<topic_edit_page> {
             Padding(
               padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
               child: Stack(
+                clipBehavior: Clip.none,
                 children: [
                   custom_box(
                     child: Padding(
@@ -196,11 +208,11 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                       child: TextField(
                         enabled: _isEnabled,
                         keyboardType: TextInputType.multiline,
-                        maxLines: 1,
-                        maxLength: 30,
+                        maxLines: null,
+                        maxLength: 120,
                         cursorColor: Colors.white,
                         controller: _descriptionController,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodySmall,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter Description Here',
@@ -257,40 +269,40 @@ class _topic_edit_pageState extends State<topic_edit_page> {
                 ],
               ),
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 10,
-                    left: 10,
-                    bottom: 8.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: currentTopic!.tasks?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return task_tile(
-                            task_name: currentTopic.tasks![index][0],
-                            taskcompleted: currentTopic.tasks![index][1],
-                            onChanged: (value) {
-                              clickcheckbox(index);
-                            },
-                            onPressed: () {
-                              setState(() {
-                                currentTopic.tasks?.removeAt(index);
-                              });
-                            },
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 10,
+                left: 10,
+                bottom: 8.0,
+              ),
+              child: ListView.builder(
+                addAutomaticKeepAlives: true,
+                addRepaintBoundaries: true,
+                controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: currentTopic!.tasks?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 8.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: task_tile(
+                      task_name: currentTopic.tasks![index][0],
+                      taskcompleted: currentTopic.tasks![index][1],
+                      onChanged: (value) {
+                        clickcheckbox(index);
+                      },
+                      onPressed: () {
+                        setState(() {
+                          currentTopic.tasks?.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

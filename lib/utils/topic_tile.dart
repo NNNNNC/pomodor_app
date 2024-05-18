@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/utils/custom_box.dart';
 
 class topic_tile extends StatelessWidget {
   final String topic_name;
@@ -20,10 +19,24 @@ class topic_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 0),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 7, bottom: 5),
       child: GestureDetector(
           onTap: onEdit,
-          child: custom_box(
+          child: Container(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 1.5,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 2),
+                  color: Colors.black.withOpacity(0.25),
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 Row(
@@ -37,7 +50,6 @@ class topic_tile extends StatelessWidget {
                       ),
                     ),
                     PopupMenuButton(
-                      color: const Color.fromRGBO(48, 48, 48, 0.9),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           child: TextButton(
@@ -45,24 +57,18 @@ class topic_tile extends StatelessWidget {
                               Navigator.of(context).pop();
                               onEdit();
                             },
-                            child: const Text(
+                            child: Text(
                               'Edit       ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                              style: Theme.of(context).popupMenuTheme.textStyle,
                             ),
                           ),
                         ),
                         PopupMenuItem(
                           child: TextButton(
                             onPressed: onDelete,
-                            child: const Text(
+                            child: Text(
                               'Delete',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                              style: Theme.of(context).popupMenuTheme.textStyle,
                             ),
                           ),
                         ),
@@ -74,11 +80,12 @@ class topic_tile extends StatelessWidget {
                   if (description!.split(" ").last.isNotEmpty)
                     Row(
                       children: [
-                        Text(
-                          maxLines: null,
-                          overflow: TextOverflow.ellipsis,
-                          description!,
-                          style: Theme.of(context).textTheme.titleSmall,
+                        Flexible(
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            description!,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
                         ),
                       ],
                     ),

@@ -48,7 +48,7 @@ class _FlashcardBoxState extends State<FlashcardBox> {
           width: 300,
           margin: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(

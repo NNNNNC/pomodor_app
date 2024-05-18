@@ -26,7 +26,6 @@ class MiniTaskTile extends StatelessWidget {
             horizontal: -4.0,
             vertical: -4.0,
           ),
-          tileColor: Colors.grey,
           horizontalTitleGap: 4,
           contentPadding: const EdgeInsets.only(left: 0),
           leading: Checkbox(

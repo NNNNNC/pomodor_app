@@ -55,19 +55,13 @@ class _flashcard_editState extends State<flashcard_edit> {
         // Update the UI
         widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
       });
-      // Show Snackbar indicating undo was successful
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Undo successful'),
-        ),
-      );
     }
   }
 
   void _deleteFlashcard() {
     if (flashcard.cards.length > 1) {
       setState(() {
-        Map<String, String> deletedCard =flashcard.cards.removeLast();
+        Map<String, String> deletedCard = flashcard.cards.removeLast();
         _undoStack.add(deletedCard);
         _currentIndex = (_currentIndex >= flashcard.cards.length)
             ? flashcard.cards.length - 1
@@ -75,14 +69,14 @@ class _flashcard_editState extends State<flashcard_edit> {
         widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
       });
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Flashcard deleted'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: _undo,
+        SnackBar(
+          content: Text('Flashcard deleted'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: _undo,
+          ),
         ),
-      ),
-    );
+      );
     }
   }
 
@@ -168,6 +162,7 @@ class _flashcard_editState extends State<flashcard_edit> {
               Column(
                 children: [
                   Stack(
+                    clipBehavior: Clip.none,
                     children: [
                       CarouselSlider.builder(
                           carouselController: controller,

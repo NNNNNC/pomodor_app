@@ -91,7 +91,7 @@ class MainPage extends StatelessWidget {
         ),
         indicatorColor: Theme.of(context).colorScheme.secondary,
         labelColor: Theme.of(context).colorScheme.secondary,
-        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
         tabs: const [
           SizedBox(

@@ -67,6 +67,7 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
         child: Column(
           children: getCardMap().keys.map((card) {
             return RadioListTile(
+              tileColor: Theme.of(context).colorScheme.background,
               dense: true,
               title: Text(
                 card,

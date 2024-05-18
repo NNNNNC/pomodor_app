@@ -254,7 +254,8 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff3a3939)),
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                    ),
                     onPressed: () {
                       _controller.toggleCard();
                     },
@@ -264,11 +265,7 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                       child: Center(
                         child: Text(
                           'FLIP CARD',
-                          style: TextStyle(
-                            color: Colors.grey[300],
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                     ),

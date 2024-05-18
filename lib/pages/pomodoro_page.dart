@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
+import 'package:pomodoro_app/theme/customColors.dart';
 import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
@@ -15,7 +16,7 @@ import 'package:pomodoro_app/utils/taskDialog.dart';
 import 'package:pomodoro_app/utils/topic_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
-import 'package:flutter/services.dart';
+import 'package:rotating_icon_button/rotating_icon_button.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({
@@ -81,6 +82,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
+  var colors = CustomColors();
   final audioPlayer = AudioPlayer();
 
   void _taskStatusChange(bool? value, int index) {
@@ -340,8 +342,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    pomodoroManualDisplay()), // Replace ManualDisplay() with your actual screen widget
+                              builder: (context) => pomodoroManualDisplay(),
+                            ), // Replace ManualDisplay() with your actual screen widget
                           );
                         },
                       ),
@@ -352,6 +354,31 @@ class _PomodoroPageState extends State<PomodoroPage>
                   preferredSize: Size.fromHeight(100.0),
                   child: SizedBox(height: 30.0),
                 ),
+        ),
+        floatingActionButton: SizedBox(
+          height: 45,
+          width: 45,
+          child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            shape: const CircleBorder(),
+            heroTag: 'modeSwitch',
+            onPressed: () {},
+            child: RotatingIconButton(
+              rotateType: RotateType.full,
+              duration: Durations.medium4,
+              background: Theme.of(context).colorScheme.surface,
+              shape: ButtonShape.circle,
+              onTap: () {
+                value.toggleMode();
+                setState(() {});
+              },
+              child: Icon(
+                value.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                color: Theme.of(context).highlightColor,
+                size: 30,
+              ),
+            ),
+          ),
         ),
 
         // Select topic and headphones
@@ -418,7 +445,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       decoration: BoxDecoration(
-                        color: isFocusing ? Colors.grey[900] : Colors.grey,
+                        color: isFocusing
+                            ? Theme.of(context).primaryColorDark
+                            : Theme.of(context).primaryColor,
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(77),
                           bottomLeft: Radius.circular(77),
@@ -453,7 +482,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                       duration: const Duration(milliseconds: 250),
                       margin: const EdgeInsets.only(left: 5.0),
                       decoration: BoxDecoration(
-                        color: isLongBreak ? Colors.grey[900] : Colors.grey,
+                        color: isLongBreak
+                            ? Theme.of(context).primaryColorDark
+                            : Theme.of(context).primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(6)),
                         boxShadow: [
@@ -484,7 +515,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                       duration: const Duration(milliseconds: 250),
                       margin: const EdgeInsets.only(left: 5.0),
                       decoration: BoxDecoration(
-                        color: isBreak ? Colors.grey[900] : Colors.grey,
+                        color: isBreak
+                            ? Theme.of(context).primaryColorDark
+                            : Theme.of(context).primaryColor,
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(16),
                           bottomLeft: Radius.circular(16),
@@ -537,19 +570,19 @@ class _PomodoroPageState extends State<PomodoroPage>
                     child: CircularProgressIndicator(
                       value: progress,
                       backgroundColor: isBreak
-                          ? const Color(0xff1dc50e)
+                          ? colors.breakCircularBackground
                           : isLongBreak
-                              ? const Color(0xff0e15c5)
-                              : Colors.transparent,
+                              ? colors.longCircularBackground
+                              : colors.focusCircularBackground,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         pause
-                            ? Colors.transparent
+                            ? colors.onPause
                             : isFocusing
-                                ? const Color(0xff1dc50e)
+                                ? colors.focusCircularValue
                                 : isBreak
-                                    ? const Color(0xff252525)
+                                    ? colors.breakCircularValue
                                     : isLongBreak
-                                        ? const Color(0xff252525)
+                                        ? colors.longCircularValue
                                         : Colors.transparent,
                       ),
                       strokeWidth: 8,
@@ -591,12 +624,16 @@ class _PomodoroPageState extends State<PomodoroPage>
                       height: MediaQuery.of(context).size.height * 0.3,
                       decoration: BoxDecoration(
                         color: isFocusing == true
-                            ? const Color(0xffc50e0e)
+                            ? Theme.of(context).colorScheme.primaryContainer
                             : isBreak == true
-                                ? const Color(0xff1dc50e)
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
                                 : isLongBreak == true
-                                    ? const Color(0xff0e15c5)
-                                    : const Color(0xff3a3939),
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .tertiaryContainer
+                                    : Theme.of(context).colorScheme.surface,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -620,12 +657,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                       : isLongBreak
                                           ? 'LONG BREAK'
                                           : 'FOCUS',
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                shadows: CupertinoContextMenu.kEndBoxShadow,
-                              ),
+                              style: Theme.of(context).textTheme.displayLarge,
                             ),
                             const SizedBox(height: 10),
                             Text(
@@ -634,11 +666,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   : isFocusing || isBreak || isLongBreak
                                       ? '$digitMin:$digitSec'
                                       : 'Click here to start Pomodoro',
-                              style: const TextStyle(
-                                color: Color(0xffc0c0c0),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: Theme.of(context).textTheme.displaySmall,
                             ),
                           ],
                         ),
@@ -682,7 +710,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                     width: 330,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: const Color(0xff3a3939),
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
                       boxShadow: [
                         BoxShadow(
@@ -811,8 +839,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                               Icons.lock_open_outlined,
                               size: 28,
                               color: isBreak || isLongBreak
-                                  ? Colors.grey[300]
-                                  : Colors.grey[850],
+                                  ? Theme.of(context).highlightColor
+                                  : Theme.of(context).disabledColor,
                             ),
                             onPressed: () {
                               allowNotifications();
@@ -856,7 +884,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                               height: 32,
                               color: (topicBox.get(topicKey)?.cardSet != null)
                                   ? Theme.of(context).colorScheme.secondary
-                                  : Colors.white38,
+                                  : Theme.of(context).disabledColor,
                             ),
                           ),
                           const SizedBox(

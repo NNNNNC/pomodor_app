@@ -19,17 +19,20 @@ class KeyAdapter extends TypeAdapter<SelectedModel> {
     return SelectedModel(
       selectedTopic: fields[0] as int?,
       selectedProfile: fields[1] as int?,
+      isDarkMode: fields[2] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SelectedModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.selectedTopic)
       ..writeByte(1)
-      ..write(obj.selectedProfile);
+      ..write(obj.selectedProfile)
+      ..writeByte(2)
+      ..write(obj.isDarkMode);
   }
 
   @override

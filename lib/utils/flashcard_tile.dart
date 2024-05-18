@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/pages/flashcard_edit.dart';
-import 'package:pomodoro_app/utils/custom_box.dart';
 
 class flashcard_tile extends StatelessWidget {
   final String flashcard_name;
@@ -21,7 +20,7 @@ class flashcard_tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 0),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 7, bottom: 5),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -30,7 +29,21 @@ class flashcard_tile extends StatelessWidget {
                   builder: (Context) => flashcard_edit(
                       flashCardIndex: flashCardIndex, onUpdate: onUpdate)));
         },
-        child: custom_box(
+        child: Container(
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 1.5,
+                spreadRadius: 0,
+                offset: const Offset(0, 2),
+                color: Colors.black.withOpacity(0.25),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

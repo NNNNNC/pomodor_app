@@ -50,6 +50,7 @@ class _TopicDialogState extends State<TopicDialog> {
         child: Column(
           children: getTopicMap().keys.map((topic) {
             return RadioListTile(
+              tileColor: Theme.of(context).colorScheme.background,
               dense: true,
               title: Text(
                 topic,

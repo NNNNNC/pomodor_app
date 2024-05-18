@@ -72,6 +72,7 @@ class _audioDialogState extends State<audioDialog> {
         child: Column(
           children: widget.audioMap.keys.toList().map((topic) {
             return RadioListTile(
+              tileColor: Theme.of(context).colorScheme.background,
               dense: true,
               title: Text(
                 topic,

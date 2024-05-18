@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pomodoro_app/utils/custom_box_2.dart';
 // import 'package:overflow_text_animated/overflow_text_animated.dart';
 
 class task_tile extends StatelessWidget {
@@ -28,41 +27,38 @@ class task_tile extends StatelessWidget {
           //     MaterialPageRoute(builder: (Context) => const task_edit_page()));
           // createNewTask(context);
         },
-        child: custom_box_2(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 0),
-                child: Checkbox(
-                  value: taskcompleted,
-                  onChanged: onChanged,
-                  activeColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 0),
+              child: Checkbox(
+                value: taskcompleted,
+                onChanged: onChanged,
+                activeColor: Theme.of(context).highlightColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                side: BorderSide(
+                  color: Theme.of(context).highlightColor,
                 ),
               ),
-              Flexible(
-                child: Text(
-                  maxLines: null,
-                  task_name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w100,
-                  ),
-                ),
+            ),
+            Flexible(
+              child: Text(
+                maxLines: null,
+                task_name,
+                style: Theme.of(context).textTheme.labelSmall,
               ),
-              IconButton(
-                onPressed: onPressed,
-                icon: Icon(
-                  Icons.delete_outlined,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+            ),
+            IconButton(
+              onPressed: onPressed,
+              icon: Icon(
+                Icons.delete_outlined,
+                color: Theme.of(context).colorScheme.secondary,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
