@@ -618,8 +618,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                         pause = false;
                       });
                     },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 700),
+                    child: Container(
+                      // duration: const Duration(milliseconds: 700),
                       width: MediaQuery.of(context).size.width * 0.6,
                       height: MediaQuery.of(context).size.height * 0.3,
                       decoration: BoxDecoration(
