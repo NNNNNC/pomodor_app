@@ -7,3 +7,6 @@ Software Engineering Project
 - Preset Themes
 - Customizable Themes
 - Statistics (?)
+- Flashcard Builder
+- Study Reminders
+  
