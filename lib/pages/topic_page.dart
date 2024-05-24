@@ -108,7 +108,6 @@ class _topic_pageState extends State<topic_page> {
               setState(() {
                 topicBox.deleteAt(index);
               });
-              Navigator.of(context).pop();
             },
             onEdit: () async {
               await Navigator.push(

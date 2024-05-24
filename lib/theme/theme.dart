@@ -85,6 +85,7 @@ ThemeData app_theme = ThemeData(
     textStyle: TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.white,
+      fontSize: 12,
     ),
   ),
 );
@@ -184,6 +185,7 @@ ThemeData app_theme_light = ThemeData(
     textStyle: TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.white,
+      fontSize: 12,
     ),
   ),
 );

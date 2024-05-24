@@ -50,26 +50,13 @@ class topic_tile extends StatelessWidget {
                       ),
                     ),
                     PopupMenuButton(
+                      padding: EdgeInsets.zero,
                       itemBuilder: (context) => [
                         PopupMenuItem(
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              onEdit();
-                            },
-                            child: Text(
-                              'Edit       ',
-                              style: Theme.of(context).popupMenuTheme.textStyle,
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          child: TextButton(
-                            onPressed: onDelete,
-                            child: Text(
-                              'Delete',
-                              style: Theme.of(context).popupMenuTheme.textStyle,
-                            ),
+                          onTap: onDelete,
+                          child: Text(
+                            'Delete',
+                            style: Theme.of(context).popupMenuTheme.textStyle,
                           ),
                         ),
                       ],
