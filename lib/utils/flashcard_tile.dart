@@ -57,15 +57,17 @@ class flashcard_tile extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      onDelete();
-                    },
-                    icon: Icon(
-                      size: 20,
-                      Icons.delete_outline,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                  PopupMenuButton(
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        onTap: onDelete,
+                        child: Text(
+                          'Delete',
+                          style: Theme.of(context).popupMenuTheme.textStyle,
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

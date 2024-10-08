@@ -97,6 +97,7 @@ class _topic_pageState extends State<topic_page> {
         ),
       ),
       body: ListView.builder(
+        padding: EdgeInsets.only(bottom: 80),
         itemCount: topicBox.length,
         itemBuilder: (context, index) {
           var topics = topicBox.getAt(index);

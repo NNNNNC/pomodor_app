@@ -135,6 +135,7 @@ class _profile_pageState extends State<profile_page> {
           ),
         ),
         body: ListView.builder(
+          padding: EdgeInsets.only(bottom: 80),
           itemCount: profileBox.length,
           itemBuilder: (context, index) {
             var profile = profileBox.getAt(index);

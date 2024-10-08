@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/pages/profile_edit.dart';
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
 class profile_tile extends StatefulWidget {
   final String profile_name;
@@ -91,33 +92,43 @@ class _profile_tileState extends State<profile_tile> {
                             widget.profile_name,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          if (defaultKey.get(0)?.selectedProfile ==
-                              profileBox.getAt(widget.profileIndex)!.key)
-                            Text(
-                              '  (Selected)',
-                              style: TextStyle(
-                                color: Colors.green[600],
-                                fontSize: 13,
-                              ),
-                            ),
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 15,
+                      width: 40,
+                        child: AnimatedToggleSwitch.dual(
+                      current: defaultKey.get(0)?.selectedProfile ==
+                          profileBox.getAt(widget.profileIndex)!.key,
+                      first: false,
+                      second: true,
+                      style: ToggleStyle(
+                        borderColor: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1.5),
+                          ),
+                        ],
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      onChanged: (bool value) {
+                        if (value) {
+                          widget.onSelect(
+                              widget.profileIndex); // Handle selection if true
+                        }
+                      },
+                      styleBuilder: (value) => ToggleStyle(
+                        indicatorColor: value ? Colors.green : Colors.red,
+                      ),
+                    )),
                     PopupMenuButton(
                       iconSize: 25,
                       itemBuilder: (context) => [
-                        PopupMenuItem(
-                          onTap: () {
-                            widget.onSelect(widget.profileIndex);
-                          },
-                          child: Text(
-                            (defaultKey.get(0)?.selectedProfile ==
-                                    profileBox.getAt(widget.profileIndex)!.key)
-                                ? 'Unselect'
-                                : 'Select Profile',
-                            style: Theme.of(context).popupMenuTheme.textStyle,
-                          ),
-                        ),
                         PopupMenuItem(
                           onTap: () {
                             widget.onUpdate(
@@ -152,7 +163,7 @@ class _profile_tileState extends State<profile_tile> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(

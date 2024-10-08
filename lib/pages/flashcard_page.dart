@@ -105,6 +105,7 @@ class _flashcard_pageState extends State<flashcard_page> {
           ),
         ),
         body: ListView.builder(
+          padding: EdgeInsets.only(bottom: 80),
           itemCount: flashcardBox.length,
           itemBuilder: (context, index) {
             var flashcardSet = flashcardBox.getAt(index);
