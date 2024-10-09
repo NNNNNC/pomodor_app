@@ -96,36 +96,38 @@ class _profile_tileState extends State<profile_tile> {
                       ),
                     ),
                     SizedBox(
-                      height: 15,
-                      width: 40,
+                        height: 15,
+                        width: 40,
                         child: AnimatedToggleSwitch.dual(
-                      current: defaultKey.get(0)?.selectedProfile ==
-                          profileBox.getAt(widget.profileIndex)!.key,
-                      first: false,
-                      second: true,
-                      style: ToggleStyle(
-                        borderColor: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: Offset(0, 1.5),
+                          current: defaultKey.get(0)?.selectedProfile ==
+                              profileBox.getAt(widget.profileIndex)!.key,
+                          first: false,
+                          second: true,
+                          style: ToggleStyle(
+                            borderColor: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(0, 1.5),
+                              ),
+                            ],
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0)),
                           ),
-                        ],
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      ),
-                      onChanged: (bool value) {
-                        if (value) {
-                          widget.onSelect(
-                              widget.profileIndex); // Handle selection if true
-                        }
-                      },
-                      styleBuilder: (value) => ToggleStyle(
-                        indicatorColor: value ? Colors.green : Colors.red,
-                      ),
-                    )),
+                          onChanged: (bool value) {
+                            if (value) {
+                              widget.onSelect(widget
+                                  .profileIndex); // Handle selection if true
+                            }
+                          },
+                          styleBuilder: (value) => ToggleStyle(
+                            indicatorColor: value ? Colors.green : Colors.red,
+                          ),
+                        )),
                     PopupMenuButton(
                       iconSize: 25,
                       itemBuilder: (context) => [

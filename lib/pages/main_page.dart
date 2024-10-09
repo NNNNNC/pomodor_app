@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pomodoro_app/pages/flashcard_page.dart';
+import 'package:pomodoro_app/pages/menu_page.dart';
 import 'package:pomodoro_app/pages/pomodoro_page.dart';
 import 'package:pomodoro_app/pages/profile_page.dart';
 import 'package:pomodoro_app/pages/topic_page.dart';
@@ -25,6 +26,9 @@ class MainPage extends StatelessWidget {
     profile_page(
       key: PageStorageKey('ProfilePage'),
     ),
+    MenuPage(
+      key: PageStorageKey('MenuPage'),
+    )
   ];
 
   @override
@@ -32,7 +36,7 @@ class MainPage extends StatelessWidget {
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => DefaultTabController(
         initialIndex: 0,
-        length: 4,
+        length: 5,
         child: PopScope(
           canPop: value.isVisible ? true : false,
           // onPopInvoked: (didPop) {
@@ -127,9 +131,19 @@ class MainPage extends StatelessWidget {
           SizedBox(
             width: 70,
             child: Tab(
-              text: 'Profile',
+              text: 'Presets',
               icon: Icon(
                 Icons.person_outline,
+                size: 20,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 70,
+            child: Tab(
+              text: 'Menu',
+              icon: Icon(
+                Icons.menu,
                 size: 20,
               ),
             ),
