@@ -5,6 +5,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/theme/customColors.dart';
@@ -85,6 +86,20 @@ class _PomodoroPageState extends State<PomodoroPage>
   var colors = CustomColors();
   final audioPlayer = AudioPlayer();
 
+  void _logFocusSession() {
+    final int focusDurationInSeconds =
+        (focusDur! * 60) - (minutes * 60 + seconds);
+
+    final DateTime now = DateTime.now();
+    final Map<String, dynamic> sessionData = {
+      'date': now.toIso8601String(),
+      'duration': focusDurationInSeconds,
+    };
+
+    final sessionBox = Hive.box('focusSessions');
+    sessionBox.add(sessionData);
+  }
+
   void _taskStatusChange(bool? value, int index) {
     setState(() {
       topicTasks![index][1] = !topicTasks![index][1];
@@ -146,6 +161,11 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   void timerStop() {
     timer!.cancel();
+
+    if (isFocusing) {
+      _logFocusSession();
+    }
+
     setState(() {
       seconds = 0;
       minutes = 0;
@@ -166,6 +186,10 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   void terminateTimer() {
+    if (isFocusing) {
+      _logFocusSession();
+    }
+
     final visibility = context.read<BottomBarVisibility>();
 
     allowNotifications();

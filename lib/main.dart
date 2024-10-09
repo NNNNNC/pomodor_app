@@ -31,6 +31,12 @@ void main() async {
 
   await Hive.initFlutter();
 
+  // for tracking sessions statistics
+  await Hive.openBox('focusSessions');
+
+  // for the daily study target
+  await Hive.openBox('studyTarget');
+
   Hive.registerAdapter<Flashcard>(flashcardAdapter());
   Hive.registerAdapter<profileModel>(profileAdapter());
   Hive.registerAdapter<TopicModel>(TopicAdapter());

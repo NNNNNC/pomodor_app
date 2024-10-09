@@ -109,7 +109,7 @@ ThemeData app_theme_light = ThemeData(
     displayLarge: TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.bold,
-      color: const Color.fromARGB(164, 0, 0, 0),
+      color: Color.fromRGBO(70, 130, 180, 1),
       shadows: CupertinoContextMenu.kEndBoxShadow,
     ),
     displaySmall: TextStyle(

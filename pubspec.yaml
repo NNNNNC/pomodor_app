@@ -50,6 +50,7 @@ dependencies:
   overflow_text_animated: ^0.0.6
   rotating_icon_button: ^1.0.0
   animated_toggle_switch: ^0.8.3
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
