@@ -124,12 +124,12 @@ class StatPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Wrap(
-            children: [
-              Expanded(
-                child: GridView.count(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Wrap(
+              children: [
+                GridView.count(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(12),
@@ -149,53 +149,53 @@ class StatPage extends StatelessWidget {
                         timeSpent: overallFocusString,
                         subText: 'Total studied'),
                   ],
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 18, top: 16),
-            child: Row(
-              children: [
-                Text(
-                  'Daily Progress',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 30),
-            child: Center(
-              child: CircularPercentIndicator(
-                radius: 100.0,
-                lineWidth: 13.0,
-                animation: true,
-                percent: dailyProgress > 1.0 ? 1.0 : dailyProgress,
-                center: Text(
-                  "${(dailyProgress * 100).toStringAsFixed(1)}%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: Colors.blue),
-                ),
-                footer: Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Text(
-                    remainingTimeString,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
-                        color: Colors.grey),
+            Padding(
+              padding: EdgeInsets.only(left: 18, top: 16),
+              child: Row(
+                children: [
+                  Text(
+                    'Daily Progress',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                ),
-                circularStrokeCap: CircularStrokeCap.round,
-                progressColor:
-                    dailyProgress >= 1.0 ? Colors.green : Colors.blue,
+                ],
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(top: 30),
+              child: Center(
+                child: CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 13.0,
+                  animation: true,
+                  percent: dailyProgress > 1.0 ? 1.0 : dailyProgress,
+                  center: Text(
+                    "${(dailyProgress * 100).toStringAsFixed(1)}%",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.blue),
+                  ),
+                  footer: Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Text(
+                      remainingTimeString,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Colors.grey),
+                    ),
+                  ),
+                  circularStrokeCap: CircularStrokeCap.round,
+                  progressColor:
+                      dailyProgress >= 1.0 ? Colors.green : Colors.blue,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

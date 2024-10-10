@@ -37,6 +37,8 @@ void main() async {
   // for the daily study target
   await Hive.openBox('studyTarget');
 
+  await Hive.openBox('themePrefs');
+
   Hive.registerAdapter<Flashcard>(flashcardAdapter());
   Hive.registerAdapter<profileModel>(profileAdapter());
   Hive.registerAdapter<TopicModel>(TopicAdapter());
@@ -85,7 +87,7 @@ class MyApp extends StatelessWidget {
       builder: (context, value, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: app_theme_light,
-        darkTheme: app_theme,
+        darkTheme: value.isusingCustom ? value.getCustomTheme() : app_theme,
         themeMode: value.isDarkMode ? ThemeMode.dark : ThemeMode.light,
         home: onboarding ? MainPage() : OnboardingScreen(),
       ),

@@ -4,7 +4,11 @@ class StatTile extends StatelessWidget {
   final String timeSpent;
   final String subText;
 
-  const StatTile({super.key, required this.timeSpent, required this.subText});
+  const StatTile({
+    super.key,
+    required this.timeSpent,
+    required this.subText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +40,17 @@ class StatTile extends StatelessWidget {
                   Text(
                     timeSpent,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 50),
+                    style: TextStyle(
+                      fontSize: 50,
+                    ),
                   ),
                   SizedBox(width: 6),
                   Text(
                     'mins',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w200),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w200,
+                    ),
                   )
                 ],
               ),
@@ -49,7 +58,10 @@ class StatTile extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 5.0),
                 child: Text(
                   subText,
-                  style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w200),
+                  style: TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w200,
+                  ),
                 ),
               )
             ],

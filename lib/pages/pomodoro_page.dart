@@ -379,31 +379,33 @@ class _PomodoroPageState extends State<PomodoroPage>
                   child: SizedBox(height: 30.0),
                 ),
         ),
-        floatingActionButton: SizedBox(
-          height: 45,
-          width: 45,
-          child: FloatingActionButton(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            shape: const CircleBorder(),
-            heroTag: 'modeSwitch',
-            onPressed: () {},
-            child: RotatingIconButton(
-              rotateType: RotateType.full,
-              duration: Durations.medium4,
-              background: Theme.of(context).colorScheme.surface,
-              shape: ButtonShape.circle,
-              onTap: () {
-                value.toggleMode();
-                setState(() {});
-              },
-              child: Icon(
-                value.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                color: Theme.of(context).highlightColor,
-                size: 30,
+        floatingActionButton: value.isusingCustom
+            ? null
+            : SizedBox(
+                height: 45,
+                width: 45,
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  shape: const CircleBorder(),
+                  heroTag: 'modeSwitch',
+                  onPressed: () {},
+                  child: RotatingIconButton(
+                    rotateType: RotateType.full,
+                    duration: Durations.medium4,
+                    background: Theme.of(context).colorScheme.surface,
+                    shape: ButtonShape.circle,
+                    onTap: () {
+                      value.toggleMode();
+                      setState(() {});
+                    },
+                    child: Icon(
+                      value.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                      color: Theme.of(context).highlightColor,
+                      size: 30,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
 
         // Select topic and headphones
         body: Center(
