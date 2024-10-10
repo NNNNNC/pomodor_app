@@ -75,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text("Team143@gmail.com")
+                        Text("studyassistant@gmail.com")
                       ],
                     ),
                     false),
@@ -160,7 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                            'Cancel',
+                            isStudyTimeTarget ? 'Cancel' : 'Back',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
