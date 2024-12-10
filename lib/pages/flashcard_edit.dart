@@ -29,6 +29,7 @@ class _flashcard_editState extends State<flashcard_edit> {
   int _currentIndex = 0;
 
   List<Map<String, String>> _undoStack = [];
+  int _undoIndex = 0;
 
   void next() {
     if (_currentIndex < flashcard.cards.length - 1) {
@@ -54,13 +55,40 @@ class _flashcard_editState extends State<flashcard_edit> {
         // Retrieve the last deleted flashcard
         Map<String, String> deletedCard = _undoStack.removeLast();
         // Add the deleted flashcard back to the list
-        flashcard.cards.add(deletedCard);
+        flashcard.cards.insert(_undoIndex, deletedCard);
+
         // Update the UI
         widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
       });
     }
   }
+  
+  void _deleteFlashcard() {
+    if (flashcard.cards.length > 1) {
+      setState(() {
+        Map<String, String> deletedCard = flashcard.cards.removeAt(_currentIndex);
+        _undoIndex = _currentIndex;
+        _undoStack.add(deletedCard);
+        _currentIndex = (_currentIndex >= flashcard.cards.length)
+            ? flashcard.cards.length - 1
+            : _currentIndex;
 
+
+            
+        widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+        previous();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Flashcard deleted'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: _undo,
+          ),
+        ),
+      );
+    }
+  }
   void _createFlashcard(String question, String answer) {
     setState(() {
       // Add a new question and answer flashcard to the list
@@ -76,27 +104,7 @@ class _flashcard_editState extends State<flashcard_edit> {
     _answerController.clear();
   }
 
-  void _deleteFlashcard() {
-    if (flashcard.cards.length > 1) {
-      setState(() {
-        Map<String, String> deletedCard = flashcard.cards.removeLast();
-        _undoStack.add(deletedCard);
-        _currentIndex = (_currentIndex >= flashcard.cards.length)
-            ? flashcard.cards.length - 1
-            : _currentIndex;
-        widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Flashcard deleted'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: _undo,
-          ),
-        ),
-      );
-    }
-  }
+  
 
   late Flashcard flashcard;
   late TextEditingController _nameController;
