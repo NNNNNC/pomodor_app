@@ -159,9 +159,8 @@ class _profile_editState extends State<profile_edit> {
                                   ),
                                 ),
                                 Text(' Minutes',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall),
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
                               ],
                             ),
                           ),
@@ -236,9 +235,8 @@ class _profile_editState extends State<profile_edit> {
                                   ),
                                 ),
                                 Text(' Minutes',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall),
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
                               ],
                             ),
                           ],
@@ -296,7 +294,8 @@ class _profile_editState extends State<profile_edit> {
                               children: [
                                 Text(
                                   'White Noise',
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(
                                   height: 8,
@@ -391,11 +390,17 @@ class _profile_editState extends State<profile_edit> {
         items.contains(controller.text) ? controller.text : null;
     return DropdownButton<String>(
       value: selectedValue,
-      icon: Icon(Icons.keyboard_arrow_down,size: 20,),
+      icon: Icon(
+        Icons.keyboard_arrow_down,
+        size: 20,
+      ),
       items: items.map((item) {
         return DropdownMenuItem(
           value: item,
-          child: Text(item, style: Theme.of(context).textTheme.titleSmall,),
+          child: Text(
+            item,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
         );
       }).toList(),
       onChanged: (value) {

@@ -10,6 +10,7 @@ import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/theme/customColors.dart';
 import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
+import 'package:pomodoro_app/utils/audio_select.dart';
 import 'package:pomodoro_app/utils/flashcard_present.dart';
 import 'package:pomodoro_app/utils/mini_task_tile.dart';
 import 'package:pomodoro_app/utils/sliding_app_bar.dart';
@@ -39,6 +40,7 @@ class _PomodoroPageState extends State<PomodoroPage>
       timerStarted;
 
   late AnimationController _slideController;
+  late TextEditingController _whiteNoiseController;
   int? topicKey;
   int? profileKey;
   int? focusDur, breakDur, longBreakDur;
@@ -55,6 +57,8 @@ class _PomodoroPageState extends State<PomodoroPage>
     focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
     breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
     longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
+
+    _whiteNoiseController = TextEditingController();
 
     super.initState();
 
@@ -86,6 +90,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   int setMinute = 0;
   String digitSec = '00';
   String digitMin = '00';
+  String? currentNoise;
   var colors = CustomColors();
   final audioPlayer = AudioPlayer();
   final Duration customLongPressDuration = Duration(seconds: 2);
@@ -226,7 +231,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     timerStarted = true;
 
     isPlaying = true;
-    playSound(whiteNoise);
+    playSound(currentNoise ?? whiteNoise);
     loop();
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -267,7 +272,7 @@ class _PomodoroPageState extends State<PomodoroPage>
         timerStarted = true;
         isPlaying = true;
       });
-      playSound(whiteNoise);
+      playSound(currentNoise ?? whiteNoise);
       loop();
 
       timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -412,6 +417,14 @@ class _PomodoroPageState extends State<PomodoroPage>
     }
     return topicList;
   }
+
+  final Map<String, String> whiteNoiseMap = {
+    'Dryer': 'audio/Dryer.mp3',
+    'Fan': 'audio/Fan.mp3',
+    'Rain': 'audio/Rain.mp3',
+    'Train': 'audio/Train.mp3',
+    'Waves': 'audio/Waves.mp3',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -1009,9 +1022,32 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   : Theme.of(context).disabledColor,
                             ),
                           ),
-                          const SizedBox(
-                            width: 40,
-                          ),
+                          IconButton(
+                              icon: Icon(Icons.queue_music,
+                                  size: 28,
+                                  color: Theme.of(context).highlightColor),
+                              onPressed: () {
+                                showDialog<String>(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      audioSelect(
+                                    audioMap: whiteNoiseMap,
+                                    controller: _whiteNoiseController,
+                                    onTap: (selectedValue) {
+                                      Navigator.of(context).pop(selectedValue);
+                                    },
+                                  ),
+                                ).then((selectedValue) {
+                                  setState(() {
+                                    if (currentNoise != null) {
+                                      currentNoise = selectedValue;
+                                      stopAudio();
+                                      playSound(currentNoise!);
+                                    }
+                                  });
+                                });
+                              }),
                         ],
                       ),
                     ),

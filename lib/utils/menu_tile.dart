@@ -13,11 +13,14 @@ class MenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) => page));
       },
-      child: Container(
+      borderRadius: BorderRadius.circular(8),
+      splashColor: Colors.black,
+      highlightColor: Colors.white60,
+      child: Ink(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
