@@ -730,6 +730,25 @@ class _PomodoroPageState extends State<PomodoroPage>
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
+
+                          if (!hasShownDialog) {
+                          AwesomeDialog(
+                            context: context,
+                            customHeader:
+                                Image.asset('assets/icons/listening.png'),
+                            animType: AnimType.scale,
+                            title: 'Enhance Your Audio Experience',
+                            desc: 'Use headphones or earphones.',
+                            autoHide: const Duration(seconds: 2),
+                            onDismissCallback: (type) {
+                              debugPrint(
+                                  'Dialog Dismissed from callback $type');
+                            },
+                          ).show();
+
+                          hasShownDialog = true; // to display it only once
+                        }
+
                           setState(() {
                             if (!isFocusing && !isBreak && !isLongBreak) {
                               initializeSettings();
