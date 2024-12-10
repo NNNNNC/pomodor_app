@@ -109,8 +109,7 @@ class _profile_pageState extends State<profile_page> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            profileManualDisplay()), // Replace ManualDisplay() with your actual screen widget
+                        builder: (context) => profileManualDisplay()),
                   );
                 },
               ),
