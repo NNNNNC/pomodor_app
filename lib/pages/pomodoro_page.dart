@@ -71,6 +71,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   int _remainingSeconds = 0;
+  bool _isLongPressTrue = false;
   bool isPlaying = false;
   bool isMuted = false;
   bool isFocusing = false;
@@ -79,6 +80,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   bool timerStarted = false;
   bool pause = false;
   Timer? timer;
+  Timer? _longPressTimer;
   int seconds = 0, minutes = 0;
   int breakCounter = 0;
   int setMinute = 0;
@@ -86,6 +88,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   String digitMin = '00';
   var colors = CustomColors();
   final audioPlayer = AudioPlayer();
+  final Duration customLongPressDuration = Duration(seconds: 2);
 
   void _logFocusSession() {
     final int focusDurationInSeconds =
@@ -197,6 +200,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
     timer!.cancel();
     setState(() {
+      pause = false;
+      _isLongPressTrue = false;
       isFocusing = false;
       isBreak = false;
       isLongBreak = false;
@@ -244,6 +249,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   void pauseTimer() {
+    pause = true;
     if (timer != null && timer!.isActive) {
       _remainingSeconds = (minutes * 60) + seconds;
       timer!.cancel();
@@ -255,6 +261,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   void resumeTimer() {
+    pause = false;
     if (_remainingSeconds > 0 && !isPlaying) {
       setState(() {
         timerStarted = true;
@@ -278,6 +285,22 @@ class _PomodoroPageState extends State<PomodoroPage>
         });
       });
     }
+  }
+
+  void _startLongPressTimer() {
+    _longPressTimer = Timer(customLongPressDuration, () {
+      setState(() {
+        terminateTimer();
+      });
+    });
+  }
+
+  void _cancelLongPressTimer() {
+    _longPressTimer?.cancel();
+    _longPressTimer = null;
+    setState(() {
+      _isLongPressTrue = false;
+    });
   }
 
   // focus methods
@@ -660,78 +683,114 @@ class _PomodoroPageState extends State<PomodoroPage>
                               ? colors.longCircularBackground
                               : colors.focusCircularBackground,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        pause
-                            ? colors.onPause
-                            : isFocusing
-                                ? colors.focusCircularValue
-                                : isBreak
-                                    ? colors.breakCircularValue
-                                    : isLongBreak
-                                        ? colors.longCircularValue
-                                        : Colors.transparent,
+                        isFocusing
+                            ? colors.focusCircularValue
+                            : isBreak
+                                ? colors.breakCircularValue
+                                : isLongBreak
+                                    ? colors.longCircularValue
+                                    : Colors.transparent,
                       ),
                       strokeWidth: 8,
                     ),
                   ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      if (!isFocusing && !isBreak && !isLongBreak) {
-                        initializeSettings();
-                      }
-                      toggleTimer();
-                    },
-                    child: Container(
-                      // duration: const Duration(milliseconds: 700),
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      decoration: BoxDecoration(
-                        color: isFocusing == true
-                            ? Theme.of(context).colorScheme.primaryContainer
-                            : isBreak == true
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                : isLongBreak == true
-                                    ? Theme.of(context)
-                                        .colorScheme
-                                        .tertiaryContainer
-                                    : Theme.of(context).colorScheme.surface,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 1.5,
-                            spreadRadius: 7,
-                            offset: Offset.zero,
-                            color: Colors.black.withOpacity(0.25),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              isFocusing && pause == false
-                                  ? 'FOCUSING'
-                                  : isBreak
-                                      ? 'BREAK'
-                                      : isLongBreak
-                                          ? 'LONG BREAK'
-                                          : 'FOCUS',
-                              style: Theme.of(context).textTheme.displayLarge,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              pause
-                                  ? 'Click here to start timer'
-                                  : isFocusing || isBreak || isLongBreak
-                                      ? '$digitMin:$digitSec'
-                                      : 'Click here to start Pomodoro',
-                              style: Theme.of(context).textTheme.displaySmall,
+                  InkWell(
+                    onLongPress:
+                        (isFocusing || isBreak || isLongBreak) ? () {} : null,
+                    customBorder: const CircleBorder(),
+                    splashColor: Colors.white54,
+                    highlightColor: Colors.black38,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        setState(() {
+                          if (!isFocusing && !isBreak && !isLongBreak) {
+                            initializeSettings();
+                            toggleTimer();
+                          } else if (isFocusing || isBreak || isLongBreak) {
+                            pause ? resumeTimer() : pauseTimer();
+                          }
+                        });
+                        // toggleTimer();
+                      },
+                      onTapDown: (details) {
+                        if (isFocusing || isBreak || isLongBreak)
+                          setState(() {
+                            _isLongPressTrue = true;
+                          });
+                      },
+                      onTapUp: (details) {
+                        if (isFocusing || isBreak || isLongBreak)
+                          setState(() {
+                            _isLongPressTrue = false;
+                          });
+                      },
+                      onLongPressStart: (details) {
+                        if (isFocusing || isBreak || isLongBreak) {
+                          _isLongPressTrue = true;
+                          _startLongPressTimer();
+                        }
+                      },
+                      onLongPressEnd: (details) {
+                        _cancelLongPressTimer();
+                      },
+                      child: Ink(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        decoration: BoxDecoration(
+                          color: isFocusing == true
+                              ? Theme.of(context).colorScheme.primaryContainer
+                              : isBreak == true
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer
+                                  : isLongBreak == true
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .tertiaryContainer
+                                      : Theme.of(context).colorScheme.surface,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 1.5,
+                              spreadRadius: 7,
+                              offset: Offset.zero,
+                              color: Colors.black.withOpacity(0.25),
                             ),
                           ],
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                _isLongPressTrue
+                                    ? 'EXITING'
+                                    : pause
+                                        ? 'PAUSED'
+                                        : isFocusing && pause == false
+                                            ? 'FOCUSING'
+                                            : isBreak
+                                                ? 'BREAK'
+                                                : isLongBreak
+                                                    ? 'LONG BREAK'
+                                                    : 'FOCUS',
+                                style: Theme.of(context).textTheme.displayLarge,
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                _isLongPressTrue
+                                    ? 'Release to cancel'
+                                    : pause
+                                        ? 'Press to resume timer'
+                                        : isFocusing || isBreak || isLongBreak
+                                            ? '$digitMin:$digitSec'
+                                            : 'Press here to start Pomodoro',
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

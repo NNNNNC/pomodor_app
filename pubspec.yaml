@@ -50,6 +50,7 @@ dependencies:
   rotating_icon_button: ^1.0.0
   animated_toggle_switch: ^0.8.3
   percent_indicator: ^4.2.3
+  flutter_touch_ripple: ^1.1.21
 
 dev_dependencies:
   flutter_test:
