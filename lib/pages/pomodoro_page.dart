@@ -83,6 +83,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   bool isLongBreak = false;
   bool timerStarted = false;
   bool pause = false;
+  bool pauseTransition = false;
   Timer? timer;
   Timer? _longPressTimer;
   int seconds = 0, minutes = 0;
@@ -206,6 +207,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     timer!.cancel();
     setState(() {
       pause = false;
+      pauseTransition = false;
       _isLongPressTrue = false;
       isFocusing = false;
       isBreak = false;
@@ -230,6 +232,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     minutes = setMinute;
     timerStarted = true;
 
+    pauseTransition = false;
     isPlaying = true;
     playSound(currentNoise ?? whiteNoise);
     loop();
@@ -363,7 +366,7 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   void transition() {
     setState(() {
-      pause = true;
+      pauseTransition = true;
       if (isFocusing) {
         isFocusing = false;
 
@@ -552,9 +555,17 @@ class _PomodoroPageState extends State<PomodoroPage>
                 ),
               ),
 
-              const SizedBox(
-                height: 36,
-              ),
+              if (isFocusing || isBreak || isLongBreak)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    (breakCounter < 3)
+                        ? (3 - breakCounter).toString() +
+                            ' Pomodoros until long break'
+                        : 'Long break achieved!',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
 
               // states
               Padding(
@@ -732,11 +743,15 @@ class _PomodoroPageState extends State<PomodoroPage>
                             if (!isFocusing && !isBreak && !isLongBreak) {
                               initializeSettings();
                               toggleTimer();
-                            } else if (isFocusing || isBreak || isLongBreak) {
+                            } else if (isFocusing && !pauseTransition) {
                               pause ? resumeTimer() : pauseTimer();
+                            } else if ((isBreak || isLongBreak) &&
+                                pauseTransition == true) {
+                              toggleTimer();
+                            } else if (isFocusing && pauseTransition) {
+                              toggleTimer();
                             }
                           });
-                          // toggleTimer();
                         },
                         onTapDown: (details) {
                           if (isFocusing || isBreak || isLongBreak)
@@ -804,7 +819,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                                 Text(
                                   _isLongPressTrue
                                       ? 'Release to cancel'
-                                      : pause
+                                      : (pause || pauseTransition)
                                           ? 'Press to resume timer'
                                           : isFocusing || isBreak || isLongBreak
                                               ? '$digitMin:$digitSec'
@@ -1034,7 +1049,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                             ),
                           ),
                           IconButton(
-                              icon: Icon(Icons.queue_music,
+                              icon: Icon(Icons.multitrack_audio,
                                   size: 28,
                                   color: Theme.of(context).highlightColor),
                               onPressed: () {
