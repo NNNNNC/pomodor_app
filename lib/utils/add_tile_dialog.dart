@@ -4,14 +4,19 @@ final _formKey = GlobalKey<FormState>();
 
 class add_tile_dialog extends StatelessWidget {
   final TextEditingController controller;
+  final TextEditingController? AnswerController;
   final VoidCallback onPressed;
   final bool? isFlashcard;
+  final bool? isFlashcardQuestion;
 
-  const add_tile_dialog(
-      {super.key,
-      required this.controller,
-      required this.onPressed,
-      this.isFlashcard});
+  const add_tile_dialog({
+    super.key,
+    required this.controller,
+    required this.onPressed,
+    this.AnswerController,
+    this.isFlashcard,
+    this.isFlashcardQuestion,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +40,54 @@ class add_tile_dialog extends StatelessWidget {
                 }
                 return null;
               },
-              maxLength: 20,
+              maxLength: (isFlashcardQuestion ?? false) ? 100 : 20,
               controller: controller,
               keyboardType: TextInputType.multiline,
-              maxLines: 1,
+              minLines: 1,
+              maxLines: 3,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText:
-                    (isFlashcard ?? false) ? "Add new set" : "Add new profile",
+                border: (isFlashcardQuestion ?? false)
+                    ? UnderlineInputBorder()
+                    : InputBorder.none,
+                focusedBorder: (isFlashcardQuestion ?? false)
+                    ? UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.secondary,
+                          width: 1.0,
+                        ),
+                      )
+                    : null,
+                hintText: (isFlashcard ?? false)
+                    ? "Add new set"
+                    : (isFlashcardQuestion ?? false)
+                        ? 'Enter Question'
+                        : "Add new profile",
               ),
             ),
+            if (isFlashcardQuestion ?? false)
+              TextFormField(
+                style: TextStyle(fontSize: 13.5),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '';
+                  }
+                  return null;
+                },
+                maxLength: 100,
+                controller: AnswerController,
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 1.0,
+                    ),
+                  ),
+                  hintText: 'Enter Answer',
+                ),
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

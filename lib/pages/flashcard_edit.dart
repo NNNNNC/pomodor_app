@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/flashcardModel.dart';
+import 'package:pomodoro_app/utils/add_tile_dialog.dart';
 import 'package:pomodoro_app/utils/flashcard_box.dart';
 
 class flashcard_edit extends StatefulWidget {
@@ -20,6 +21,8 @@ class flashcard_edit extends StatefulWidget {
 
 class _flashcard_editState extends State<flashcard_edit> {
   final controller = CarouselController();
+  late TextEditingController _questionController;
+  late TextEditingController _answerController;
 
   FlipCardController _controller = FlipCardController();
 
@@ -58,6 +61,21 @@ class _flashcard_editState extends State<flashcard_edit> {
     }
   }
 
+  void _createFlashcard(String question, String answer) {
+    setState(() {
+      // Add a new question and answer flashcard to the list
+      Map<String, String> newCard = {
+        'Question': question,
+        'Answer': answer,
+      };
+      flashcard.cards.add(newCard);
+      widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
+    });
+    Navigator.pop(context);
+    _questionController.clear();
+    _answerController.clear();
+  }
+
   void _deleteFlashcard() {
     if (flashcard.cards.length > 1) {
       setState(() {
@@ -85,14 +103,18 @@ class _flashcard_editState extends State<flashcard_edit> {
 
   @override
   void initState() {
-    super.initState();
     flashcard = flashcardBox.getAt(widget.flashCardIndex)!;
     _nameController = TextEditingController(text: flashcard.cardSetName);
+    _questionController = TextEditingController();
+    _answerController = TextEditingController();
+    super.initState();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _questionController.dispose();
+    _answerController.dispose();
     _undoStack.clear();
     super.dispose();
   }
@@ -107,15 +129,20 @@ class _flashcard_editState extends State<flashcard_edit> {
           child: FloatingActionButton(
             heroTag: 'flashcard edit',
             onPressed: () {
-              setState(() {
-                // Add a new question and answer flashcard to the list
-                Map<String, String> newCard = {
-                  'Question': '',
-                  'Answer': '',
-                };
-                flashcard.cards.add(newCard);
-                widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
-              });
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return add_tile_dialog(
+                    controller: _questionController,
+                    AnswerController: _answerController,
+                    onPressed: () => _createFlashcard(
+                      _questionController.text,
+                      _answerController.text,
+                    ),
+                    isFlashcardQuestion: true,
+                  );
+                },
+              );
             },
             child: const Icon(
               Icons.add,
