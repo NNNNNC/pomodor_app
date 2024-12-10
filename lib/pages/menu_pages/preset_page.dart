@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
-import 'package:pomodoro_app/utils/audio_dialog.dart';
-import 'package:pomodoro_app/utils/custom_box.dart';
+import 'package:pomodoro_app/models/selectedModel.dart';
+import 'package:pomodoro_app/pages/menu_pages/preset_add.dart';
+import 'package:pomodoro_app/user_manual/profileManual_display.dart';
+import 'package:pomodoro_app/utils/profile_tile.dart';
 
 class PresetPage extends StatefulWidget {
   const PresetPage({super.key});
@@ -13,413 +16,197 @@ class PresetPage extends StatefulWidget {
 }
 
 class _PresetPageState extends State<PresetPage> {
-  final Map<String, String> ringtoneMap = {
-    'Ringtone 1': 'audio/ringtone_1.mp3',
-    'Ringtone 2': 'audio/ringtone_2.mp3',
-    'Ringtone 3': 'audio/ringtone_3.mp3',
-    'Ringtone 4': 'audio/ringtone_4.mp3',
-    'Ringtone 5': 'audio/ringtone_5.mp3',
-    // Add more entries for other audio files
-  };
-
-  final Map<String, String> whiteNoiseMap = {
-    'Dryer': 'audio/Dryer.mp3',
-    'Fan': 'audio/Fan.mp3',
-    'Rain': 'audio/Rain.mp3',
-    'Train': 'audio/Train.mp3',
-    'Waves': 'audio/Waves.mp3',
-    // Add more entries for other audio files
-  };
-
-  String? getAudioName(String path, Map<String, String> originalMap) {
-    Map<String, String> reverseMap =
-        originalMap.map((key, value) => MapEntry(value, key));
-    return reverseMap[path];
+  void updateProfile(
+    int index,
+    String newName,
+    int newFocusDuration,
+    int newShortBreak,
+    int newLongBreak,
+    String newWhiteNoise,
+    String newRingtone,
+  ) {
+    setState(() {
+      var profile = profileBox.getAt(index);
+      profile!.name = newName;
+      profile.focusDuration = newFocusDuration;
+      profile.shortBreak = newShortBreak;
+      profile.longBreak = newLongBreak;
+      profile.whiteNoise = newWhiteNoise;
+      profile.ringtone = newRingtone;
+      profileBox.putAt(index, profile);
+    });
   }
 
-  late TextEditingController _focusController;
-  late TextEditingController _shortBreakController;
-  late TextEditingController _longBreakController;
-  late TextEditingController _whiteNoiseController;
-  late TextEditingController _ringtoneController;
-  late profileModel profile;
+  void onSelect(int index) {
+    setState(() {
+      var topic = defaultKey.get(0)?.selectedTopic;
+      if (defaultKey.get(0)?.selectedProfile == profileBox.getAt(index)!.key) {
+        defaultKey.put(
+          0,
+          SelectedModel(selectedProfile: null, selectedTopic: topic),
+        );
+      } else {
+        defaultKey.put(
+          0,
+          SelectedModel(
+            selectedProfile: profileBox.getAt(index)!.key,
+            selectedTopic: topic,
+          ),
+        );
+      }
+    });
+  }
+
+  late TextEditingController _nameController;
+
+  void createNewTopic() {
+    setState(() {
+      profileBox.add(profileModel(
+        _nameController.text,
+        25,
+        5,
+        15,
+        'audio/Rain.mp3',
+        'audio/ringtone_1.mp3',
+      ));
+      _nameController.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
   @override
   void initState() {
+    _nameController = TextEditingController();
     super.initState();
-    // Initialize TextEditingControllers with default values
-    _focusController = TextEditingController();
-    _shortBreakController = TextEditingController();
-    _longBreakController = TextEditingController();
-    _whiteNoiseController = TextEditingController();
-    _ringtoneController = TextEditingController();
-
-    // Open the box
-    Hive.openBox<profileModel>('profile').then((box) {
-      setState(() {
-        profileBox = box; // Assign the opened box to your variable.
-        // Load the profile or create a new one if it doesn't exist
-        if (profileBox.isEmpty) {
-          profile = profileModel(
-              "preset", 25, 5, 10, 'audio/Rain.mp3', 'audio/ringtone_1.mp3');
-          profileBox.add(profile);
-           // Set the created profile as the default key's selectedProfile
-        if (defaultKey.isNotEmpty) { // Ensure defaultKey has at least one item
-          defaultKey.get(0)?.selectedProfile = profile.key; // Set the selected profile
-        }
-        } else {
-          profile = profileBox.getAt(0)!; // Load the first profile
-        }
-
-        
-        // Set the controllers' text values after loading the profile
-        _focusController.text = profile.focusDuration.toString();
-        _shortBreakController.text = profile.shortBreak.toString();
-        _longBreakController.text = profile.longBreak.toString();
-        _whiteNoiseController.text = profile.whiteNoise;
-        _ringtoneController.text = profile.ringtone;
-      });
-    }).catchError((error) {
-      // Handle error if box fails to open
-      print('Failed to open the box: $error');
-    });
   }
 
   @override
   void dispose() {
-    _focusController.dispose();
-    _shortBreakController.dispose();
-    _longBreakController.dispose();
-    _whiteNoiseController.dispose();
-    _ringtoneController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
-
-  bool selectAudio = false;
-  bool selectRingtone = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6.0),
+          child: const Text(
             "Presets",
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: IconButton(
-                  onPressed: () {
-                    // Update the profile
-                    profile.focusDuration = int.parse(_focusController.text);
-                    profile.shortBreak = int.parse(_shortBreakController.text);
-                    profile.longBreak = int.parse(_longBreakController.text);
-                    profile.whiteNoise = _whiteNoiseController.text;
-                    profile.ringtone = _ringtoneController.text;
-
-                    // Save the profile to Hive
-                    profileBox.putAt(0, profile);
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.check,
-                    size: 30,
-                  )),
-            )
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 10, bottom: 5),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'TIMER',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10, left: 10),
-                  child: custom_box(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Focus Duration :',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          SizedBox(
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  child: customTextField(
-                                    items: ['5', '10', '15', '20', '25', '30'],
-                                    controller: _focusController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        profile.focusDuration =
-                                            int.parse(value!);
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Text(' Minutes',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                  child: custom_box(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Long Break Length :',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                child: customTextField(
-                                  items: ['5', '10', '15', '20', '25', '30'],
-                                  controller: _longBreakController,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      profile.longBreak = int.parse(value!);
-                                    });
-                                  },
-                                ),
-                              ),
-                              Text(' Minutes',
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Padding(
-                    padding:
-                        const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                    child: custom_box(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Short Break Length :',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  child: customTextField(
-                                    items: ['5', '10', '15', '20', '25', '30'],
-                                    controller: _shortBreakController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        profile.shortBreak = int.parse(value!);
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Text(' Minutes',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(top: 45, left: 10, bottom: 5),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'SOUND',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                  child: GestureDetector(
-                    onTap: () {
-                      selectAudio = true;
-                      showDialog<String>(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) => audioDialog(
-                          audioMap: whiteNoiseMap,
-                          controller: _whiteNoiseController,
-                          whiteNoise: selectAudio,
-                          ringTone: selectRingtone,
-                          onAudioSelected: (selectedValue) {
-                            Navigator.of(context).pop(selectedValue);
-                          },
-                        ),
-                      ).then((selectedValue) {
-                        setState(() {
-                          selectAudio = false;
-                          _whiteNoiseController.text = selectedValue!;
-                          profile.whiteNoise = _whiteNoiseController.text;
-                        });
-                      });
-                    },
-                    child: custom_box(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'White Noise',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                    getAudioName(_whiteNoiseController.text,
-                                        whiteNoiseMap)!,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall)
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Padding(
-                    padding: const EdgeInsets.only(
-                      right: 10,
-                      left: 10,
-                      top: 3.5,
-                      bottom: 8.0,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        selectRingtone = true;
-                        showDialog<String>(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) => audioDialog(
-                            whiteNoise: selectAudio,
-                            ringTone: selectRingtone,
-                            audioMap: ringtoneMap,
-                            controller: _ringtoneController,
-                            onAudioSelected: (selectedValue) {
-                              selectRingtone = false;
-                              Navigator.of(context).pop(selectedValue);
-                            },
-                          ),
-                        ).then((selectedValue) {
-                          setState(() {
-                            _ringtoneController.text = selectedValue!;
-                            profile.ringtone = _ringtoneController.text;
-                          });
-                        });
-                      },
-                      child: custom_box(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Ringtone',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    getAudioName(
-                                        _ringtoneController.text, ringtoneMap)!,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
-              ],
+            style: TextStyle(
+              fontSize: 18.5,
             ),
           ),
-        ));
-  }
-
-  Widget customTextField({
-    required List<String> items,
-    required TextEditingController controller,
-    required Function(String?) onChanged,
-  }) {
-    String? selectedValue =
-        items.contains(controller.text) ? controller.text : null;
-    return DropdownButton<String>(
-      value: selectedValue,
-      icon: Icon(
-        Icons.keyboard_arrow_down,
-        size: 20,
-      ),
-      items: items.map((item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(
-            item,
-            style: Theme.of(context).textTheme.titleSmall,
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(
+                Icons.info_outline_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => profileManualDisplay()),
+                );
+              },
+            ),
           ),
-        );
-      }).toList(),
-      onChanged: (value) {
-        onChanged(value!);
-        // Updadate controller value
-        controller.text = value;
-      },
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+              itemCount: profileBox.length,
+              itemBuilder: (context, index) {
+                var profile = profileBox.getAt(index);
+                return profile_tile(
+                  profile_name: profile!.name,
+                  focus_duration: profile.focusDuration,
+                  long_break: profile.longBreak,
+                  short_break: profile.shortBreak,
+                  white_noise: profile.whiteNoise,
+                  ringtone: profile.ringtone,
+                  onDelete: () {
+                    setState(() {
+                      profileBox.deleteAt(index);
+                    });
+                  },
+                  onSelect: onSelect,
+                  profileIndex: index,
+                  onUpdate: (newName, newFocusDuration, newLongBreak,
+                      newShortBreak, newWhiteNoise, newRingtone) {
+                    updateProfile(
+                      index,
+                      newName,
+                      newFocusDuration,
+                      newShortBreak,
+                      newLongBreak,
+                      newWhiteNoise,
+                      newRingtone,
+                    );
+                  },
+                );
+              },
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 92.0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(25),
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PresetAdd()),
+                  ).then((value) => setState(() {}));
+                },
+                child: Ink(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 1.5,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 2),
+                        color: Colors.black.withOpacity(0.25),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_circle),
+                          SizedBox(width: 10),
+                          Text(
+                            'Add a preset',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

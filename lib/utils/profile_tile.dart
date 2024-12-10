@@ -49,109 +49,106 @@ class _profile_tileState extends State<profile_tile> {
       'audio/ringtone_5.mp3': 'Ringtone 5',
       // Add more mappings as needed
     };
+
+    bool isSelected = defaultKey.get(0)?.selectedProfile ==
+        profileBox.getAt(widget.profileIndex)!.key;
+
+    void toggleSwitch() {
+      setState(() {
+        isSelected = !isSelected;
+        if (isSelected) {
+          widget.onSelect(widget.profileIndex);
+        }
+      });
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 7, bottom: 5),
       child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => profile_edit(
-                  profileIndex: widget.profileIndex,
-                  onUpdate: widget.onUpdate,
-                ),
+        onTap: toggleSwitch,
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 20,
+            top: (widget.profileIndex > 2) ? 10 : 20,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 1.5,
+                spreadRadius: 0,
+                offset: const Offset(0, 2),
+                color: Colors.black.withOpacity(0.25),
               ),
-            );
-          },
-          child: Container(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 1.5,
-                  spreadRadius: 0,
-                  offset: const Offset(0, 2),
-                  color: Colors.black.withOpacity(0.25),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            maxLines: 2,
-                            widget.profile_name,
-                            style: Theme.of(context).textTheme.titleMedium,
+            ],
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          widget.profile_name,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                    width: 40,
+                    child: AnimatedToggleSwitch.dual(
+                      current: isSelected,
+                      first: false,
+                      second: true,
+                      style: ToggleStyle(
+                        borderColor: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1.5),
                           ),
                         ],
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                      onChanged: (bool value) {
+                        toggleSwitch();
+                      },
+                      styleBuilder: (value) => ToggleStyle(
+                        indicatorColor: value ? Colors.green : Colors.red,
                       ),
                     ),
-                    SizedBox(
-                        height: 15,
-                        width: 40,
-                        child: AnimatedToggleSwitch.dual(
-                          current: defaultKey.get(0)?.selectedProfile ==
-                              profileBox.getAt(widget.profileIndex)!.key,
-                          first: false,
-                          second: true,
-                          style: ToggleStyle(
-                            borderColor: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: Offset(0, 1.5),
-                              ),
-                            ],
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.0)),
-                          ),
-                          onChanged: (bool value) {
-                            if (value) {
-                              widget.onSelect(widget
-                                  .profileIndex); // Handle selection if true
-                            }
-                          },
-                          styleBuilder: (value) => ToggleStyle(
-                            indicatorColor: value ? Colors.green : Colors.red,
-                          ),
-                        )),
+                  ),
+                  if (widget.profileIndex > 2)
                     PopupMenuButton(
                       iconSize: 25,
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           onTap: () {
-                            widget.onUpdate(
-                              profileBox.getAt(widget.profileIndex)!.name,
-                              profileBox
-                                  .getAt(widget.profileIndex)!
-                                  .focusDuration = 25,
-                              profileBox.getAt(widget.profileIndex)!.longBreak =
-                                  15,
-                              profileBox
-                                  .getAt(widget.profileIndex)!
-                                  .shortBreak = 5,
-                              profileBox
-                                  .getAt(widget.profileIndex)!
-                                  .whiteNoise = 'audio/Rain.mp3',
-                              profileBox.getAt(widget.profileIndex)!.ringtone =
-                                  'audio/ringtone_1.mp3',
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => profile_edit(
+                                  profileIndex: widget.profileIndex,
+                                  onUpdate: widget.onUpdate,
+                                ),
+                              ),
                             );
                           },
                           child: Text(
-                            'Reset Values',
+                            'Edit',
                             style: Theme.of(context).popupMenuTheme.textStyle,
                           ),
                         ),
@@ -166,81 +163,72 @@ class _profile_tileState extends State<profile_tile> {
                         ),
                       ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Text('Focus Duration :',
-                          style: Theme.of(context).textTheme.labelMedium),
-                    ),
-                    Text(widget.focus_duration.toString() + ' minutes',
+                ],
+              ),
+              SizedBox(height: (widget.profileIndex > 2) ? 5 : 15),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: Text('Focus Duration :',
                         style: Theme.of(context).textTheme.labelMedium),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Text('Long Break :',
-                          style: Theme.of(context).textTheme.labelMedium),
-                    ),
-                    Text(widget.long_break.toString() + ' minutes',
+                  ),
+                  Text('${widget.focus_duration} minutes',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: Text('Long Break :',
                         style: Theme.of(context).textTheme.labelMedium),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Text('Short Break :',
-                          style: Theme.of(context).textTheme.labelMedium),
-                    ),
-                    Text(widget.short_break.toString() + ' minutes',
+                  ),
+                  Text('${widget.long_break} minutes',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: Text('Short Break :',
                         style: Theme.of(context).textTheme.labelMedium),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Text('White Noise :',
-                          style: Theme.of(context).textTheme.labelMedium),
-                    ),
-                    Text(fileDisplayNames[widget.white_noise] ?? 'Not Selected',
+                  ),
+                  Text('${widget.short_break} minutes',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: Text('White Noise :',
                         style: Theme.of(context).textTheme.labelMedium),
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 180,
-                      child: Text('Ringtone :',
-                          style: Theme.of(context).textTheme.labelMedium),
-                    ),
-                    Text(fileDisplayNames[widget.ringtone] ?? 'Not Selected',
+                  ),
+                  Text(fileDisplayNames[widget.white_noise] ?? 'Not Selected',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: Text('Ringtone :',
                         style: Theme.of(context).textTheme.labelMedium),
-                  ],
-                ),
-              ],
-            ),
-          )),
+                  ),
+                  Text(fileDisplayNames[widget.ringtone] ?? 'Not Selected',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:pomodoro_app/onBoarding/Onboarding.dart';
 import 'package:pomodoro_app/pages/main_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/utils/initial_cards.dart';
+import 'package:pomodoro_app/utils/initial_presets.dart';
 import 'package:pomodoro_app/utils/initial_topics.dart';
 import 'package:pomodoro_app/utils/notification_helper.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ void main() async {
   defaultKey = await Hive.openBox<SelectedModel>('key');
 
   // Add preset cards and topics
-  if (flashcardBox.isEmpty && topicBox.isEmpty) {
+  if (flashcardBox.isEmpty && topicBox.isEmpty && profileBox.isEmpty) {
     for (var flashcard in InitialCards().cards) {
       await flashcardBox.add(flashcard);
     }
@@ -58,7 +59,18 @@ void main() async {
     for (var topic in InitialTopics().topics) {
       await topicBox.add(topic);
     }
+
+    for (var preset in InitialPresets().presets) {
+      await profileBox.add(preset);
+    }
   }
+
+  defaultKey.put(
+    0,
+    SelectedModel(
+      selectedProfile: 0,
+    ),
+  );
 
   runApp(
     ChangeNotifierProvider(

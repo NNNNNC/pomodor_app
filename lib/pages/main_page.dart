@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro_app/pages/flashcard_page.dart';
 import 'package:pomodoro_app/pages/menu_page.dart';
 import 'package:pomodoro_app/pages/pomodoro_page.dart';
-import 'package:pomodoro_app/pages/profile_page.dart';
 import 'package:pomodoro_app/pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,9 +22,6 @@ class MainPage extends StatelessWidget {
     topic_page(
       key: PageStorageKey('TopicPage'),
     ),
-    profile_page(
-      key: PageStorageKey('ProfilePage'),
-    ),
     MenuPage(
       key: PageStorageKey('MenuPage'),
     )
@@ -36,7 +32,7 @@ class MainPage extends StatelessWidget {
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => DefaultTabController(
         initialIndex: 0,
-        length: 5,
+        length: 4,
         child: PopScope(
           canPop: value.isVisible ? true : false,
           // onPopInvoked: (didPop) {
@@ -124,16 +120,6 @@ class MainPage extends StatelessWidget {
               text: 'Topics',
               icon: ImageIcon(
                 AssetImage('assets/icons/bill.png'),
-                size: 20,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 70,
-            child: Tab(
-              text: 'Presets',
-              icon: Icon(
-                Icons.person_outline,
                 size: 20,
               ),
             ),

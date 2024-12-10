@@ -1,35 +1,26 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/utils/audio_dialog.dart';
 import 'package:pomodoro_app/utils/custom_box.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 
-class profile_edit extends StatefulWidget {
-  final int profileIndex;
-  final Function(String, int, int, int, String, String) onUpdate;
-
-  const profile_edit(
-      {Key? key, required this.profileIndex, required this.onUpdate})
-      : super(key: key);
+class PresetAdd extends StatefulWidget {
+  const PresetAdd({
+    Key? key,
+  }) : super(key: key);
   @override
-  State<profile_edit> createState() => _profile_editState();
+  State<PresetAdd> createState() => PresetAddState();
 }
 
-class _profile_editState extends State<profile_edit> {
-  void _updateProfile() {
-    widget.onUpdate(profile.name, profile.focusDuration, profile.longBreak,
-        profile.shortBreak, profile.whiteNoise, profile.ringtone);
-  }
-
+class PresetAddState extends State<PresetAdd> {
   final Map<String, String> ringtoneMap = {
     'Ringtone 1': 'audio/ringtone_1.mp3',
     'Ringtone 2': 'audio/ringtone_2.mp3',
     'Ringtone 3': 'audio/ringtone_3.mp3',
     'Ringtone 4': 'audio/ringtone_4.mp3',
     'Ringtone 5': 'audio/ringtone_5.mp3',
-    // Add more entries for other audio files
   };
 
   final Map<String, String> whiteNoiseMap = {
@@ -38,7 +29,6 @@ class _profile_editState extends State<profile_edit> {
     'Rain': 'audio/Rain.mp3',
     'Train': 'audio/Train.mp3',
     'Waves': 'audio/Waves.mp3',
-    // Add more entries for other audio files
   };
 
   String? getAudioName(String path, Map<String, String> originalMap) {
@@ -57,16 +47,12 @@ class _profile_editState extends State<profile_edit> {
   @override
   void initState() {
     super.initState();
-    profile = profileBox.getAt(widget.profileIndex)!;
-    _nameController = TextEditingController(text: profile.name);
-    _focusController =
-        TextEditingController(text: profile.focusDuration.toString());
-    _shortBreakController =
-        TextEditingController(text: profile.shortBreak.toString());
-    _longBreakController =
-        TextEditingController(text: profile.longBreak.toString());
-    _whiteNoiseController = TextEditingController(text: profile.whiteNoise);
-    _ringtoneController = TextEditingController(text: profile.ringtone);
+    _nameController = TextEditingController(text: 'New Preset');
+    _focusController = TextEditingController(text: '25');
+    _shortBreakController = TextEditingController(text: '5');
+    _longBreakController = TextEditingController(text: '15');
+    _whiteNoiseController = TextEditingController(text: 'audio/Dryer.mp3');
+    _ringtoneController = TextEditingController(text: 'audio/ringtone_1.mp3');
   }
 
   @override
@@ -98,17 +84,30 @@ class _profile_editState extends State<profile_edit> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 25),
-              child: IconButton(
-                  onPressed: () {
-                    profile.name = _nameController.text;
-                    _updateProfile();
-                    profile.save();
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.check,
-                    size: 30,
-                  )),
+              child: TextButton(
+                onPressed: () {
+                  profileBox.add(
+                    profileModel(
+                      _nameController.text,
+                      int.parse(_focusController.text),
+                      int.parse(_shortBreakController.text),
+                      int.parse(_longBreakController.text),
+                      _whiteNoiseController.text,
+                      _ringtoneController.text,
+                    ),
+                  );
+
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Add',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -164,9 +163,7 @@ class _profile_editState extends State<profile_edit> {
                                     controller: _focusController,
                                     onChanged: (value) {
                                       setState(() {
-                                        profile.focusDuration =
-                                            int.parse(value!);
-                                        _updateProfile();
+                                        _focusController.text = value!;
                                       });
                                     },
                                   ),
@@ -215,8 +212,7 @@ class _profile_editState extends State<profile_edit> {
                                   controller: _longBreakController,
                                   onChanged: (value) {
                                     setState(() {
-                                      profile.longBreak = int.parse(value!);
-                                      _updateProfile();
+                                      _longBreakController.text = value!;
                                     });
                                   },
                                 ),
@@ -253,8 +249,7 @@ class _profile_editState extends State<profile_edit> {
                                     controller: _shortBreakController,
                                     onChanged: (value) {
                                       setState(() {
-                                        profile.shortBreak = int.parse(value!);
-                                        _updateProfile();
+                                        _shortBreakController.text = value!;
                                       });
                                     },
                                   ),
@@ -300,12 +295,7 @@ class _profile_editState extends State<profile_edit> {
                           },
                         ),
                       ).then((selectedValue) {
-                        setState(() {
-                          selectAudio = false;
-                          _whiteNoiseController.text = selectedValue!;
-                          profile.whiteNoise = _whiteNoiseController.text;
-                          _updateProfile();
-                        });
+                        setState(() {});
                       });
                     },
                     child: custom_box(
@@ -363,11 +353,7 @@ class _profile_editState extends State<profile_edit> {
                             },
                           ),
                         ).then((selectedValue) {
-                          setState(() {
-                            _ringtoneController.text = selectedValue!;
-                            profile.ringtone = _ringtoneController.text;
-                            _updateProfile();
-                          });
+                          setState(() {});
                         });
                       },
                       child: custom_box(

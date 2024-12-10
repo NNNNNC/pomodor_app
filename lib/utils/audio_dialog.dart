@@ -59,6 +59,7 @@ class _audioDialogState extends State<audioDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      surfaceTintColor: Theme.of(context).colorScheme.background,
       contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         widget.whiteNoise
