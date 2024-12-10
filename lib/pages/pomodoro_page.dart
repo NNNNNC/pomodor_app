@@ -70,6 +70,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     super.dispose();
   }
 
+  int _remainingSeconds = 0;
   bool isPlaying = false;
   bool isMuted = false;
   bool isFocusing = false;
@@ -242,6 +243,43 @@ class _PomodoroPageState extends State<PomodoroPage>
     });
   }
 
+  void pauseTimer() {
+    if (timer != null && timer!.isActive) {
+      _remainingSeconds = (minutes * 60) + seconds;
+      timer!.cancel();
+      setState(() {
+        isPlaying = false;
+      });
+      stopAudio();
+    }
+  }
+
+  void resumeTimer() {
+    if (_remainingSeconds > 0 && !isPlaying) {
+      setState(() {
+        timerStarted = true;
+        isPlaying = true;
+      });
+      playSound(whiteNoise);
+      loop();
+
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _remainingSeconds--;
+          minutes = _remainingSeconds ~/ 60;
+          seconds = _remainingSeconds % 60;
+
+          digitSec = (seconds >= 10) ? "$seconds" : "0$seconds";
+          digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
+
+          if (_remainingSeconds <= 0) {
+            timerStop();
+          }
+        });
+      });
+    }
+  }
+
   // focus methods
 
   void focus() async {
@@ -314,6 +352,27 @@ class _PomodoroPageState extends State<PomodoroPage>
       } else if (isLongBreak) {
         isLongBreak = false;
       }
+    });
+  }
+
+  void initializeSettings() {
+    setState(() {
+      topicKey = defaultKey.get(0)?.selectedTopic;
+      profileKey = defaultKey.get(0)?.selectedProfile;
+      topicTasks = topicBox.get(topicKey)?.tasks ?? [];
+      whiteNoise = profileBox.get(profileKey)?.whiteNoise ?? 'audio/Dryer.mp3';
+      ringTone = profileBox.get(profileKey)?.ringtone ?? 'audio/ringtone_1.mp3';
+      focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
+      breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
+      longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
+      focus();
+    });
+  }
+
+  void toggleTimer() {
+    setState(() {
+      timerStarted ? terminateTimer() : startTimer();
+      pause = false;
     });
   }
 
@@ -617,32 +676,10 @@ class _PomodoroPageState extends State<PomodoroPage>
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      if (isFocusing == false &&
-                          isBreak == false &&
-                          isLongBreak == false) {
-                        setState(() {
-                          // reinitialize keys
-                          topicKey = defaultKey.get(0)?.selectedTopic;
-                          profileKey = defaultKey.get(0)?.selectedProfile;
-                          topicTasks = topicBox.get(topicKey)?.tasks;
-                          whiteNoise = profileBox.get(profileKey)?.whiteNoise ??
-                              'audio/Dryer.mp3';
-                          ringTone = profileBox.get(profileKey)?.ringtone ??
-                              'audio/ringtone_1.mp3';
-                          focusDur =
-                              profileBox.get(profileKey)?.focusDuration ?? 25;
-                          breakDur =
-                              profileBox.get(profileKey)?.shortBreak ?? 5;
-                          longBreakDur =
-                              profileBox.get(profileKey)?.longBreak ?? 15;
-
-                          focus();
-                        });
+                      if (!isFocusing && !isBreak && !isLongBreak) {
+                        initializeSettings();
                       }
-                      setState(() {
-                        timerStarted ? terminateTimer() : startTimer();
-                        pause = false;
-                      });
+                      toggleTimer();
                     },
                     child: Container(
                       // duration: const Duration(milliseconds: 700),
