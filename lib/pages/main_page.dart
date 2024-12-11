@@ -80,6 +80,7 @@ class MainPage extends StatelessWidget {
         color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
       ),
       child: TabBar(
+        dividerColor: Colors.transparent,
         tabAlignment: TabAlignment.fill,
         indicator: BoxDecoration(
           border: Border(

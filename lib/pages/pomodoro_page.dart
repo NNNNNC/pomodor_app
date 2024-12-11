@@ -20,6 +20,7 @@ import 'package:pomodoro_app/utils/topic_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:rotating_icon_button/rotating_icon_button.dart';
+import 'package:headset_connection_event/headset_event.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({
@@ -48,6 +49,9 @@ class _PomodoroPageState extends State<PomodoroPage>
   String whiteNoise = '', ringTone = '';
   List<dynamic>? topicTasks;
 
+  final _headsetPlugin = HeadsetEvent();
+  HeadsetState? _headsetState;
+
   @override
   void initState() {
     topicKey = defaultKey.get(0)?.selectedTopic;
@@ -67,11 +71,27 @@ class _PomodoroPageState extends State<PomodoroPage>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+
+    _headsetPlugin.requestPermission();
+
+    _headsetPlugin.getCurrentState.then((_val) {
+      setState(() {
+        _headsetState = _val;
+      });
+    });
+
+    _headsetPlugin.setListener((_val) {
+      setState(() {
+        _headsetState = _val;
+      });
+    });
   }
 
   @override
   void dispose() {
     _slideController.dispose();
+    audioPlayer.dispose();
+    // _headsetDetector.removeListener();
     super.dispose();
   }
 
@@ -479,7 +499,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                   child: SizedBox(height: 30.0),
                 ),
         ),
-        floatingActionButton: value.isusingCustom
+        floatingActionButton: (value.isusingCustom || !value.isVisible)
             ? null
             : SizedBox(
                 height: 45,
@@ -730,7 +750,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                                 ? Theme.of(context)
                                     .colorScheme
                                     .tertiaryContainer
-                                : Theme.of(context).colorScheme.surface,
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
                     type: MaterialType.circle,
                     child: InkWell(
                       onLongPress:
@@ -741,7 +763,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          if (hasShownDialog) {
+                          // checks if user don't have a headphone connected
+                          if (hasShownDialog &&
+                              this._headsetState == HeadsetState.DISCONNECT) {
                             AwesomeDialog(
                               context: context,
                               customHeader:
@@ -756,7 +780,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                               },
                             ).show();
 
-                            hasShownDialog = true; // to display it only once
+                            hasShownDialog = true;
                           }
 
                           setState(() {

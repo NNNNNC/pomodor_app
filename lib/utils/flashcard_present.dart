@@ -19,7 +19,8 @@ class FlashcardPresent extends StatefulWidget {
 }
 
 class FlashcardPresentState extends State<FlashcardPresent> {
-  final CarouselController _carouselController = CarouselController();
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
   final FlipCardController _flipCardController = FlipCardController();
   int _currentIndex = 0;
 
@@ -206,7 +207,8 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     onPressed: () {
                       _flipCardController.toggleCard();

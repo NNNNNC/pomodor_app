@@ -26,13 +26,13 @@ class _audioDialogState extends State<audioSelect> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.surface,
       contentPadding: const EdgeInsets.all(12),
       content: SingleChildScrollView(
         child: Column(
           children: widget.audioMap.keys.toList().map((topic) {
             return ListTile(
-              tileColor: Theme.of(context).colorScheme.background,
+              tileColor: Theme.of(context).colorScheme.surface,
               dense: true,
               title: Text(
                 topic,

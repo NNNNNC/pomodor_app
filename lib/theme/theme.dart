@@ -17,6 +17,7 @@ ThemeData app_theme = ThemeData(
     primaryContainer: const Color(0xffc50e0e),
     secondaryContainer: const Color(0xff1dc50e),
     tertiaryContainer: const Color(0xff0e15c5),
+    surfaceContainerHighest: Color.fromRGBO(37, 37, 37, 1),
     surface: const Color(0xff3a3939),
   ),
   textTheme: TextTheme(
@@ -103,6 +104,7 @@ ThemeData app_theme_light = ThemeData(
     primaryContainer: Colors.red,
     secondaryContainer: Colors.green,
     tertiaryContainer: Colors.blue,
+    surfaceContainerHighest: Color.fromRGBO(245, 245, 245, 1),
     surface: Colors.grey[300]!,
   ),
   textTheme: TextTheme(
@@ -204,6 +206,7 @@ ThemeData forest_theme = ThemeData(
     secondaryContainer: Color(0xffB8860B), // Golden brown
     tertiaryContainer: Color(0xff556B2F), // Olive green
     surface: Color(0xff3a3a2f), // Earthy tone
+    surfaceContainerHighest: Color.fromRGBO(34, 45, 34, 1),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -253,6 +256,7 @@ ThemeData purple_modern_theme = ThemeData(
     secondaryContainer: Colors.purple[400], // Soft purple
     tertiaryContainer: Colors.purple[700], // Darker purple
     surface: Color(0xff2B2B3D), // Dark surface
+    surfaceContainerHighest: Color(0xff1E1E2F),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -330,6 +334,7 @@ ThemeData wooden_theme = ThemeData(
     secondaryContainer: Color(0xffFFD54F), // Soft amber
     tertiaryContainer: Color(0xff6D4C41), // Mahogany
     surface: Color(0xff5D4037), // Brown surface
+    surfaceContainerHighest: Color(0xff4E342E),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -382,6 +387,7 @@ ThemeData underwater_theme = ThemeData(
     secondaryContainer: Colors.cyan[200], // Softer cyan for secondary container
     tertiaryContainer: Colors.teal[800], // Very dark teal for tertiary elements
     surface: Color(0xff002b36), // Dark surface color resembling ocean depths
+    surfaceContainerHighest: Color(0xff001f2b),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -459,6 +465,7 @@ ThemeData desert_theme = ThemeData(
     secondaryContainer: Color(0xffFFE0B2), // Pale sand
     tertiaryContainer: Color(0xffBF360C), // Deep desert brown
     surface: Color(0xffFBE9E7), // Soft sand surface
+    surfaceContainerHighest: Color(0xffFFF3E0),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -510,6 +517,7 @@ ThemeData rosy_theme = ThemeData(
     secondaryContainer: Colors.pink[200], // Soft pink for secondary container
     tertiaryContainer: Colors.pink[500], // Darker pink for tertiary elements
     surface: Colors.white, // Clean white for surfaces
+    surfaceContainerHighest: Color(0xfffff0f5),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(
@@ -590,6 +598,7 @@ ThemeData zen_theme = ThemeData(
         const Color(0xffd0e6df), // Softer version for secondary containers
     tertiaryContainer: const Color(0xffb2c2c1), // Soft neutral blue
     surface: Color.fromARGB(255, 110, 155, 127), // Light neutral surface color
+    surfaceContainerHighest: Color.fromRGBO(240, 248, 245, 1),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(

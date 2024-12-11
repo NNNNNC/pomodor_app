@@ -20,7 +20,7 @@ class flashcard_edit extends StatefulWidget {
 }
 
 class _flashcard_editState extends State<flashcard_edit> {
-  final controller = CarouselController();
+  final controller = CarouselSliderController();
   late TextEditingController _questionController;
   late TextEditingController _answerController;
 
@@ -62,19 +62,18 @@ class _flashcard_editState extends State<flashcard_edit> {
       });
     }
   }
-  
+
   void _deleteFlashcard() {
     if (flashcard.cards.length > 1) {
       setState(() {
-        Map<String, String> deletedCard = flashcard.cards.removeAt(_currentIndex);
+        Map<String, String> deletedCard =
+            flashcard.cards.removeAt(_currentIndex);
         _undoIndex = _currentIndex;
         _undoStack.add(deletedCard);
         _currentIndex = (_currentIndex >= flashcard.cards.length)
             ? flashcard.cards.length - 1
             : _currentIndex;
 
-
-            
         widget.onUpdate(flashcard.cards.length, flashcard.cardSetName);
         previous();
       });
@@ -89,6 +88,7 @@ class _flashcard_editState extends State<flashcard_edit> {
       );
     }
   }
+
   void _createFlashcard(String question, String answer) {
     setState(() {
       // Add a new question and answer flashcard to the list
@@ -103,8 +103,6 @@ class _flashcard_editState extends State<flashcard_edit> {
     _questionController.clear();
     _answerController.clear();
   }
-
-  
 
   late Flashcard flashcard;
   late TextEditingController _nameController;

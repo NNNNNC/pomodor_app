@@ -65,12 +65,13 @@ void main() async {
     }
   }
 
-  defaultKey.put(
-    0,
-    SelectedModel(
-      selectedProfile: 0,
-    ),
-  );
+  if (!onboarding)
+    defaultKey.put(
+      0,
+      SelectedModel(
+        selectedProfile: 0,
+      ),
+    );
 
   runApp(
     ChangeNotifierProvider(

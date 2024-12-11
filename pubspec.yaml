@@ -37,7 +37,7 @@ dependencies:
   google_fonts: ^6.2.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   flip_card: ^0.7.0
   provider: ^6.1.2
   audioplayers: ^6.0.0
@@ -50,9 +50,9 @@ dependencies:
   rotating_icon_button: ^1.0.0
   animated_toggle_switch: ^0.8.3
   percent_indicator: ^4.2.3
-  flutter_touch_ripple: ^1.1.21
   awesome_dialog: ^3.2.1
   dropdown_button2: ^2.3.9
+  headset_connection_event: ^3.1.0
 
 dev_dependencies:
   flutter_test:

@@ -41,6 +41,7 @@ class _TopicDialogState extends State<TopicDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      surfaceTintColor: Theme.of(context).colorScheme.surface,
       contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Topic',
@@ -50,7 +51,7 @@ class _TopicDialogState extends State<TopicDialog> {
         child: Column(
           children: getTopicMap().keys.map((topic) {
             return RadioListTile(
-              tileColor: Theme.of(context).colorScheme.background,
+              tileColor: Theme.of(context).colorScheme.surface,
               dense: true,
               title: Text(
                 topic,

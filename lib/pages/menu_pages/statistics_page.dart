@@ -9,7 +9,6 @@ class StatPage extends StatelessWidget {
 
   double getDailyProgress(num todayFocus) {
     final studyBox = Hive.box('studyTarget');
-
     int targetTimeInSeconds =
         (studyBox.get(1) ?? 6) * 60 * 60; // converts to seconds
     return todayFocus / targetTimeInSeconds;
@@ -68,10 +67,15 @@ class StatPage extends StatelessWidget {
     return getTotalFocusTime(monthRange);
   }
 
+  void incrementDailyGoalCounter() {
+    final studyBox = Hive.box('studyTarget');
+    int dailyGoalCount = studyBox.get('dailyGoalCount') ?? 0;
+    studyBox.put('dailyGoalCount', dailyGoalCount + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     final studyBox = Hive.box('studyTarget');
-
     int targetTimeInSeconds = (studyBox.get(1) ?? 2) * 60 * 60;
 
     final num todayFocus = getTodayFocusTime();
@@ -96,7 +100,10 @@ class StatPage extends StatelessWidget {
 
     String remainingTimeString;
 
-    if (remainingTimeInSeconds > 0) {
+    if (dailyProgress >= 1.0) {
+      incrementDailyGoalCounter();
+      remainingTimeString = "You’ve reached your daily goal!";
+    } else {
       if (remainingTimeInSeconds == targetTimeInSeconds) {
         remainingTimeString = "You need to study!";
       } else if (remainingTimeInSeconds >= 3600) {
@@ -108,9 +115,9 @@ class StatPage extends StatelessWidget {
         remainingTimeString =
             "$minutesLeft more minute${minutesLeft > 1 ? 's' : ''} to go!";
       }
-    } else {
-      remainingTimeString = "You’ve reached your daily goal!";
     }
+
+    final int dailyGoalCount = studyBox.get('dailyGoalCount') ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -164,7 +171,7 @@ class StatPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 20),
               child: Center(
                 child: CircularPercentIndicator(
                   radius: 100.0,
@@ -192,6 +199,13 @@ class StatPage extends StatelessWidget {
                   progressColor:
                       dailyProgress >= 1.0 ? Colors.green : Colors.blue,
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
+              child: Text(
+                "Daily Goals Reached: $dailyGoalCount",
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ],
