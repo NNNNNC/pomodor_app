@@ -51,7 +51,10 @@ void main() async {
   defaultKey = await Hive.openBox<SelectedModel>('key');
 
   // Add preset cards and topics
-  if (flashcardBox.isEmpty && topicBox.isEmpty && profileBox.isEmpty) {
+  if (flashcardBox.isEmpty &&
+      topicBox.isEmpty &&
+      profileBox.isEmpty &&
+      !onboarding) {
     for (var flashcard in InitialCards().cards) {
       await flashcardBox.add(flashcard);
     }
@@ -99,7 +102,7 @@ class MyApp extends StatelessWidget {
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: app_theme_light,
+        theme: value.isusingCustom ? value.getCustomTheme() : app_theme_light,
         darkTheme: value.isusingCustom ? value.getCustomTheme() : app_theme,
         themeMode: value.isDarkMode ? ThemeMode.dark : ThemeMode.light,
         home: onboarding ? MainPage() : OnboardingScreen(),

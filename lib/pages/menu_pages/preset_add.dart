@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
+import 'package:pomodoro_app/utils/data_init/audiomaps.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/audio_dialog.dart';
 import 'package:pomodoro_app/utils/widgets/custom_box.dart';
 
@@ -15,22 +16,6 @@ class PresetAdd extends StatefulWidget {
 }
 
 class PresetAddState extends State<PresetAdd> {
-  final Map<String, String> ringtoneMap = {
-    'Ringtone 1': 'audio/ringtone_1.mp3',
-    'Ringtone 2': 'audio/ringtone_2.mp3',
-    'Ringtone 3': 'audio/ringtone_3.mp3',
-    'Ringtone 4': 'audio/ringtone_4.mp3',
-    'Ringtone 5': 'audio/ringtone_5.mp3',
-  };
-
-  final Map<String, String> whiteNoiseMap = {
-    'Dryer': 'audio/Dryer.mp3',
-    'Fan': 'audio/Fan.mp3',
-    'Rain': 'audio/Rain.mp3',
-    'Train': 'audio/Train.mp3',
-    'Waves': 'audio/Waves.mp3',
-  };
-
   String? getAudioName(String path, Map<String, String> originalMap) {
     Map<String, String> reverseMap =
         originalMap.map((key, value) => MapEntry(value, key));
@@ -43,6 +28,7 @@ class PresetAddState extends State<PresetAdd> {
   late TextEditingController _longBreakController;
   late TextEditingController _whiteNoiseController;
   late TextEditingController _ringtoneController;
+  late TextEditingController _counterController;
   late profileModel profile;
   @override
   void initState() {
@@ -53,6 +39,7 @@ class PresetAddState extends State<PresetAdd> {
     _longBreakController = TextEditingController(text: '15');
     _whiteNoiseController = TextEditingController(text: 'audio/Dryer.mp3');
     _ringtoneController = TextEditingController(text: 'audio/ringtone_1.mp3');
+    _counterController = TextEditingController(text: '3');
   }
 
   @override
@@ -94,6 +81,7 @@ class PresetAddState extends State<PresetAdd> {
                       int.parse(_longBreakController.text),
                       _whiteNoiseController.text,
                       _ringtoneController.text,
+                      int.parse(_counterController.text),
                     ),
                   );
 
@@ -168,11 +156,49 @@ class PresetAddState extends State<PresetAdd> {
                                     },
                                   ),
                                 ),
-                                Text(' Minutes',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
+                                Text(
+                                  ' Minutes',
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
                               ],
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                  child: custom_box(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Short Break Length :',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: customTextField(
+                                  items: ['5', '10', '15', '20', '25', '30'],
+                                  controller: _shortBreakController,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _shortBreakController.text = value!;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Text(
+                                ' Minutes',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -229,40 +255,52 @@ class PresetAddState extends State<PresetAdd> {
                 ),
                 const SizedBox(height: 5.0),
                 Padding(
-                    padding:
-                        const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                    child: custom_box(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Short Break Length :',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  child: customTextField(
-                                    items: ['5', '10', '15', '20', '25', '30'],
-                                    controller: _shortBreakController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _shortBreakController.text = value!;
-                                      });
-                                    },
-                                  ),
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                  child: custom_box(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Long Break after :',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: customTextField(
+                                  items: [
+                                    '1',
+                                    '2',
+                                    '3',
+                                    '4',
+                                    '5',
+                                    '6',
+                                    '7',
+                                    '8',
+                                    '9',
+                                    '10',
+                                  ],
+                                  controller: _counterController,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _counterController.text = value!;
+                                    });
+                                  },
                                 ),
-                                Text(' Minutes',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              Text(
+                                ' Pomodoro',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    )),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 45, left: 10, bottom: 5),
                   child: Row(
@@ -286,7 +324,7 @@ class PresetAddState extends State<PresetAdd> {
                         barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) => audioDialog(
-                          audioMap: whiteNoiseMap,
+                          audioMap: WhiteNoise().whiteNoiseMap,
                           controller: _whiteNoiseController,
                           whiteNoise: selectAudio,
                           ringTone: selectRingtone,
@@ -317,7 +355,7 @@ class PresetAddState extends State<PresetAdd> {
                                 ),
                                 Text(
                                     getAudioName(_whiteNoiseController.text,
-                                        whiteNoiseMap)!,
+                                        WhiteNoise().whiteNoiseMap)!,
                                     style:
                                         Theme.of(context).textTheme.bodySmall)
                               ],
@@ -345,7 +383,7 @@ class PresetAddState extends State<PresetAdd> {
                           builder: (BuildContext context) => audioDialog(
                             whiteNoise: selectAudio,
                             ringTone: selectRingtone,
-                            audioMap: ringtoneMap,
+                            audioMap: Ringtones().ringToneMap,
                             controller: _ringtoneController,
                             onAudioSelected: (selectedValue) {
                               selectRingtone = false;
@@ -374,8 +412,8 @@ class PresetAddState extends State<PresetAdd> {
                                     height: 8,
                                   ),
                                   Text(
-                                    getAudioName(
-                                        _ringtoneController.text, ringtoneMap)!,
+                                    getAudioName(_ringtoneController.text,
+                                        Ringtones().ringToneMap)!,
                                     style:
                                         Theme.of(context).textTheme.bodySmall,
                                   )
@@ -402,7 +440,7 @@ class PresetAddState extends State<PresetAdd> {
 
     return Container(
       margin: EdgeInsets.only(right: 8.0),
-      constraints: const BoxConstraints(maxWidth: 80),
+      constraints: const BoxConstraints(maxWidth: 76),
       child: DropdownButtonFormField2(
         value: selectedValue,
         decoration: InputDecoration(
@@ -433,7 +471,7 @@ class PresetAddState extends State<PresetAdd> {
         dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
           maxHeight: 200,
         ),

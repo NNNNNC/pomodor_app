@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
-import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/models/selectedModel.dart';
 import 'package:pomodoro_app/pages/menu_pages/preset_add.dart';
 import 'package:pomodoro_app/user_manual/profileManual_display.dart';
@@ -24,6 +23,7 @@ class _PresetPageState extends State<PresetPage> {
     int newLongBreak,
     String newWhiteNoise,
     String newRingtone,
+    int newCounter,
   ) {
     setState(() {
       var profile = profileBox.getAt(index);
@@ -33,6 +33,7 @@ class _PresetPageState extends State<PresetPage> {
       profile.longBreak = newLongBreak;
       profile.whiteNoise = newWhiteNoise;
       profile.ringtone = newRingtone;
+      profile.pomodoroCounter = newCounter;
       profileBox.putAt(index, profile);
     });
   }
@@ -59,20 +60,21 @@ class _PresetPageState extends State<PresetPage> {
 
   late TextEditingController _nameController;
 
-  void createNewTopic() {
-    setState(() {
-      profileBox.add(profileModel(
-        _nameController.text,
-        25,
-        5,
-        15,
-        'audio/Rain.mp3',
-        'audio/ringtone_1.mp3',
-      ));
-      _nameController.clear();
-    });
-    Navigator.of(context).pop();
-  }
+  // void createNewTopic() {
+  //   setState(() {
+  //     profileBox.add(profileModel(
+  //       _nameController.text,
+  //       25,
+  //       5,
+  //       15,
+  //       'audio/Rain.mp3',
+  //       'audio/ringtone_1.mp3',
+  //       3,
+  //     ));
+  //     _nameController.clear();
+  //   });
+  //   Navigator.of(context).pop();
+  // }
 
   @override
   void initState() {
@@ -137,6 +139,7 @@ class _PresetPageState extends State<PresetPage> {
                   short_break: profile.shortBreak,
                   white_noise: profile.whiteNoise,
                   ringtone: profile.ringtone,
+                  counter: profile.pomodoroCounter,
                   onDelete: () {
                     setState(() {
                       profileBox.deleteAt(index);
@@ -145,7 +148,7 @@ class _PresetPageState extends State<PresetPage> {
                   onSelect: onSelect,
                   profileIndex: index,
                   onUpdate: (newName, newFocusDuration, newLongBreak,
-                      newShortBreak, newWhiteNoise, newRingtone) {
+                      newShortBreak, newWhiteNoise, newRingtone, newCounter) {
                     updateProfile(
                       index,
                       newName,
@@ -154,6 +157,7 @@ class _PresetPageState extends State<PresetPage> {
                       newLongBreak,
                       newWhiteNoise,
                       newRingtone,
+                      newCounter,
                     );
                   },
                 );

@@ -46,7 +46,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   late TextEditingController _whiteNoiseController;
   int? topicKey;
   int? profileKey;
-  int? focusDur, breakDur, longBreakDur;
+  int? focusDur, breakDur, longBreakDur, pomodoroCount;
   String whiteNoise = '', ringTone = '';
   List<dynamic>? topicTasks;
 
@@ -63,6 +63,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
     breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
     longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
+    pomodoroCount = profileBox.get(profileKey)?.pomodoroCounter ?? 3;
 
     _whiteNoiseController = TextEditingController();
 
@@ -393,7 +394,7 @@ class _PomodoroPageState extends State<PomodoroPage>
       if (isFocusing) {
         isFocusing = false;
 
-        if (breakCounter <= 3) {
+        if (breakCounter <= pomodoroCount!) {
           shortBreak();
         } else {
           longBreak();
@@ -419,6 +420,7 @@ class _PomodoroPageState extends State<PomodoroPage>
       focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
       breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
       longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
+      pomodoroCount = profileBox.get(profileKey)?.pomodoroCounter ?? 3;
       focus();
     });
   }
@@ -574,8 +576,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    (breakCounter < 3)
-                        ? (3 - breakCounter).toString() +
+                    (breakCounter < pomodoroCount!)
+                        ? (pomodoroCount! - breakCounter).toString() +
                             ' Pomodoros until long break'
                         : 'Long break achieved!',
                     style: Theme.of(context).textTheme.bodySmall,

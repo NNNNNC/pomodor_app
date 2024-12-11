@@ -11,8 +11,9 @@ class profile_tile extends StatefulWidget {
   final String white_noise;
   final String ringtone;
   final int profileIndex;
+  final int counter;
   final VoidCallback onDelete;
-  final Function(String, int, int, int, String, String) onUpdate;
+  final Function(String, int, int, int, String, String, int) onUpdate;
   final Function(int) onSelect;
 
   const profile_tile({
@@ -27,6 +28,7 @@ class profile_tile extends StatefulWidget {
     required this.profileIndex,
     required this.onUpdate,
     required this.onSelect,
+    required this.counter,
   }) : super(key: key);
 
   @override
@@ -182,6 +184,18 @@ class _profile_tileState extends State<profile_tile> {
                 children: [
                   SizedBox(
                     width: 180,
+                    child: Text('Short Break :',
+                        style: Theme.of(context).textTheme.labelMedium),
+                  ),
+                  Text('${widget.short_break} minutes',
+                      style: Theme.of(context).textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 180,
                     child: Text('Long Break :',
                         style: Theme.of(context).textTheme.labelMedium),
                   ),
@@ -194,10 +208,10 @@ class _profile_tileState extends State<profile_tile> {
                 children: [
                   SizedBox(
                     width: 180,
-                    child: Text('Short Break :',
+                    child: Text('Long Break after :',
                         style: Theme.of(context).textTheme.labelMedium),
                   ),
-                  Text('${widget.short_break} minutes',
+                  Text('${widget.counter} pomodoro',
                       style: Theme.of(context).textTheme.labelMedium),
                 ],
               ),

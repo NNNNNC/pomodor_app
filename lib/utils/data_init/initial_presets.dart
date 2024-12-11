@@ -9,6 +9,7 @@ class InitialPresets {
       15,
       'audio/Rain.mp3',
       'audio/ringtone_1.mp3',
+      3,
     ),
     profileModel(
       'Balanced',
@@ -17,6 +18,7 @@ class InitialPresets {
       30,
       'audio/Rain.mp3',
       'audio/ringtone_1.mp3',
+      3,
     ),
     profileModel(
       'Intense',
@@ -25,6 +27,7 @@ class InitialPresets {
       60,
       'audio/Rain.mp3',
       'audio/ringtone_1.mp3',
+      3,
     ),
   ];
 }

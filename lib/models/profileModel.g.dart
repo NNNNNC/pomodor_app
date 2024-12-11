@@ -23,13 +23,14 @@ class profileAdapter extends TypeAdapter<profileModel> {
       fields[3] as int,
       fields[4] as String,
       fields[5] as String,
+      fields[6] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, profileModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class profileAdapter extends TypeAdapter<profileModel> {
       ..writeByte(4)
       ..write(obj.whiteNoise)
       ..writeByte(5)
-      ..write(obj.ringtone);
+      ..write(obj.ringtone)
+      ..writeByte(6)
+      ..write(obj.pomodoroCounter);
   }
 
   @override

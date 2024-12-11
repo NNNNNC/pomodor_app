@@ -22,6 +22,9 @@ class profileModel extends HiveObject {
   @HiveField(5)
   String ringtone;
 
+  @HiveField(6)
+  int pomodoroCounter;
+
   profileModel(
     this.name,
     this.focusDuration,
@@ -29,5 +32,6 @@ class profileModel extends HiveObject {
     this.longBreak,
     this.whiteNoise,
     this.ringtone,
+    this.pomodoroCounter,
   );
 }

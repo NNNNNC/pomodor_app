@@ -17,8 +17,8 @@ ThemeData app_theme = ThemeData(
     primaryContainer: const Color(0xffc50e0e),
     secondaryContainer: const Color(0xff1dc50e),
     tertiaryContainer: const Color(0xff0e15c5),
-    surfaceContainerHighest: Color.fromRGBO(37, 37, 37, 1),
-    surface: const Color(0xff3a3939),
+    surface: Color.fromRGBO(37, 37, 37, 1),
+    surfaceContainerHighest: const Color(0xff3a3939),
   ),
   textTheme: TextTheme(
     displayLarge: TextStyle(

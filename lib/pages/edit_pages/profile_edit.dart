@@ -9,7 +9,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 class profile_edit extends StatefulWidget {
   final int profileIndex;
-  final Function(String, int, int, int, String, String) onUpdate;
+  final Function(String, int, int, int, String, String, int) onUpdate;
 
   const profile_edit(
       {Key? key, required this.profileIndex, required this.onUpdate})
@@ -20,8 +20,15 @@ class profile_edit extends StatefulWidget {
 
 class _profile_editState extends State<profile_edit> {
   void _updateProfile() {
-    widget.onUpdate(profile.name, profile.focusDuration, profile.longBreak,
-        profile.shortBreak, profile.whiteNoise, profile.ringtone);
+    widget.onUpdate(
+      profile.name,
+      profile.focusDuration,
+      profile.longBreak,
+      profile.shortBreak,
+      profile.whiteNoise,
+      profile.ringtone,
+      profile.pomodoroCounter,
+    );
   }
 
   String? getAudioName(String path, Map<String, String> originalMap) {
@@ -36,6 +43,7 @@ class _profile_editState extends State<profile_edit> {
   late TextEditingController _longBreakController;
   late TextEditingController _whiteNoiseController;
   late TextEditingController _ringtoneController;
+  late TextEditingController _counterController;
   late profileModel profile;
   @override
   void initState() {
@@ -50,6 +58,8 @@ class _profile_editState extends State<profile_edit> {
         TextEditingController(text: profile.longBreak.toString());
     _whiteNoiseController = TextEditingController(text: profile.whiteNoise);
     _ringtoneController = TextEditingController(text: profile.ringtone);
+    _counterController =
+        TextEditingController(text: profile.pomodoroCounter.toString());
   }
 
   @override
@@ -175,6 +185,44 @@ class _profile_editState extends State<profile_edit> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
+                            'Short Break Length :',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: customTextField(
+                                  items: ['5', '10', '15', '20', '25', '30'],
+                                  controller: _shortBreakController,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      profile.shortBreak = int.parse(value!);
+                                      _updateProfile();
+                                    });
+                                  },
+                                ),
+                              ),
+                              Text(
+                                ' Minutes',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                  child: custom_box(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
                             'Long Break Length :',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
@@ -204,9 +252,10 @@ class _profile_editState extends State<profile_edit> {
                                   },
                                 ),
                               ),
-                              Text(' Minutes',
-                                  style:
-                                      Theme.of(context).textTheme.titleSmall),
+                              Text(
+                                ' Minutes',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
                             ],
                           ),
                         ],
@@ -216,41 +265,54 @@ class _profile_editState extends State<profile_edit> {
                 ),
                 const SizedBox(height: 5.0),
                 Padding(
-                    padding:
-                        const EdgeInsets.only(right: 10, left: 10, top: 3.5),
-                    child: custom_box(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Short Break Length :',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  child: customTextField(
-                                    items: ['5', '10', '15', '20', '25', '30'],
-                                    controller: _shortBreakController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        profile.shortBreak = int.parse(value!);
-                                        _updateProfile();
-                                      });
-                                    },
-                                  ),
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 3.5),
+                  child: custom_box(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Long Break after :',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: customTextField(
+                                  items: [
+                                    '1',
+                                    '2',
+                                    '3',
+                                    '4',
+                                    '5',
+                                    '6',
+                                    '7',
+                                    '8',
+                                    '9',
+                                    '10',
+                                  ],
+                                  controller: _counterController,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      profile.pomodoroCounter =
+                                          int.parse(value!);
+                                      _updateProfile();
+                                    });
+                                  },
                                 ),
-                                Text(' Minutes',
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              Text(
+                                ' Pomodoro',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    )),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 45, left: 10, bottom: 5),
                   child: Row(
@@ -432,7 +494,7 @@ class _profile_editState extends State<profile_edit> {
         dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
           maxHeight: 200,
         ),

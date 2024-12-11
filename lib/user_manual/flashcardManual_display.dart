@@ -19,8 +19,9 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       bottomSheet: Container(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: isLastPage
             ? getStarted()
@@ -112,8 +113,9 @@ class _flashcardManualDisplayState extends State<flashcardManualDisplay> {
   Widget getStarted() {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: Theme.of(context).colorScheme.primary),
+        borderRadius: BorderRadius.circular(25),
+        color: Theme.of(context).colorScheme.primary,
+      ),
       width: MediaQuery.of(context).size.width * .9,
       height: 55,
       child: TextButton(

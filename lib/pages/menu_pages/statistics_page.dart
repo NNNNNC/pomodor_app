@@ -10,7 +10,7 @@ class StatPage extends StatelessWidget {
   double getDailyProgress(num todayFocus) {
     final studyBox = Hive.box('studyTarget');
     int targetTimeInSeconds =
-        (studyBox.get(1) ?? 6) * 60 * 60; // converts to seconds
+        (studyBox.get(1) ?? 3) * 60 * 60; // 3 hours is default
     return todayFocus / targetTimeInSeconds;
   }
 
@@ -76,7 +76,7 @@ class StatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final studyBox = Hive.box('studyTarget');
-    int targetTimeInSeconds = (studyBox.get(1) ?? 2) * 60 * 60;
+    int targetTimeInSeconds = (studyBox.get(1) ?? 3) * 60 * 60;
 
     final num todayFocus = getTodayFocusTime();
     final num weeklyFocus = getWeeklyFocusTime();
@@ -107,7 +107,7 @@ class StatPage extends StatelessWidget {
       if (remainingTimeInSeconds == targetTimeInSeconds) {
         remainingTimeString = "You need to study!";
       } else if (remainingTimeInSeconds >= 3600) {
-        int hoursLeft = remainingTimeInSeconds ~/ 3600;
+        int hoursLeft = (remainingTimeInSeconds / 3600).floor();
         remainingTimeString =
             "$hoursLeft more hour${hoursLeft > 1 ? 's' : ''} to go!";
       } else {
@@ -171,33 +171,50 @@ class StatPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: EdgeInsets.only(top: 10),
               child: Center(
-                child: CircularPercentIndicator(
-                  radius: 100.0,
-                  lineWidth: 13.0,
-                  animation: true,
-                  percent: dailyProgress > 1.0 ? 1.0 : dailyProgress,
-                  center: Text(
-                    "${(dailyProgress * 100).toStringAsFixed(1)}%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.blue),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  width: MediaQuery.of(context).size.width * 0.92,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 3,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 2),
+                        color: Colors.black.withOpacity(0.25),
+                      ),
+                    ],
                   ),
-                  footer: Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: Text(
-                      remainingTimeString,
+                  child: CircularPercentIndicator(
+                    radius: 100.0,
+                    lineWidth: 16.0,
+                    animation: true,
+                    percent: dailyProgress > 1.0 ? 1.0 : dailyProgress,
+                    center: Text(
+                      "${(dailyProgress * 100).toStringAsFixed(1)}%",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14.0,
-                          color: Colors.grey),
+                          fontSize: 32.0,
+                          color: Colors.lightBlueAccent),
                     ),
+                    footer: Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Text(
+                        remainingTimeString,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ),
+                    circularStrokeCap: CircularStrokeCap.square,
+                    progressColor:
+                        dailyProgress >= 1.0 ? Colors.green : Colors.blue,
                   ),
-                  circularStrokeCap: CircularStrokeCap.round,
-                  progressColor:
-                      dailyProgress >= 1.0 ? Colors.green : Colors.blue,
                 ),
               ),
             ),
