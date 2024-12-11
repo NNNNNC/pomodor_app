@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/utils/theme_tile.dart';
+import 'package:pomodoro_app/utils/widgets/tiles/theme_tile.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key});

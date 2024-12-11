@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/profileModel.dart';
-import 'package:pomodoro_app/utils/audio_dialog.dart';
-import 'package:pomodoro_app/utils/custom_box.dart';
+import 'package:pomodoro_app/utils/widgets/dialogs/audio_dialog.dart';
+import 'package:pomodoro_app/utils/widgets/custom_box.dart';
 
 class PresetAdd extends StatefulWidget {
   const PresetAdd({

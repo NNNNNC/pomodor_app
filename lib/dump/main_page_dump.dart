@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/pages/flashcard_page.dart';
-import 'package:pomodoro_app/pages/pomodoro_page.dart';
-import 'package:pomodoro_app/pages/profile_page.dart';
-import 'package:pomodoro_app/pages/topic_page.dart';
+import 'package:pomodoro_app/pages/main_pages/flashcard_page.dart';
+import 'package:pomodoro_app/pages/main_pages/pomodoro_page.dart';
+import 'package:pomodoro_app/dump/profile_page.dart';
+import 'package:pomodoro_app/pages/main_pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
 

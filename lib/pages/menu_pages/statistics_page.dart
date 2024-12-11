@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:pomodoro_app/utils/stat_tile.dart';
+import 'package:pomodoro_app/utils/widgets/tiles/stat_tile.dart';
 
 class StatPage extends StatelessWidget {
   const StatPage({super.key});

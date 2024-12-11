@@ -6,7 +6,7 @@ import 'package:pomodoro_app/models/profileModel.dart';
 import 'package:pomodoro_app/models/selectedModel.dart';
 import 'package:pomodoro_app/pages/menu_pages/preset_add.dart';
 import 'package:pomodoro_app/user_manual/profileManual_display.dart';
-import 'package:pomodoro_app/utils/profile_tile.dart';
+import 'package:pomodoro_app/utils/widgets/tiles/profile_tile.dart';
 
 class PresetPage extends StatefulWidget {
   const PresetPage({super.key});

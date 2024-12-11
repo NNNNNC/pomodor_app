@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pomodoro_app/pages/flashcard_page.dart';
-import 'package:pomodoro_app/pages/menu_page.dart';
-import 'package:pomodoro_app/pages/pomodoro_page.dart';
-import 'package:pomodoro_app/pages/topic_page.dart';
+import 'package:pomodoro_app/pages/main_pages/flashcard_page.dart';
+import 'package:pomodoro_app/pages/main_pages/menu_page.dart';
+import 'package:pomodoro_app/pages/main_pages/pomodoro_page.dart';
+import 'package:pomodoro_app/pages/main_pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
