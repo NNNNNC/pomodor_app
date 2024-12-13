@@ -38,6 +38,8 @@ void main() async {
   // for the daily study target
   await Hive.openBox('studyTarget');
 
+  await Hive.openBox('settings');
+
   await Hive.openBox('themePrefs');
 
   Hive.registerAdapter<Flashcard>(flashcardAdapter());
@@ -75,6 +77,8 @@ void main() async {
         selectedProfile: 0,
       ),
     );
+
+  if (!onboarding) Hive.box('settings').put('enableReminder', true);
 
   runApp(
     ChangeNotifierProvider(

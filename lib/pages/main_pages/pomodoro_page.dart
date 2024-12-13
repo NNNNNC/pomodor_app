@@ -74,8 +74,6 @@ class _PomodoroPageState extends State<PomodoroPage>
       duration: const Duration(milliseconds: 400),
     );
 
-    _headsetPlugin.requestPermission();
-
     _headsetPlugin.getCurrentState.then((_val) {
       setState(() {
         _headsetState = _val;
@@ -93,7 +91,6 @@ class _PomodoroPageState extends State<PomodoroPage>
   void dispose() {
     _slideController.dispose();
     audioPlayer.dispose();
-    // _headsetDetector.removeListener();
     super.dispose();
   }
 

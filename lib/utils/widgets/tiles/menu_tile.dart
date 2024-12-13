@@ -15,11 +15,13 @@ class MenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+        Future.delayed(const Duration(milliseconds: 150), () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => page));
+        });
       },
       borderRadius: BorderRadius.circular(8),
-      splashColor: Colors.black,
-      highlightColor: Colors.white60,
+      splashColor: Theme.of(context).disabledColor,
       child: Ink(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

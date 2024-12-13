@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 ThemeData app_theme = ThemeData(
+  // pageTransitionsTheme: const PageTransitionsTheme(
+  //   builders: <TargetPlatform, PageTransitionsBuilder>{
+  //     TargetPlatform.android: ZoomPageTransitionsBuilder(
+  //       allowEnterRouteSnapshotting: false,
+  //     ),
+  //   },
+  // ),
   primaryColor: Colors.grey,
   primaryColorDark: Colors.grey[900],
   disabledColor: Colors.grey[850],
