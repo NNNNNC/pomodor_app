@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/models/flashcardModel.dart';
 import 'package:pomodoro_app/utils/others/flashcard_box.dart';
@@ -19,10 +23,18 @@ class FlashcardPresent extends StatefulWidget {
 }
 
 class FlashcardPresentState extends State<FlashcardPresent> {
+  Timer? timer;
   final CarouselSliderController _carouselController =
       CarouselSliderController();
   final FlipCardController _flipCardController = FlipCardController();
+  final settingBox = Hive.box('settings');
+
+  bool _isTimed = false;
   int _currentIndex = 0;
+  bool _onNext = false;
+  bool _onCountDown = false;
+  int maxCount = 10;
+  int countDown = 10;
 
   Key _flipCardKey = UniqueKey();
 
@@ -39,7 +51,6 @@ class FlashcardPresentState extends State<FlashcardPresent> {
   @override
   void initState() {
     super.initState();
-
     int? cardKey = topicBox.get(widget.topicKey)?.cardSet;
     if (cardKey != null) {
       setState(() {
@@ -78,8 +89,64 @@ class FlashcardPresentState extends State<FlashcardPresent> {
     }
   }
 
+  void _startTimed() async {
+    countDown = maxCount;
+    timer?.cancel();
+
+    if (await _onNext) {
+      next();
+      _onCountDown = true;
+    } else {
+      await AwesomeDialog(
+        width: MediaQuery.of(context).size.width * 0.8,
+        context: context,
+        customHeader: Icon(
+          Icons.timer,
+          color: Theme.of(context).colorScheme.secondary,
+          size: 100,
+        ),
+        animType: AnimType.scale,
+        title: 'Timed Flashcards',
+        desc: 'Get ready',
+        autoHide: const Duration(seconds: 2),
+        onDismissCallback: (type) {
+          debugPrint('Dialog Dismissed from callback $type');
+        },
+      ).show();
+    }
+
+    cardList.shuffle();
+    updateKey();
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _onCountDown = true;
+        _onNext = false;
+        countDown--;
+
+        if (countDown == 0) {
+          if (_currentIndex == cardList.length - 1) {
+            _onCountDown = false;
+            _onNext = false;
+            _currentIndex = 0;
+            updateKey();
+            timer.cancel();
+          } else {
+            _flipCardController.toggleCard();
+            _onCountDown = false;
+            _onNext = true;
+            timer.cancel();
+          }
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool alwaysTimed = settingBox.get('alwaysTimed', defaultValue: false);
+    _isTimed = alwaysTimed;
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -107,18 +174,49 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                     'Flashcard ${_currentIndex + 1}',
                     style: const TextStyle(fontSize: 14),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        cardList.shuffle();
-                        updateKey();
-                      });
-                    },
-                    icon: Icon(
-                      Icons.shuffle,
-                      color: Theme.of(context).colorScheme.secondary,
-                      size: 22,
-                    ),
+                  Row(
+                    children: [
+                      if (!alwaysTimed)
+                        IconButton(
+                          onPressed: () {
+                            if (_isTimed == false) {
+                              setState(() {
+                                _isTimed = true;
+                                _currentIndex = 0;
+                                updateKey();
+                                _startTimed();
+                              });
+                            } else if (_isTimed) {
+                              setState(() {
+                                _isTimed = false;
+                                timer?.cancel();
+                                cardList.shuffle();
+                                _currentIndex = 0;
+                                updateKey();
+                              });
+                            }
+                          },
+                          icon: Icon(
+                            _isTimed ? Icons.timer_off : Icons.timer,
+                            color: Theme.of(context).colorScheme.secondary,
+                            size: 22,
+                          ),
+                        ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            cardList.shuffle();
+                            _currentIndex = 0;
+                            updateKey();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.shuffle,
+                          color: Theme.of(context).colorScheme.secondary,
+                          size: 22,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -157,6 +255,9 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                             );
                           },
                           options: CarouselOptions(
+                            scrollPhysics: _isTimed
+                                ? NeverScrollableScrollPhysics()
+                                : ScrollPhysics(),
                             enableInfiniteScroll: false,
                             height: MediaQuery.of(context).size.height * 0.45,
                             viewportFraction: 1,
@@ -170,32 +271,33 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: 5,
-                      right: 5,
-                      top: 0,
-                      bottom: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            onPressed: previous,
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: Theme.of(context).colorScheme.secondary,
+                    if (!_isTimed)
+                      Positioned(
+                        left: 5,
+                        right: 5,
+                        top: 0,
+                        bottom: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: previous,
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: next,
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 25,
-                              color: Theme.of(context).colorScheme.secondary,
+                            IconButton(
+                              onPressed: next,
+                              icon: Icon(
+                                Icons.arrow_forward_ios,
+                                size: 25,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 // Progress Bar
@@ -211,16 +313,32 @@ class FlashcardPresentState extends State<FlashcardPresent> {
                           Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                     onPressed: () {
-                      _flipCardController.toggleCard();
+                      if (!_isTimed) {
+                        _flipCardController.toggleCard();
+                      } else {
+                        if (!_onCountDown)
+                          setState(() {
+                            _startTimed();
+                          });
+                      }
                     },
                     child: SizedBox(
                       width: 258,
                       height: 53,
                       child: Center(
-                        child: Text(
-                          'FLIP CARD',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
+                        child: !_isTimed
+                            ? Text(
+                                'FLIP CARD',
+                                style: Theme.of(context).textTheme.labelLarge,
+                              )
+                            : Text(
+                                _onCountDown
+                                    ? countDown.toString()
+                                    : _onNext
+                                        ? 'NEXT CARD'
+                                        : 'START TIMED',
+                                style: Theme.of(context).textTheme.labelLarge,
+                              ),
                       ),
                     ),
                   ),

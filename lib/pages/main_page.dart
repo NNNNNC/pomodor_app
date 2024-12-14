@@ -1,17 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pomodoro_app/pages/main_pages/flashcard_page.dart';
 import 'package:pomodoro_app/pages/main_pages/menu_page.dart';
 import 'package:pomodoro_app/pages/main_pages/pomodoro_page.dart';
 import 'package:pomodoro_app/pages/main_pages/topic_page.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   MainPage({super.key});
 
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
   final PageStorageBucket bucket = PageStorageBucket();
+  DateTime? lastBackPressed;
+  late TabController _tabController;
+
   final List<Widget> pages = const [
     PomodoroPage(
       key: PageStorageKey('PomodoroPage'),
@@ -27,6 +36,72 @@ class MainPage extends StatelessWidget {
     )
   ];
 
+  bool get canPop {
+    return lastBackPressed != null &&
+        DateTime.now().difference(lastBackPressed!) <
+            const Duration(seconds: 2);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: pages.length, vsync: this);
+    _tabController.addListener(_clearSnackBarsOnPageChange);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_clearSnackBarsOnPageChange);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _clearSnackBarsOnPageChange() {
+    if (_tabController.indexIsChanging) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+    }
+  }
+
+  void handleBackPress(BottomBarVisibility value) {
+    if (!value.isVisible) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 2),
+          backgroundColor: Color.fromARGB(255, 22, 22, 22),
+          content: Text(
+            'You cannot leave while on lock mode',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    final now = DateTime.now();
+    if (lastBackPressed == null ||
+        now.difference(lastBackPressed!) > const Duration(seconds: 2)) {
+      lastBackPressed = now;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 2),
+          backgroundColor: Color.fromARGB(255, 22, 22, 22),
+          content: Text(
+            'Tap back again to leave the app.',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+      );
+    } else {
+      SystemNavigator.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BottomBarVisibility>(
@@ -34,37 +109,21 @@ class MainPage extends StatelessWidget {
         initialIndex: 0,
         length: 4,
         child: PopScope(
-          canPop: value.isVisible ? true : false,
-          // onPopInvoked: (didPop) {
-          //   if (didPop) {
-          //     return;
-          //   }
-          //   _showLeaveDialog(context);
-          // },
+          canPop: canPop,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) handleBackPress(value);
+          },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             bottomNavigationBar: value.isVisible ? bottomBar(context) : null,
             body: PageStorage(
               bucket: bucket,
-              child: DoubleBackToCloseApp(
-                snackBar: SnackBar(
-                  duration: Durations.medium4,
-                  backgroundColor: const Color.fromARGB(255, 22, 22, 22),
-                  content: Text(
-                    value.isVisible
-                        ? 'Tap back again to leave the app.'
-                        : 'You cannot leave while on lock mode',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-                child: TabBarView(
-                  physics: value.isVisible
-                      ? const PageScrollPhysics()
-                      : const NeverScrollableScrollPhysics(),
-                  children: pages,
-                ),
+              child: TabBarView(
+                controller: _tabController,
+                physics: value.isVisible
+                    ? const PageScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
+                children: pages,
               ),
             ),
           ),
@@ -80,6 +139,7 @@ class MainPage extends StatelessWidget {
         color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
       ),
       child: TabBar(
+        controller: _tabController,
         dividerColor: Colors.transparent,
         tabAlignment: TabAlignment.fill,
         indicator: BoxDecoration(

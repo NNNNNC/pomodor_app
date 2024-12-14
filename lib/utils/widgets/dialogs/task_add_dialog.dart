@@ -60,19 +60,20 @@ class TaskAdd extends StatelessWidget {
                       ),
                     )),
                 TextButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        onPressed();
-                      }
-                    },
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ))
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      onPressed();
+                    }
+                  },
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
               ],
             ),
           ],

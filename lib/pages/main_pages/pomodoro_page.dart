@@ -14,6 +14,7 @@ import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/data_init/audiomaps.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/audio_select.dart';
 import 'package:pomodoro_app/utils/others/flashcard_present.dart';
+import 'package:pomodoro_app/utils/widgets/dialogs/task_add_dialog.dart';
 import 'package:pomodoro_app/utils/widgets/tiles/mini_task_tile.dart';
 import 'package:pomodoro_app/utils/others/sliding_app_bar.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/taskDialog.dart';
@@ -22,6 +23,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:rotating_icon_button/rotating_icon_button.dart';
 import 'package:headset_connection_event/headset_event.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({
@@ -44,6 +46,7 @@ class _PomodoroPageState extends State<PomodoroPage>
 
   late AnimationController _slideController;
   late TextEditingController _whiteNoiseController;
+  late TextEditingController _taskController;
   int? topicKey;
   int? profileKey;
   int? focusDur, breakDur, longBreakDur, pomodoroCount;
@@ -66,6 +69,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     pomodoroCount = profileBox.get(profileKey)?.pomodoroCounter ?? 3;
 
     _whiteNoiseController = TextEditingController();
+    _taskController = TextEditingController();
 
     super.initState();
 
@@ -91,6 +95,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   void dispose() {
     _slideController.dispose();
     audioPlayer.dispose();
+    allowNotifications();
     super.dispose();
   }
 
@@ -107,6 +112,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   bool pauseTransition = false;
   Timer? timer;
   Timer? _longPressTimer;
+  Timer? _speedIncreaseTimer;
   int seconds = 0, minutes = 0;
   int breakCounter = 0;
   int setMinute = 0;
@@ -116,6 +122,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   var colors = CustomColors();
   final audioPlayer = AudioPlayer();
   final Duration customLongPressDuration = Duration(seconds: 2);
+  double _speedMultiplier = 1.0;
 
   void _logFocusSession() {
     final int focusDurationInSeconds =
@@ -135,6 +142,10 @@ class _PomodoroPageState extends State<PomodoroPage>
     setState(() {
       topicTasks![index][1] = !topicTasks![index][1];
     });
+  }
+
+  void _createNewTask(String task) {
+    topicTasks!.add([task, false]);
   }
 
   void suppressNotifications() async {
@@ -166,10 +177,17 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   void playSound(String filepath) async {
-    await audioPlayer.play(
-      AssetSource(filepath),
-      mode: PlayerMode.lowLatency,
-    );
+    final settingBox = Hive.box('settings');
+    bool isWhiteNoiseDisabled =
+        settingBox.get('disableNoise', defaultValue: false);
+
+    // will only play sound if white noise is enabled
+    if (!isWhiteNoiseDisabled) {
+      await audioPlayer.play(
+        AssetSource(filepath),
+        mode: PlayerMode.lowLatency,
+      );
+    }
   }
 
   void loop() async {
@@ -258,7 +276,16 @@ class _PomodoroPageState extends State<PomodoroPage>
     playSound(currentNoise ?? whiteNoise);
     loop();
 
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _startPeriodicTimer();
+  }
+
+  void _startPeriodicTimer() {
+    timer?.cancel();
+
+    Duration duration =
+        Duration(milliseconds: (1000 ~/ _speedMultiplier).toInt());
+
+    timer = Timer.periodic(duration, (timer) {
       setState(() {
         if (seconds == 0) {
           minutes--;
@@ -269,12 +296,28 @@ class _PomodoroPageState extends State<PomodoroPage>
         digitSec = (seconds >= 10) ? "$seconds" : "0$seconds";
         digitMin = (minutes >= 10) ? "$minutes" : "0$minutes";
 
-        // stop if countdown is finished
         if ((minutes == 0) && (seconds == 0)) {
           timerStop();
         }
       });
     });
+  }
+
+  void fastForwardTimer(double speed) {
+    if (speed <= 0) return;
+    _speedMultiplier = speed;
+
+    if (timer != null && timer!.isActive) {
+      _startPeriodicTimer();
+    }
+  }
+
+  void revertTimerSpeed() {
+    _speedMultiplier = 1.0;
+
+    if (timer != null && timer!.isActive) {
+      _startPeriodicTimer();
+    }
   }
 
   void pauseTimer() {
@@ -386,6 +429,10 @@ class _PomodoroPageState extends State<PomodoroPage>
   }
 
   void transition() {
+    final settingBox = Hive.box('settings');
+    bool isLongBreakDisabled =
+        settingBox.get('disableLongBreak', defaultValue: false);
+
     setState(() {
       pauseTransition = true;
       if (isFocusing) {
@@ -394,13 +441,18 @@ class _PomodoroPageState extends State<PomodoroPage>
         if (breakCounter <= pomodoroCount!) {
           shortBreak();
         } else {
-          longBreak();
-          breakCounter = 0;
+          if (!isLongBreakDisabled) {
+            longBreak();
+            breakCounter = 0;
+          }
+          shortBreak();
         }
       } else if (isBreak) {
         isBreak = false;
         focus();
-        breakCounter++;
+        if (!isLongBreakDisabled) {
+          breakCounter++;
+        }
       } else if (isLongBreak) {
         isLongBreak = false;
       }
@@ -418,12 +470,15 @@ class _PomodoroPageState extends State<PomodoroPage>
       breakDur = profileBox.get(profileKey)?.shortBreak ?? 5;
       longBreakDur = profileBox.get(profileKey)?.longBreak ?? 15;
       pomodoroCount = profileBox.get(profileKey)?.pomodoroCounter ?? 3;
+      breakCounter = 0;
       focus();
     });
   }
 
   void toggleTimer() {
     setState(() {
+      revertTimerSpeed();
+      _speedIncreaseTimer?.cancel();
       timerStarted ? terminateTimer() : startTimer();
       pause = false;
     });
@@ -450,8 +505,10 @@ class _PomodoroPageState extends State<PomodoroPage>
         isFocusing ? focusDur! : (isBreak ? breakDur! : longBreakDur!);
     final double progress =
         (totalDuration * 60 - (seconds + minutes * 60)) / (totalDuration * 60);
+    final settingBox = Hive.box('settings');
     return Consumer<BottomBarVisibility>(
       builder: (context, value, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: SlidingAppBar(
           controller: _slideController,
           visible: value.isVisible,
@@ -479,7 +536,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                             context,
                             MaterialPageRoute(
                               builder: (context) => pomodoroManualDisplay(),
-                            ), // Replace ManualDisplay() with your actual screen widget
+                            ),
                           );
                         },
                       ),
@@ -522,6 +579,7 @@ class _PomodoroPageState extends State<PomodoroPage>
         // Select topic and headphones
         body: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -569,7 +627,9 @@ class _PomodoroPageState extends State<PomodoroPage>
                 ),
               ),
 
-              if (isFocusing || isBreak || isLongBreak)
+              if ((isFocusing || isBreak || isLongBreak) &&
+                  (settingBox.get('disableLongBreak', defaultValue: false) ==
+                      false))
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -700,177 +760,187 @@ class _PomodoroPageState extends State<PomodoroPage>
                 height: value.isVisible
                     ? 72
                     : (topicTasks == null || isBreak || isLongBreak)
-                        ? 125
+                        ? 75
                         : 30,
               ),
 
-              // Focus Button
-              Stack(
-                children: [
-                  // progress indicator
-                  Positioned.fill(
-                    top: MediaQuery.of(context).size.width / 60,
-                    bottom: MediaQuery.of(context).size.width / 60,
-                    left: 0,
-                    right: 0,
-                    child: CircularProgressIndicator(
-                      value: progress,
-                      backgroundColor: isBreak
-                          ? colors.breakCircularBackground
-                          : isLongBreak
-                              ? colors.longCircularBackground
-                              : colors.focusCircularBackground,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        isFocusing
-                            ? colors.focusCircularValue
-                            : isBreak
-                                ? colors.breakCircularValue
-                                : isLongBreak
-                                    ? colors.longCircularValue
-                                    : Colors.transparent,
+              // focus Button
+              AvatarGlow(
+                startDelay: const Duration(milliseconds: 1000),
+                glowShape: BoxShape.circle,
+                glowRadiusFactor:
+                    settingBox.get('enablePulse', defaultValue: true) ? 0.1 : 0,
+                glowColor: Theme.of(context).colorScheme.primary,
+                child: Stack(
+                  children: [
+                    // progress indicator
+                    Positioned.fill(
+                      top: MediaQuery.of(context).size.width / 60,
+                      bottom: MediaQuery.of(context).size.width / 60,
+                      left: 0,
+                      right: 0,
+                      child: CircularProgressIndicator(
+                        value: progress,
+                        backgroundColor: isBreak
+                            ? colors.breakCircularBackground
+                            : isLongBreak
+                                ? colors.longCircularBackground
+                                : colors.focusCircularBackground,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isFocusing
+                              ? colors.focusCircularValue
+                              : isBreak
+                                  ? colors.breakCircularValue
+                                  : isLongBreak
+                                      ? colors.longCircularValue
+                                      : Colors.transparent,
+                        ),
+                        strokeWidth: 8,
                       ),
-                      strokeWidth: 8,
                     ),
-                  ),
-                  Material(
-                    elevation: 20,
-                    color: isFocusing == true
-                        ? Theme.of(context).colorScheme.primaryContainer
-                        : isBreak == true
-                            ? Theme.of(context).colorScheme.secondaryContainer
-                            : isLongBreak == true
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .tertiaryContainer
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                    type: MaterialType.circle,
-                    child: InkWell(
-                      onLongPress:
-                          (isFocusing || isBreak || isLongBreak) ? () {} : null,
-                      customBorder: const CircleBorder(),
-                      splashColor: Colors.white54,
-                      highlightColor: Colors.black38,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          // checks if user don't have a headphone connected
-                          if (hasShownDialog &&
-                              this._headsetState == HeadsetState.DISCONNECT) {
-                            AwesomeDialog(
-                              context: context,
-                              customHeader:
-                                  Image.asset('assets/icons/listening.png'),
-                              animType: AnimType.scale,
-                              title: 'Enhance Your Audio Experience',
-                              desc: 'Use headphones or earphones.',
-                              autoHide: const Duration(seconds: 2),
-                              onDismissCallback: (type) {
-                                debugPrint(
-                                    'Dialog Dismissed from callback $type');
-                              },
-                            ).show();
+                    Material(
+                      elevation: 20,
+                      color: isFocusing == true
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : isBreak == true
+                              ? Theme.of(context).colorScheme.secondaryContainer
+                              : isLongBreak == true
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .tertiaryContainer
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest,
+                      type: MaterialType.circle,
+                      child: InkWell(
+                        onLongPress: (isFocusing || isBreak || isLongBreak)
+                            ? () {}
+                            : null,
+                        customBorder: const CircleBorder(),
+                        splashColor: Colors.white54,
+                        highlightColor: Colors.black38,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            setState(() {
+                              if (!isFocusing && !isBreak && !isLongBreak) {
+                                initializeSettings();
+                                toggleTimer();
+                              } else if (isFocusing && !pauseTransition) {
+                                pause ? resumeTimer() : pauseTimer();
+                              } else if ((isBreak || isLongBreak) &&
+                                  pauseTransition == true) {
+                                toggleTimer();
+                              } else if (isFocusing && pauseTransition) {
+                                toggleTimer();
+                              }
+                            });
+                            if (hasShownDialog &&
+                                this._headsetState == HeadsetState.DISCONNECT) {
+                              AwesomeDialog(
+                                context: context,
+                                customHeader:
+                                    Image.asset('assets/icons/listening.png'),
+                                animType: AnimType.scale,
+                                title: 'Enhance Your Audio Experience',
+                                desc: 'Use headphones or earphones.',
+                                autoHide: const Duration(seconds: 2),
+                                onDismissCallback: (type) {
+                                  debugPrint(
+                                      'Dialog Dismissed from callback $type');
+                                },
+                              ).show();
 
-                            hasShownDialog = true;
-                          }
-
-                          setState(() {
-                            if (!isFocusing && !isBreak && !isLongBreak) {
-                              initializeSettings();
-                              toggleTimer();
-                            } else if (isFocusing && !pauseTransition) {
-                              pause ? resumeTimer() : pauseTimer();
-                            } else if ((isBreak || isLongBreak) &&
-                                pauseTransition == true) {
-                              toggleTimer();
-                            } else if (isFocusing && pauseTransition) {
-                              toggleTimer();
+                              hasShownDialog = true;
                             }
-                          });
-                        },
-                        onTapDown: (details) {
-                          if (isFocusing || isBreak || isLongBreak)
-                            setState(() {
+                          },
+                          onTapDown: (details) {
+                            if (isFocusing || isBreak || isLongBreak)
+                              setState(() {
+                                _isLongPressTrue = true;
+                              });
+                          },
+                          onTapUp: (details) {
+                            if (isFocusing || isBreak || isLongBreak)
+                              setState(() {
+                                _isLongPressTrue = false;
+                              });
+                          },
+                          onTapCancel: () {
+                            if (isFocusing || isBreak || isLongBreak)
+                              setState(() {
+                                _isLongPressTrue = false;
+                              });
+                          },
+                          onLongPressStart: (details) {
+                            if (isFocusing || isBreak || isLongBreak) {
                               _isLongPressTrue = true;
-                            });
-                        },
-                        onTapUp: (details) {
-                          if (isFocusing || isBreak || isLongBreak)
-                            setState(() {
-                              _isLongPressTrue = false;
-                            });
-                        },
-                        onTapCancel: () {
-                          if (isFocusing || isBreak || isLongBreak)
-                            setState(() {
-                              _isLongPressTrue = false;
-                            });
-                        },
-                        onLongPressStart: (details) {
-                          if (isFocusing || isBreak || isLongBreak) {
-                            _isLongPressTrue = true;
-                            _startLongPressTimer();
-                          }
-                        },
-                        onLongPressEnd: (details) {
-                          _cancelLongPressTimer();
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            shape: BoxShape.circle,
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     blurRadius: 1.5,
-                            //     spreadRadius: 7,
-                            //     offset: Offset.zero,
-                            //     color: Colors.black.withOpacity(0.25),
-                            //   ),
-                            // ],
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _isLongPressTrue
-                                      ? 'EXITING'
-                                      : pause
-                                          ? 'PAUSED'
-                                          : isFocusing && pause == false
-                                              ? 'FOCUSING'
-                                              : isBreak
-                                                  ? 'BREAK'
-                                                  : isLongBreak
-                                                      ? 'LONG BREAK'
-                                                      : 'FOCUS',
-                                  style:
-                                      Theme.of(context).textTheme.displayLarge,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  _isLongPressTrue
-                                      ? 'Release to cancel'
-                                      : (pause || pauseTransition)
-                                          ? 'Press to resume timer'
-                                          : isFocusing || isBreak || isLongBreak
-                                              ? '$digitMin:$digitSec'
-                                              : 'Press here to start Pomodoro',
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
-                                ),
-                              ],
+                              _startLongPressTimer();
+                            }
+                          },
+                          onLongPressEnd: (details) {
+                            _cancelLongPressTimer();
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              shape: BoxShape.circle,
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     blurRadius: 1.5,
+                              //     spreadRadius: 7,
+                              //     offset: Offset.zero,
+                              //     color: Colors.black.withOpacity(0.25),
+                              //   ),
+                              // ],
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _isLongPressTrue
+                                        ? 'EXITING'
+                                        : pause
+                                            ? 'PAUSED'
+                                            : isFocusing && pause == false
+                                                ? 'FOCUSING'
+                                                : isBreak
+                                                    ? 'BREAK'
+                                                    : isLongBreak
+                                                        ? 'LONG BREAK'
+                                                        : 'FOCUS',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    _isLongPressTrue
+                                        ? 'Release to cancel'
+                                        : (pause || pauseTransition)
+                                            ? 'Press to resume timer'
+                                            : isFocusing ||
+                                                    isBreak ||
+                                                    isLongBreak
+                                                ? '$digitMin:$digitSec'
+                                                : 'Press here to start Pomodoro',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               const SizedBox(height: 32.0),
@@ -948,23 +1018,56 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   ),
                                 ],
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return TaskDialog(
-                                        currentIndex: topicKey!,
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.add,
+                                      size: 22,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return TaskAdd(
+                                            controller: _taskController,
+                                            onPressed: () {
+                                              setState(() {
+                                                _createNewTask(
+                                                  _taskController.text,
+                                                );
+                                                _taskController.clear();
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.fullscreen,
-                                  size: 22,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return TaskDialog(
+                                            currentIndex: topicKey!,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.fullscreen,
+                                      size: 22,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -990,6 +1093,63 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+
+              if ((isBreak || isLongBreak) &&
+                  (settingBox.get('enableSkip', defaultValue: false) == true))
+                InkWell(
+                  highlightColor: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(36),
+                  onLongPress: () {},
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onLongPressDown: (details) {
+                      _speedIncreaseTimer?.cancel();
+
+                      setState(() {
+                        _speedMultiplier = 1.0;
+                        fastForwardTimer(
+                          _speedMultiplier,
+                        );
+                      });
+
+                      _speedIncreaseTimer = Timer.periodic(
+                          const Duration(milliseconds: 100), (timer) {
+                        setState(() {
+                          _speedMultiplier += 1.0;
+                          fastForwardTimer(_speedMultiplier);
+                        });
+                      });
+                    },
+                    onLongPressCancel: () {
+                      setState(() {
+                        _speedIncreaseTimer?.cancel();
+                        revertTimerSpeed();
+                      });
+                    },
+                    onLongPressUp: () {
+                      _speedIncreaseTimer?.cancel();
+                      _speedIncreaseTimer = null;
+
+                      setState(() {
+                        revertTimerSpeed();
+                      });
+                    },
+                    onLongPressEnd: (details) {
+                      setState(() {
+                        _speedIncreaseTimer?.cancel();
+                        revertTimerSpeed();
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.fast_forward,
+                        color: Theme.of(context).highlightColor,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ),

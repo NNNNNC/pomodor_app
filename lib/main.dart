@@ -12,7 +12,6 @@ import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/utils/data_init/initial_cards.dart';
 import 'package:pomodoro_app/utils/data_init/initial_presets.dart';
 import 'package:pomodoro_app/utils/data_init/initial_topics.dart';
-import 'package:pomodoro_app/utils/others/notification_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/theme.dart';
@@ -26,7 +25,6 @@ late Box<SelectedModel> defaultKey;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationHelper.init();
   final prefs = await SharedPreferences.getInstance();
   final onboarding = prefs.getBool('onboarding') ?? false;
 
@@ -79,6 +77,7 @@ void main() async {
     );
 
   if (!onboarding) Hive.box('settings').put('enableReminder', true);
+  if (!onboarding) Hive.box('settings').put('enablePulse', true);
 
   runApp(
     ChangeNotifierProvider(
