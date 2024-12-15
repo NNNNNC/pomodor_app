@@ -90,8 +90,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0)
-                          .copyWith(left: 15, right: 8),
+                      padding: const EdgeInsets.all(8.0).copyWith(
+                        left: 15,
+                        right: 8,
+                      ),
                       child: Stack(
                         children: [
                           CustomPaint(
@@ -172,20 +174,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  height: 10,
-                                  width: MediaQuery.of(context).size.width - 30,
-                                  color: KColors.actionColor?.withOpacity(0.5),
-                                ),
-                                Container(
-                                  height: 10,
-                                  width: MediaQuery.of(context).size.width - 30,
-                                  color: const Color.fromARGB(255, 236, 160, 48)
-                                      .withOpacity(0.5),
-                                ),
-                                const SizedBox(
-                                  height: 0,
-                                ),
+                                // Container(
+                                //   height: 10,
+                                //   width: MediaQuery.of(context).size.width - 30,
+                                //   color: KColors.actionColor?.withOpacity(0.5),
+                                // ),
+                                // Container(
+                                //   height: 10,
+                                //   width: MediaQuery.of(context).size.width - 30,
+                                //   color: const Color.fromARGB(255, 236, 160, 48)
+                                //       .withOpacity(0.5),
+                                // ),
+                                // const SizedBox(
+                                //   height: 50,
+                                // ),
                               ],
                             ),
                           ),
@@ -198,7 +200,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 0,
+                    height: 10,
                   ),
                 ],
               ),

@@ -41,59 +41,5 @@ class InitialTopics {
         ['Write a short journal entry in Japanese', false],
       ],
     ),
-    TopicModel(
-      name: 'Java Basics',
-      cardSet: 3,
-      tasks: [
-        ['Read Chapter 1 of "Java Programming for Beginners"', false],
-        ['Complete online tutorials on Java syntax and basics', false],
-        ['Explore Java documentation and learn about basic data types', false],
-        [
-          'Solve coding challenges on variables, operators, and control flow',
-          false
-        ],
-        [
-          'Work on a small Java project, such as a calculator or todo list application',
-          false
-        ],
-      ],
-    ),
-    TopicModel(
-      name: 'Mathematics',
-      cardSet: 4,
-      tasks: [
-        ['Review and practice solving equations with one variable', false],
-        ['Study properties and operations of matrices', false],
-        ['Explore the concept of limits and continuity in calculus', false],
-        ['Learn about vectors and vector operations', false],
-        ['Study properties of logarithms and exponential functions', false],
-      ],
-    ),
-    TopicModel(
-      name: 'Philippine History',
-      cardSet: 5,
-      tasks: [
-        [
-          'Research and present on the pre-colonial civilizations in the Philippines',
-          false
-        ],
-        [
-          'Read primary sources on the Spanish colonization period and summarize key events',
-          false
-        ],
-        [
-          'Watch documentaries on the Philippine Revolution against Spanish rule',
-          false
-        ],
-        [
-          'Study the American occupation period and its impact on Philippine society',
-          false
-        ],
-        [
-          'Explore the Japanese occupation of the Philippines during World War II',
-          false
-        ],
-      ],
-    ),
   ];
 }

@@ -10,7 +10,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/theme/customColors.dart';
-import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/calculator/calculator_page.dart';
 import 'package:pomodoro_app/utils/data_init/audiomaps.dart';
 import 'package:pomodoro_app/utils/scribble/scribble_page.dart';
@@ -103,7 +102,6 @@ class _PomodoroPageState extends State<PomodoroPage>
   void dispose() {
     _slideController.dispose();
     audioPlayer.dispose();
-    allowNotifications();
     super.dispose();
   }
 
@@ -536,25 +534,6 @@ class _PomodoroPageState extends State<PomodoroPage>
                       ),
                     ),
                   ),
-                  actions: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.info_outline_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => pomodoroManualDisplay(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
                 )
               : const PreferredSize(
                   preferredSize: Size.fromHeight(100.0),
@@ -783,9 +762,10 @@ class _PomodoroPageState extends State<PomodoroPage>
               AvatarGlow(
                 startDelay: const Duration(milliseconds: 1000),
                 glowShape: BoxShape.circle,
-                glowRadiusFactor:
-                    settingBox.get('enablePulse', defaultValue: true) ? 0.1 : 0,
-                glowColor: Theme.of(context).colorScheme.primary,
+                glowRadiusFactor: 0.1,
+                glowColor: Colors.transparent,
+                glowCount:
+                    settingBox.get('enablePulse', defaultValue: true) ? 2 : 0,
                 child: Stack(
                   children: [
                     // progress indicator
@@ -814,7 +794,7 @@ class _PomodoroPageState extends State<PomodoroPage>
                       ),
                     ),
                     Material(
-                      elevation: 20,
+                      elevation: 2,
                       color: isFocusing == true
                           ? Theme.of(context).colorScheme.primaryContainer
                           : isBreak == true

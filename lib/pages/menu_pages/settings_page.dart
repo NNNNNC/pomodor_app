@@ -118,8 +118,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       context, "Configure App Permissions", false, false),
                   buildOption(context, "Help/Feedback", buildHelpFeedback(),
                       false, false, true, false, false, false),
-                  buildOption(context, "App Info", buildAppInfo(), false, false,
-                      false, false, false, false),
                   buildOption(context, "Version", buildVersionInfo(), false,
                       true, false, false, false, true),
                 ],
@@ -169,11 +167,6 @@ class _SettingsPageState extends State<SettingsPage> {
         Text("studyassistant@gmail.com"),
       ],
     );
-  }
-
-  Widget buildAppInfo() {
-    return const Text(
-        "The app uses the Pomodoro Technique, breaking study time into focused sessions with short breaks to boost productivity. It also includes helpful tools like flashcards, an app-lock feature, and adjustable white noise to create a personalized study environment.");
   }
 
   Widget buildVersionInfo() {
