@@ -33,7 +33,7 @@ class _MainPageState extends State<MainPage>
     ),
     MenuPage(
       key: PageStorageKey('MenuPage'),
-    )
+    ),
   ];
 
   bool get canPop {

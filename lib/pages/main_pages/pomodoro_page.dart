@@ -11,6 +11,7 @@ import 'package:pomodoro_app/main.dart';
 import 'package:pomodoro_app/providers/visibility_provider.dart';
 import 'package:pomodoro_app/theme/customColors.dart';
 import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
+import 'package:pomodoro_app/utils/calculator/calculator_page.dart';
 import 'package:pomodoro_app/utils/data_init/audiomaps.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/audio_select.dart';
 import 'package:pomodoro_app/utils/others/flashcard_present.dart';
@@ -1206,6 +1207,37 @@ class _PomodoroPageState extends State<PomodoroPage>
                               });
                             },
                           ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.calculate_outlined,
+                              size: 32,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            onPressed: () {
+                              showGeneralDialog(
+                                barrierLabel: 'Label',
+                                barrierDismissible: false,
+                                barrierColor: Colors.black.withOpacity(0.5),
+                                transitionDuration:
+                                    const Duration(milliseconds: 400),
+                                context: context,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) {
+                                  return CalculatorPage();
+                                },
+                                transitionBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0, 1),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: child,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           GestureDetector(
                             onTap: () {
                               if (topicBox.get(topicKey)?.cardSet != null) {
@@ -1244,32 +1276,35 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   : Theme.of(context).disabledColor,
                             ),
                           ),
+                          const SizedBox(
+                            width: 40,
+                          ),
                           IconButton(
-                              icon: Icon(Icons.multitrack_audio,
-                                  size: 28,
-                                  color: Theme.of(context).highlightColor),
-                              onPressed: () {
-                                showDialog<String>(
-                                  barrierDismissible: true,
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      audioSelect(
-                                    audioMap: WhiteNoise().whiteNoiseMap,
-                                    controller: _whiteNoiseController,
-                                    onTap: (selectedValue) {
-                                      Navigator.of(context).pop(selectedValue);
-                                    },
-                                  ),
-                                ).then((selectedValue) {
-                                  setState(() {
-                                    if (selectedValue != null) {
-                                      currentNoise = selectedValue;
-                                      stopAudio();
-                                      playSound(currentNoise!);
-                                    }
-                                  });
+                            icon: Icon(Icons.multitrack_audio,
+                                size: 28,
+                                color: Theme.of(context).colorScheme.secondary),
+                            onPressed: () {
+                              showDialog<String>(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (BuildContext context) => audioSelect(
+                                  audioMap: WhiteNoise().whiteNoiseMap,
+                                  controller: _whiteNoiseController,
+                                  onTap: (selectedValue) {
+                                    Navigator.of(context).pop(selectedValue);
+                                  },
+                                ),
+                              ).then((selectedValue) {
+                                setState(() {
+                                  if (selectedValue != null) {
+                                    currentNoise = selectedValue;
+                                    stopAudio();
+                                    playSound(currentNoise!);
+                                  }
                                 });
-                              }),
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),

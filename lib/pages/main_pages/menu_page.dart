@@ -3,6 +3,7 @@ import 'package:pomodoro_app/pages/menu_pages/preset_page.dart';
 import 'package:pomodoro_app/pages/menu_pages/settings_page.dart';
 import 'package:pomodoro_app/pages/menu_pages/statistics_page.dart';
 import 'package:pomodoro_app/pages/menu_pages/themes_page.dart';
+import 'package:pomodoro_app/utils/calculator/calculator_page.dart';
 import 'package:pomodoro_app/utils/widgets/tiles/menu_tile.dart';
 
 class MenuPage extends StatelessWidget {
@@ -46,6 +47,11 @@ class MenuPage extends StatelessWidget {
             title: 'Settings',
             imageURL: 'assets/images/settings.png',
             page: SettingsPage(),
+          ),
+          MenuTile(
+            title: 'Calculator',
+            imageURL: 'assets/images/calculator2.png',
+            page: CalculatorPage(),
           )
         ],
       ),

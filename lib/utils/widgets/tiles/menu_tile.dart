@@ -4,12 +4,15 @@ class MenuTile extends StatelessWidget {
   final String title;
   final String imageURL;
   final Widget page;
+  final bool? needResize;
 
-  const MenuTile(
-      {super.key,
-      required this.title,
-      required this.imageURL,
-      required this.page});
+  const MenuTile({
+    super.key,
+    required this.title,
+    required this.imageURL,
+    required this.page,
+    this.needResize,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +44,8 @@ class MenuTile extends StatelessWidget {
           children: [
             Image(
               image: AssetImage(imageURL),
-              width: 60,
-              height: 60,
+              width: (needResize ?? false) ? 80 : 70,
+              height: (needResize ?? false) ? 80 : 70,
               color: null,
             ),
             SizedBox(height: 17),
