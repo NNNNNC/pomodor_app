@@ -18,6 +18,7 @@ class MiniTaskTile extends StatelessWidget {
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 5.0),
       child: Material(
         child: ListTile(
+          tileColor: Theme.of(context).primaryColor,
           dense: true,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2),

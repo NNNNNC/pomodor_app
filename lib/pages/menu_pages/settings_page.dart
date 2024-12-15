@@ -108,8 +108,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   buildToggleOption(
                       context, 'Pulsating Button', 'enablePulse', false, true),
                   buildSectionHeader(context, "OTHERS"),
+                  buildToggleOption(
+                      context,
+                      "Enable Paper Background in Scribble",
+                      'enablePaper',
+                      true,
+                      false),
                   buildPermission(
-                      context, "Configure App Permissions", true, false),
+                      context, "Configure App Permissions", false, false),
                   buildOption(context, "Help/Feedback", buildHelpFeedback(),
                       false, false, true, false, false, false),
                   buildOption(context, "App Info", buildAppInfo(), false, false,

@@ -58,7 +58,7 @@ class _FlashcardDialogState extends State<FlashcardDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       contentPadding: const EdgeInsets.only(top: 18.0),
       title: Text(
         'Select Flashcard',

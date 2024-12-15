@@ -52,79 +52,119 @@ class _flashcard_pageState extends State<flashcard_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Padding(
-            padding: const EdgeInsets.only(left: 6.0),
-            child: const Text(
-              "Flashcards",
-              style: TextStyle(
-                fontSize: 18.5,
-              ),
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6.0),
+          child: const Text(
+            "Flashcards",
+            style: TextStyle(
+              fontSize: 18.5,
             ),
           ),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                icon: Icon(
-                  Icons.info_outline_rounded,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => flashcardManualDisplay()),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(
+                Icons.info_outline_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => flashcardManualDisplay(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: GridView.builder(
+          itemCount: flashcardBox.length + 1,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+            childAspectRatio: 0.65,
+          ),
+          itemBuilder: (context, index) {
+            if (index == flashcardBox.length) {
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return add_tile_dialog(
+                        controller: _nameController,
+                        onPressed: createNewTopic,
+                        isFlashcard: true,
+                      );
+                    },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: FloatingActionButton(
-            heroTag: 'flashcard',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return add_tile_dialog(
-                    controller: _nameController,
-                    onPressed: createNewTopic,
-                    isFlashcard: true,
-                  );
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 6, right: 6, top: 7, bottom: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.50),
+                        ),
+                        BoxShadow(
+                          blurStyle: BlurStyle.inner,
+                          blurRadius: 15,
+                          spreadRadius: 0,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          size: 50,
+                          color: Theme.of(context).highlightColor,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Add New Set",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              var flashcardSet = flashcardBox.getAt(index);
+              var cardSetName = flashcardSet!.cardSetName;
+              var cardSetLength = flashcardSet.cards.length;
+              return flashcard_tile(
+                flashcard_name: cardSetName,
+                flashcard_count: cardSetLength,
+                flashCardIndex: index,
+                onDelete: () {
+                  setState(() {
+                    flashcardBox.deleteAt(index);
+                  });
+                },
+                onUpdate: (newCount, newName) {
+                  updateFlashcard(index, newCount, newName);
                 },
               );
-            },
-            child: Icon(
-              Icons.add,
-              size: 45,
-            ),
-          ),
-        ),
-        body: ListView.builder(
-          padding: EdgeInsets.only(bottom: 80),
-          itemCount: flashcardBox.length,
-          itemBuilder: (context, index) {
-            var flashcardSet = flashcardBox.getAt(index);
-            var cardSetName = flashcardSet!.cardSetName;
-            var cardSetLength = flashcardSet.cards.length;
-            return flashcard_tile(
-              flashcard_name: cardSetName,
-              flashcard_count: cardSetLength,
-              flashCardIndex: index,
-              onDelete: () {
-                setState(() {
-                  flashcardBox.deleteAt(index);
-                });
-              },
-              onUpdate: (newCount, newName) {
-                updateFlashcard(index, newCount, newName);
-              },
-            );
+            }
           },
-        ));
+        ),
+      ),
+    );
   }
 }

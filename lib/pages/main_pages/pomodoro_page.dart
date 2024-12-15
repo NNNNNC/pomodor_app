@@ -56,6 +56,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   int? focusDur, breakDur, longBreakDur, pomodoroCount;
   String whiteNoise = '', ringTone = '';
   List<dynamic>? topicTasks;
+  int? topicCardSet;
 
   final _headsetPlugin = HeadsetEvent();
   HeadsetState? _headsetState;
@@ -65,6 +66,7 @@ class _PomodoroPageState extends State<PomodoroPage>
     topicKey = defaultKey.get(0)?.selectedTopic;
     profileKey = defaultKey.get(0)?.selectedProfile;
     topicTasks = topicBox.get(topicKey)?.tasks;
+    topicCardSet = topicBox.get(topicKey)?.cardSet ?? null;
     whiteNoise = profileBox.get(profileKey)?.whiteNoise ?? 'audio/Dryer.mp3';
     ringTone = profileBox.get(profileKey)?.ringtone ?? 'audio/ringtone_1.mp3';
     focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
@@ -470,6 +472,7 @@ class _PomodoroPageState extends State<PomodoroPage>
       topicKey = defaultKey.get(0)?.selectedTopic;
       profileKey = defaultKey.get(0)?.selectedProfile;
       topicTasks = topicBox.get(topicKey)?.tasks ?? [];
+      topicCardSet = topicBox.get(topicKey)?.cardSet ?? null;
       whiteNoise = profileBox.get(profileKey)?.whiteNoise ?? 'audio/Dryer.mp3';
       ringTone = profileBox.get(profileKey)?.ringtone ?? 'audio/ringtone_1.mp3';
       focusDur = profileBox.get(profileKey)?.focusDuration ?? 25;
@@ -502,6 +505,10 @@ class _PomodoroPageState extends State<PomodoroPage>
       }
     }
     return topicList;
+  }
+
+  int? getCardSet(int? index) {
+    return flashcardBox.get(index)?.key;
   }
 
   @override
@@ -605,6 +612,8 @@ class _PomodoroPageState extends State<PomodoroPage>
                         setState(() {
                           topicKey = defaultKey.get(0)?.selectedTopic;
                           topicTasks = topicBox.get(topicKey)?.tasks;
+                          topicCardSet =
+                              topicBox.get(topicKey)?.cardSet ?? null;
                         });
                       },
                       child: Text(
@@ -1002,27 +1011,33 @@ class _PomodoroPageState extends State<PomodoroPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Tasks',
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                              SizedBox(
+                                width: 180,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Tasks',
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    ' (${topicBox.get(topicKey)?.name})',
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                    Flexible(
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        ' (${topicBox.get(topicKey)?.name})',
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               Row(
                                 children: [
@@ -1245,38 +1260,40 @@ class _PomodoroPageState extends State<PomodoroPage>
                           ),
                           GestureDetector(
                             onTap: () {
-                              if (topicBox.get(topicKey)?.cardSet != null) {
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 200),
-                                    reverseTransitionDuration:
-                                        const Duration(milliseconds: 200),
-                                    opaque: true,
-                                    pageBuilder: (context, animation,
-                                        secondaryAnimation) {
-                                      return FlashcardPresent(
-                                        topicKey: topicKey,
-                                      );
-                                    },
-                                    transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) {
-                                      return SlideTransition(
-                                        position: Tween<Offset>(
-                                          begin: const Offset(0, 1),
-                                          end: Offset.zero,
-                                        ).animate(animation),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
+                              if (topicCardSet != null) {
+                                if (getCardSet(topicCardSet!) != null) {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      transitionDuration:
+                                          const Duration(milliseconds: 200),
+                                      reverseTransitionDuration:
+                                          const Duration(milliseconds: 200),
+                                      opaque: true,
+                                      pageBuilder: (context, animation,
+                                          secondaryAnimation) {
+                                        return FlashcardPresent(
+                                          topicKey: topicKey,
+                                        );
+                                      },
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: const Offset(0, 1),
+                                            end: Offset.zero,
+                                          ).animate(animation),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
                               }
                             },
                             child: Image.asset(
                               'assets/icons/document.png',
                               height: 32,
-                              color: (topicBox.get(topicKey)?.cardSet != null)
+                              color: (getCardSet(topicCardSet) != null)
                                   ? Theme.of(context).colorScheme.secondary
                                   : Theme.of(context).disabledColor,
                             ),

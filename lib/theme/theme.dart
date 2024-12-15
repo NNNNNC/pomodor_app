@@ -621,9 +621,7 @@ ThemeData zen_theme = ThemeData(
     ),
     // title font style
     titleLarge: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
-        color: Color.fromRGBO(115, 134, 129, 1)),
+        fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blueGrey[800]),
     titleMedium:
         TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey[800]),
     titleSmall:

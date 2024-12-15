@@ -19,19 +19,23 @@ class flashcard_tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 7, bottom: 5),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (Context) => flashcard_edit(
-                      flashCardIndex: flashCardIndex, onUpdate: onUpdate)));
-        },
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (Context) => flashcard_edit(
+              flashCardIndex: flashCardIndex,
+              onUpdate: onUpdate,
+            ),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, right: 6, top: 7, bottom: 5),
         child: Container(
           padding:
-              const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+              const EdgeInsets.only(left: 15, right: 15, bottom: 0, top: 5),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(10),
@@ -44,37 +48,50 @@ class flashcard_tile extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      maxLines: 2,
-                      flashcard_name,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                  PopupMenuButton(
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: onDelete,
-                        child: Text(
-                          'Delete',
-                          style: Theme.of(context).popupMenuTheme.textStyle,
-                        ),
+              Positioned(
+                top: 0,
+                right: -20,
+                child: PopupMenuButton(
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: onDelete,
+                      child: Text(
+                        'Delete',
+                        style: Theme.of(context).popupMenuTheme.textStyle,
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                '$flashcard_count Flashcards',
-                style: Theme.of(context).textTheme.labelMedium,
-              )
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image(
+                      image: AssetImage('assets/images/flashcards.png'),
+                      width: 150,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          maxLines: 2,
+                          flashcard_name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          '$flashcard_count Flashcards',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

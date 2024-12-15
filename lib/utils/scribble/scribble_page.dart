@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pomodoro_app/utils/scribble/color_button.dart';
 import 'package:scribble/scribble.dart';
 import 'package:value_notifier_tools/value_notifier_tools.dart';
@@ -22,6 +23,9 @@ class _ScribblePageState extends State<ScribblePage>
 
   @override
   Widget build(BuildContext context) {
+    final settingBox = Hive.box('settings');
+    bool paperEnabled = settingBox.get('enablePaper', defaultValue: false);
+
     super.build(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -38,9 +42,20 @@ class _ScribblePageState extends State<ScribblePage>
                 clipBehavior: Clip.hardEdge,
                 margin: const EdgeInsets.only(top: 2),
                 color: Colors.white,
-                child: Scribble(
-                  notifier: widget.notifier,
-                  drawPen: true,
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: (paperEnabled)
+                        ? DecorationImage(
+                            image: AssetImage("assets/bg/lined_paper.jpg"),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          )
+                        : null,
+                  ),
+                  child: Scribble(
+                    notifier: widget.notifier,
+                    drawPen: true,
+                  ),
                 ),
               ),
             ),
@@ -121,30 +136,6 @@ class _ScribblePageState extends State<ScribblePage>
       ),
       const SizedBox(width: 10),
     ];
-  }
-
-  void _showImage(BuildContext context) async {
-    final image = widget.notifier.renderImage();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Generated Image"),
-        content: SizedBox.expand(
-          child: FutureBuilder(
-            future: image,
-            builder: (context, snapshot) => snapshot.hasData
-                ? Image.memory(snapshot.data!.buffer.asUint8List())
-                : const Center(child: CircularProgressIndicator()),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text("Close"),
-          )
-        ],
-      ),
-    );
   }
 
   Widget _buildStrokeToolbar(BuildContext context) {
