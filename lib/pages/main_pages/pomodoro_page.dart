@@ -13,6 +13,7 @@ import 'package:pomodoro_app/theme/customColors.dart';
 import 'package:pomodoro_app/user_manual/pomodoroManual_display.dart';
 import 'package:pomodoro_app/utils/calculator/calculator_page.dart';
 import 'package:pomodoro_app/utils/data_init/audiomaps.dart';
+import 'package:pomodoro_app/utils/scribble/scribble_page.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/audio_select.dart';
 import 'package:pomodoro_app/utils/others/flashcard_present.dart';
 import 'package:pomodoro_app/utils/widgets/dialogs/task_add_dialog.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_dnd/flutter_dnd.dart';
 import 'package:rotating_icon_button/rotating_icon_button.dart';
 import 'package:headset_connection_event/headset_event.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:scribble/scribble.dart';
 
 class PomodoroPage extends StatefulWidget {
   const PomodoroPage({
@@ -48,6 +50,7 @@ class _PomodoroPageState extends State<PomodoroPage>
   late AnimationController _slideController;
   late TextEditingController _whiteNoiseController;
   late TextEditingController _taskController;
+  late ScribbleNotifier notifier;
   int? topicKey;
   int? profileKey;
   int? focusDur, breakDur, longBreakDur, pomodoroCount;
@@ -71,6 +74,8 @@ class _PomodoroPageState extends State<PomodoroPage>
 
     _whiteNoiseController = TextEditingController();
     _taskController = TextEditingController();
+
+    notifier = ScribbleNotifier(widths: [5, 10, 15, 20, 25]);
 
     super.initState();
 
@@ -1276,8 +1281,23 @@ class _PomodoroPageState extends State<PomodoroPage>
                                   : Theme.of(context).disabledColor,
                             ),
                           ),
-                          const SizedBox(
-                            width: 40,
+                          IconButton(
+                            icon: Icon(
+                              Icons.draw,
+                              size: 28,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ScribblePage(
+                                    key: PageStorageKey('ScribblePage'),
+                                    notifier: notifier,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           IconButton(
                             icon: Icon(Icons.multitrack_audio,

@@ -4,7 +4,9 @@ import 'package:pomodoro_app/pages/menu_pages/settings_page.dart';
 import 'package:pomodoro_app/pages/menu_pages/statistics_page.dart';
 import 'package:pomodoro_app/pages/menu_pages/themes_page.dart';
 import 'package:pomodoro_app/utils/calculator/calculator_page.dart';
+import 'package:pomodoro_app/utils/scribble/scribble_page.dart';
 import 'package:pomodoro_app/utils/widgets/tiles/menu_tile.dart';
+import 'package:scribble/scribble.dart';
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -52,7 +54,19 @@ class MenuPage extends StatelessWidget {
             title: 'Calculator',
             imageURL: 'assets/images/calculator2.png',
             page: CalculatorPage(),
-          )
+            isCalculator: true,
+          ),
+          MenuTile(
+            title: 'Scribble',
+            imageURL: 'assets/images/art.png',
+            page: ScribblePage(
+              notifier: ScribbleNotifier(widths: [5, 10, 15, 20, 25]),
+            ),
+          ),
+          MenuTile(
+            title: 'Exit Application',
+            imageURL: 'assets/images/shutdown.png',
+          ),
         ],
       ),
     );
